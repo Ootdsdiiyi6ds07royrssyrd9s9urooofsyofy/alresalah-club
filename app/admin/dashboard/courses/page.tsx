@@ -3,10 +3,10 @@ import ShareButton from '@/components/ShareButton'
 
 export default async function CoursesPage() {
     const supabase = await createClient()
-    const { data: courses, error } = await supabase
+    const { data: courses, error } = await (supabase
         .from('courses')
         .select('*')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false }) as any)
 
     if (error) {
         console.error('Error fetching courses:', error)

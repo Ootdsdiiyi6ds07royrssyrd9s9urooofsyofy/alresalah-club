@@ -2,10 +2,10 @@ import { createClient } from '@/lib/supabase/server'
 
 export default async function AdminProgramsPage() {
     const supabase = await createClient()
-    const { data: programs } = await supabase
+    const { data: programs } = await (supabase
         .from('programs')
         .select('*')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false }) as any)
 
     return (
         <div>

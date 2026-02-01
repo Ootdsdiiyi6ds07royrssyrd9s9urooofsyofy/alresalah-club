@@ -3,11 +3,11 @@ import { createClient } from '@/lib/supabase/server'
 export default async function ActivityLogsPage() {
     const supabase = await createClient()
 
-    const { data: logs } = await supabase
+    const { data: logs } = await (supabase
         .from('activity_logs')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(100)
+        .limit(100) as any)
 
     return (
         <div>

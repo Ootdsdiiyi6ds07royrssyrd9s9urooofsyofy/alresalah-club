@@ -6,10 +6,10 @@ type Announcement = Database['public']['Tables']['announcements']['Row']
 
 export default async function AdminAnnouncementsPage() {
     const supabase = await createClient()
-    const { data: announcements } = await supabase
+    const { data: announcements } = await (supabase
         .from('announcements')
         .select('*')
-        .order('publish_date', { ascending: false })
+        .order('publish_date', { ascending: false }) as any)
 
     return (
         <div>

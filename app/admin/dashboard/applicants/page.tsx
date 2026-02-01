@@ -4,16 +4,16 @@ export default async function ApplicantsPage() {
     const supabase = await createClient()
 
     // Fetch all applicants with course information
-    const { data: applicants } = await supabase
+    const { data: applicants } = await (supabase
         .from('applicants')
         .select('*, courses(title)')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false }) as any)
 
     // Fetch all courses for filtering
-    const { data: courses } = await supabase
+    const { data: courses } = await (supabase
         .from('courses')
         .select('id, title')
-        .order('title', { ascending: true })
+        .order('title', { ascending: true }) as any)
 
     return (
         <div>
