@@ -23,9 +23,9 @@ export default function NewAnnouncementPage() {
         e.preventDefault()
         setLoading(true)
 
-        const { error } = await supabase
-            .from('announcements')
-            .insert([formData as any])
+        const { error } = await (supabase
+            .from('announcements') as any)
+            .insert([formData])
 
         setLoading(false)
 
