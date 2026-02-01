@@ -93,7 +93,7 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                 className="admin-sidebar"
             >
                 <div style={{ marginBottom: 'var(--spacing-2xl)', textAlign: 'center' }}>
-                    <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '90px', marginBottom: 'var(--spacing-sm)' }} />
+                    <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '130px', marginBottom: 'var(--spacing-sm)' }} />
                     <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
                         لوحة تحكم المسؤول
                     </p>

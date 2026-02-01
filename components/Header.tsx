@@ -47,7 +47,7 @@ export default function Header() {
                             </svg>
                         </button>
                         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
-                            <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '70px', width: 'auto' }} />
+                            <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '90px', width: 'auto' }} />
                         </Link>
                     </div>
 

@@ -7,11 +7,13 @@ export default function SmartLearnerSettings() {
     const supabase = createClient()
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
+    const [uploading, setUploading] = useState(false)
     const [learner, setLearner] = useState({
         name: 'عبدالله بن محمد',
         title: 'متعلم متميز',
         cohort: 'دفعة 2025',
-        description: 'نكرم في كل عام الطالب الأكثر تميزاً ومشاركة في برامجنا التدريبية. الطالب الذي أثبت جدارته بالتفوق والابتكار.'
+        description: 'نكرم في كل عام الطالب الأكثر تميزاً ومشاركة في برامجنا التدريبية. الطالب الذي أثبت جدارته بالتفوق والابتكار.',
+        image_url: ''
     })
 
     useEffect(() => {
@@ -23,12 +25,46 @@ export default function SmartLearnerSettings() {
                 .single()
 
             if (data) {
-                setLearner(data.value)
+                // Ensure image_url exists in merged state
+                setLearner({ ...learner, ...data.value })
             }
             setLoading(false)
         }
         fetchSettings()
     }, [])
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || e.target.files.length === 0) {
+            return
+        }
+
+        const file = e.target.files[0]
+        setUploading(true)
+
+        try {
+            const fileExt = file.name.split('.').pop()
+            const fileName = `smart-learner-${Date.now()}.${fileExt}`
+            const filePath = `learner/${fileName}`
+
+            // Try to upload to 'media' bucket first (assuming it exists from previous tasks)
+            // If it fails, we might need to create it or use 'public'
+            const { error: uploadError } = await supabase.storage
+                .from('media')
+                .upload(filePath, file)
+
+            if (uploadError) {
+                throw uploadError
+            }
+
+            const { data } = supabase.storage.from('media').getPublicUrl(filePath)
+
+            setLearner(prev => ({ ...prev, image_url: data.publicUrl }))
+        } catch (error: any) {
+            alert('فشل رفع الصورة: ' + error.message)
+        } finally {
+            setUploading(false)
+        }
+    }
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -63,6 +99,28 @@ export default function SmartLearnerSettings() {
                     />
                 </div>
 
+                <div className="form-group">
+                    <label className="label">صورة المتعلم (اختياري)</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
+                        {learner.image_url && (
+                            <img
+                                src={learner.image_url}
+                                alt="Preview"
+                                style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--color-border)' }}
+                            />
+                        )}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            disabled={uploading}
+                            className="input"
+                            style={{ padding: '8px' }}
+                        />
+                    </div>
+                    {uploading && <span style={{ fontSize: '0.8rem', color: 'var(--color-primary)' }}>جاري الرفع...</span>}
+                </div>
+
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-md)' }}>
                     <div className="form-group">
                         <label className="label">اللقب</label>
@@ -93,7 +151,7 @@ export default function SmartLearnerSettings() {
                 </div>
 
                 <div style={{ marginTop: 'var(--spacing-md)' }}>
-                    <button type="submit" className="btn btn-primary" disabled={saving}>
+                    <button type="submit" className="btn btn-primary" disabled={saving || uploading}>
                         {saving ? 'جاري الحفظ...' : 'حفظ التغييرات'}
                     </button>
                 </div>
@@ -101,7 +159,7 @@ export default function SmartLearnerSettings() {
 
             <div className="card" style={{ marginTop: 'var(--spacing-2xl)', border: '1px solid var(--color-gold)' }}>
                 <h3>⚠️ تنبيه تقني</h3>
-                <p>للأهمية، تأكد من تشغيل كود SQL الخاص بالجدول الجديد في لوحة تحكم Supabase ليتمكن المشرفون من حفظ هذه البيانات.</p>
+                <p>تأكد من وجود 'Buckets' باسم 'media' في Supabase Storage وأن سياسات الأمان تسمح بالرفع والقراءة (Public).</p>
             </div>
         </div>
     )

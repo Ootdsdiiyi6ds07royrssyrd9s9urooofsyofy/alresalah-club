@@ -13,7 +13,8 @@ export default function HomePage() {
         name: 'عبدالله بن محمد',
         title: 'متعلم متميز',
         cohort: 'دفعة 2025',
-        description: 'نكرم في كل عام الطالب الأكثر تميزاً ومشاركة في برامجنا التدريبية. الطالب الذي أثبت جدارته بالتفوق والابتكار.'
+        description: 'نكرم في كل عام الطالب الأكثر تميزاً ومشاركة في برامجنا التدريبية. الطالب الذي أثبت جدارته بالتفوق والابتكار.',
+        image_url: ''
     })
 
     useEffect(() => {
@@ -134,9 +135,18 @@ export default function HomePage() {
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     fontSize: '1.5rem',
-                                    color: 'white'
+                                    color: 'white',
+                                    overflow: 'hidden'
                                 }}>
-                                    <GraduationCap size={30} />
+                                    {smartLearner.image_url ? (
+                                        <img
+                                            src={smartLearner.image_url}
+                                            alt={smartLearner.name}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                    ) : (
+                                        <GraduationCap size={30} />
+                                    )}
                                 </div>
                                 <div>
                                     <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--color-primary)' }}>{smartLearner.name}</h3>
