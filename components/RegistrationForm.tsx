@@ -157,7 +157,7 @@ export default function RegistrationForm({ formId, courseId, courseTitle, availa
                 {fields.length > 0 && <hr style={{ margin: 'var(--spacing-lg) 0', borderColor: 'var(--color-border)' }} />}
 
                 <div style={{ display: 'grid', gap: 'var(--spacing-md)' }}>
-                    {fields.map((field) => (
+                    {fields.filter(field => !['الاسم الكامل', 'البريد الإلكتروني', 'رقم الجوال'].includes(field.field_label)).map((field) => (
                         <div key={field.id} className="form-group">
                             <label htmlFor={field.field_name} className="label">
                                 {field.field_label} {field.is_required && '*'}
