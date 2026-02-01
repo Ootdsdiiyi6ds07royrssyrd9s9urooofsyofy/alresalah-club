@@ -55,6 +55,7 @@ export default function Header() {
                         <Link href="/courses" className="nav-link">الدورات</Link>
                         <Link href="/programs" className="nav-link">البرامج</Link>
                         <Link href="/announcements" className="nav-link">الإعلانات</Link>
+                        <Link href="/surveys" className="nav-link">الاستبيانات</Link>
                         <Link href="/gallery" className="nav-link">المعرض</Link>
                     </nav>
 

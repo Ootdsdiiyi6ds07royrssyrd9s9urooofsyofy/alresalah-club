@@ -79,6 +79,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                     <MenuLink href="/courses" onClick={onClose} icon="📚">الدورات المتاحة</MenuLink>
                     <MenuLink href="/programs" onClick={onClose} icon="🎓">البرامج التعليمية</MenuLink>
                     <MenuLink href="/announcements" onClick={onClose} icon="📢">آخر الإعلانات</MenuLink>
+                    <MenuLink href="/surveys" onClick={onClose} icon="📊">الاستبيانات</MenuLink>
                     <MenuLink href="/gallery" onClick={onClose} icon="🖼️">معرض الصور</MenuLink>
                     <div style={{ margin: 'var(--spacing-md) 0', borderTop: '1px solid var(--color-border)' }} />
                     <MenuLink href="/admin/login" onClick={onClose} icon="🔐">لوحة التحكم</MenuLink>
