@@ -62,10 +62,10 @@ export default async function HomePage() {
                 }}
             >
                 <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-                    <h2 style={{ fontSize: '3.5rem', marginBottom: 'var(--spacing-lg)', color: 'white', textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
+                    <h2 className="hero-title" style={{ fontSize: '3.5rem', marginBottom: 'var(--spacing-lg)', color: 'white', textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
                         نادي الرسالة التعليمي
                     </h2>
-                    <p style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-2xl)', opacity: 0.9, maxWidth: '800px', margin: '0 auto var(--spacing-2xl)' }}>
+                    <p className="hero-subtitle" style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-2xl)', opacity: 0.9, maxWidth: '800px', margin: '0 auto var(--spacing-2xl)' }}>
                         بوابتك نحو التميز والإبداع في رحلتك التعليمية. نقدم لك برامج تدريبية متكاملة تهدف إلى تطوير مهاراتك وبناء مستقبلك.
                     </p>
 
@@ -99,11 +99,9 @@ export default async function HomePage() {
 
             {/* Statistics & Counters Section */}
             <section style={{ padding: 'var(--spacing-2xl) 0', background: 'var(--color-surface)', marginTop: '-40px' }}>
-                <div className="container" style={{
-                    display: 'flex',
+                <div className="container flex-responsive" style={{
                     justifyContent: 'center',
-                    gap: 'var(--spacing-2xl)',
-                    flexWrap: 'wrap'
+                    gap: 'var(--spacing-2xl)'
                 }}>
                     <StatBox count={stats.available} label="دورات متاحة حالياً" icon="🌟" color="var(--color-primary)" />
                     <StatBox count={stats.completed} label="دورات تم إنجازها" icon="✅" color="var(--color-success)" />
@@ -113,13 +111,11 @@ export default async function HomePage() {
             {/* Smart Learner of the Year Section */}
             <section style={{ padding: 'var(--spacing-2xl) 0' }}>
                 <div className="container">
-                    <div className="card" style={{
+                    <div className="card flex-responsive" style={{
                         background: 'linear-gradient(135deg, var(--color-beige) 0%, #fff 100%)',
                         border: '2px solid var(--color-gold)',
-                        display: 'flex',
                         alignItems: 'center',
                         gap: 'var(--spacing-2xl)',
-                        flexWrap: 'wrap',
                         padding: 'var(--spacing-2xl)'
                     }}>
                         <div style={{ flex: 1, minWidth: '300px' }}>
@@ -177,9 +173,9 @@ export default async function HomePage() {
             {/* Latest Announcements Section */}
             <section style={{ padding: 'var(--spacing-2xl) 0', backgroundColor: 'var(--color-background)' }}>
                 <div className="container">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)', gap: 'var(--spacing-md)' }}>
                         <h2 style={{ margin: 0 }}>أحدث الإعلانات</h2>
-                        <Link href="/announcements" className="nav-link">عرض الكل ←</Link>
+                        <Link href="/announcements" className="nav-link" style={{ whiteSpace: 'nowrap' }}>عرض الكل ←</Link>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-lg)' }}>
                         {announcements.map((ann: any) => (
@@ -222,7 +218,7 @@ export default async function HomePage() {
             {/* Footer */}
             <footer style={{ background: 'var(--color-navy)', color: 'white', padding: 'var(--spacing-2xl) 0', marginTop: 'var(--spacing-2xl)' }}>
                 <div className="container">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--spacing-2xl)' }}>
+                    <div className="flex-responsive" style={{ justifyContent: 'space-between', gap: 'var(--spacing-2xl)' }}>
                         <div style={{ maxWidth: '400px' }}>
                             <h2 style={{ color: 'white', marginBottom: 'var(--spacing-md)' }}>نادي الرسالة</h2>
                             <p style={{ opacity: 0.7 }}>نحن نهتم ببناء جيل مبدع، ملهم، وقادر على قيادة المستقبل من خلال برامج تعليمية نوعية.</p>

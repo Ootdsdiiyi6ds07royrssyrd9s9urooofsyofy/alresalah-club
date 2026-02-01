@@ -48,7 +48,7 @@ export default async function ApplicantsPage() {
             {/* Applicants Table */}
             {applicants && applicants.length > 0 ? (
                 <div className="card">
-                    <div style={{ overflowX: 'auto' }}>
+                    <div className="table-container" style={{ overflowX: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                             <thead>
                                 <tr style={{ borderBottom: '2px solid var(--color-border)' }}>
