@@ -1,4 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
+import Link from 'next/link'
+import { Database } from '@/lib/types/database'
+
+type Announcement = Database['public']['Tables']['announcements']['Row']
 
 export default async function AdminAnnouncementsPage() {
     const supabase = await createClient()
@@ -16,7 +20,7 @@ export default async function AdminAnnouncementsPage() {
                         نشر وتعديل الإعلانات التي تظهر للمستخدمين
                     </p>
                 </div>
-                <a href="/admin/dashboard/announcements/new" className="btn btn-primary">+ إضافة إعلان جديد</a>
+                <Link href="/admin/dashboard/announcements/new" className="btn btn-primary">+ إضافة إعلان جديد</Link>
             </div>
 
             <div className="card">
@@ -33,7 +37,7 @@ export default async function AdminAnnouncementsPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {announcements.map((announcement: any) => (
+                                {announcements.map((announcement: Announcement) => (
                                     <tr key={announcement.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
                                         <td style={{ padding: 'var(--spacing-md)' }}>{announcement.title}</td>
                                         <td style={{ padding: 'var(--spacing-md)' }}>
@@ -47,10 +51,10 @@ export default async function AdminAnnouncementsPage() {
                                             </span>
                                         </td>
                                         <td style={{ padding: 'var(--spacing-md)' }}>
-                                            {new Date(announcement.publish_date).toLocaleDateString('ar-SA')}
+                                            {announcement.publish_date ? new Date(announcement.publish_date).toLocaleDateString('ar-SA') : '-'}
                                         </td>
                                         <td style={{ padding: 'var(--spacing-md)' }}>
-                                            <a href={`/admin/dashboard/announcements/${announcement.id}/edit`} className="btn btn-sm btn-secondary" style={{ marginLeft: 'var(--spacing-xs)' }}>تعديل</a>
+                                            <Link href={`/admin/dashboard/announcements/${announcement.id}/edit`} className="btn btn-sm btn-secondary" style={{ marginLeft: 'var(--spacing-xs)' }}>تعديل</Link>
                                             <button className="btn btn-sm btn-error">حذف</button>
                                         </td>
                                     </tr>
@@ -63,7 +67,7 @@ export default async function AdminAnnouncementsPage() {
                         <p style={{ color: 'var(--color-text-secondary)', marginBottom: 'var(--spacing-lg)' }}>
                             لا توجد إعلانات منشورة حالياً
                         </p>
-                        <a href="/admin/dashboard/announcements/new" className="btn btn-primary">+ نشر أول إعلان</a>
+                        <Link href="/admin/dashboard/announcements/new" className="btn btn-primary">+ نشر أول إعلان</Link>
                     </div>
                 )}
             </div>

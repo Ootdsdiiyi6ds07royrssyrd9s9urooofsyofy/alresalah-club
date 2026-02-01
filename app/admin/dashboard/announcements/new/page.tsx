@@ -3,12 +3,15 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Database } from '@/lib/types/database'
+
+type AnnouncementInsert = Database['public']['Tables']['announcements']['Insert']
 
 export default function NewAnnouncementPage() {
     const router = useRouter()
     const supabase = createClient()
     const [loading, setLoading] = useState(false)
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<AnnouncementInsert>({
         title: '',
         content: '',
         priority: 'normal',
@@ -22,7 +25,7 @@ export default function NewAnnouncementPage() {
 
         const { error } = await supabase
             .from('announcements')
-            .insert([formData])
+            .insert([formData as any])
 
         setLoading(false)
 
