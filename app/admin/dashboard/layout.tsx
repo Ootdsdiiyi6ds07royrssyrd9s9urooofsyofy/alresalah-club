@@ -1,30 +1,53 @@
 'use client';
+
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import AdminSidebar from '@/components/admin/AdminSidebar'
 
-export default async function AdminDashboardLayout({
+export default function AdminDashboardLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const [user, setUser] = useState<any>(null)
+    const [loading, setLoading] = useState(true)
+    const router = useRouter()
+    const supabase = createClient()
 
-    if (!user) {
-        redirect('/admin/login')
-    }
+    useEffect(() => {
+        const checkUser = async () => {
+            try {
+                const { data: { user } } = await supabase.auth.getUser()
+                if (!user) {
+                    router.push('/admin/login')
+                } else {
+                    setUser(user)
+                    setLoading(false)
+                }
+            } catch (error) {
+                router.push('/admin/login')
+            }
+        }
+        checkUser()
+    }, [router, supabase])
 
     const handleSignOut = async () => {
-        'use server'
-        const supabase = await createClient()
         await supabase.auth.signOut()
-        redirect('/admin/login')
+        router.push('/admin/login')
+    }
+
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="loading" style={{ width: '40px', height: '40px' }}></div>
+            </div>
+        )
     }
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh' }}>
-            <AdminSidebar userEmail={user.email} handleSignOut={handleSignOut} />
+            <AdminSidebar userEmail={user?.email} handleSignOut={handleSignOut} />
 
             {/* Main Content */}
             <main style={{ flex: 1, padding: 'var(--spacing-xl)', overflow: 'auto', width: '100%' }}>
