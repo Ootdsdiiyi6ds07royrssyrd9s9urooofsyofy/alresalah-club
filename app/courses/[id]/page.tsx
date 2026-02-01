@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 
+import RegistrationForm from '@/components/RegistrationForm'
+
 export default async function CourseDetailPage({ params }: { params: { id: string } }) {
     const supabase = await createClient()
 
@@ -101,27 +103,26 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
                                 }}
                             />
                         </div>
-                        {course.available_seats <= 5 && course.available_seats > 0 && (
-                            <p style={{ marginTop: 'var(--spacing-sm)', color: 'var(--color-warning)', fontSize: 'var(--font-size-sm)' }}>
-                                ⚠️ تبقى {course.available_seats} مقاعد فقط!
-                            </p>
-                        )}
                     </div>
 
-                    {/* Registration Button */}
-                    {form && course.available_seats > 0 ? (
-                        <a href={`/register/${form.id}`} className="btn btn-primary btn-lg" style={{ width: '100%' }}>
-                            سجل الآن
-                        </a>
-                    ) : course.available_seats <= 0 ? (
-                        <button className="btn btn-secondary btn-lg" style={{ width: '100%' }} disabled>
-                            الدورة ممتلئة - لا توجد مقاعد متاحة
-                        </button>
-                    ) : (
-                        <p style={{ textAlign: 'center', color: 'var(--color-text-secondary)' }}>
-                            التسجيل غير متاح حالياً
-                        </p>
-                    )}
+                    {/* Registration Section */}
+                    <div id="register" style={{ marginTop: 'var(--spacing-2xl)', paddingTop: 'var(--spacing-xl)', borderTop: '1px solid var(--color-border)' }}>
+                        <h2 style={{ marginBottom: 'var(--spacing-lg)' }}>التسجيل في الدورة</h2>
+
+                        {form ? (
+                            <RegistrationForm
+                                formId={form.id}
+                                courseId={course.id}
+                                courseTitle={course.title}
+                                availableSeats={course.available_seats}
+                                totalSeats={course.total_seats}
+                            />
+                        ) : (
+                            <div className="alert alert-warning">
+                                نعتذر، التسجيل في هذه الدورة غير متاح حالياً (لم يتم إعداد نموذج التسجيل).
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 <div style={{ marginTop: 'var(--spacing-lg)', textAlign: 'center' }}>

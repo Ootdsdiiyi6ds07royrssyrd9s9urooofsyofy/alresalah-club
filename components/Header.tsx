@@ -47,16 +47,7 @@ export default function Header() {
                             </svg>
                         </button>
                         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
-                            <img src="/logo.jpg" alt="Logo" style={{ height: '40px', width: 'auto', borderRadius: '4px' }} />
-                            <h1 style={{
-                                margin: 0,
-                                fontSize: 'var(--font-size-xl)',
-                                color: 'var(--color-primary)',
-                                fontWeight: 700,
-                                letterSpacing: '-0.5px'
-                            }}>
-                                نادي الرسالة
-                            </h1>
+                            <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '50px', width: 'auto' }} />
                         </Link>
                     </div>
 
