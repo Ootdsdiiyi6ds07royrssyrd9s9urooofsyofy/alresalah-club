@@ -23,12 +23,12 @@ export default function NewCoursePage() {
         e.preventDefault()
         setLoading(true)
 
-        const { error } = await supabase
+        const { error } = await (supabase
             .from('courses')
             .insert([{
                 ...formData,
                 available_seats: formData.total_seats
-            }])
+            }]) as any)
 
         setLoading(false)
 

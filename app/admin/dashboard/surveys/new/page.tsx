@@ -69,11 +69,11 @@ export default function NewSurveyPage() {
         setLoading(true)
 
         // 1. Insert Survey
-        const { data: survey, error: surveyError } = await supabase
+        const { data: survey, error: surveyError } = await (supabase
             .from('surveys')
             .insert([formData])
             .select()
-            .single()
+            .single() as any)
 
         if (surveyError) {
             alert('حدث خطأ أثناء إضافة الاستبيان: ' + surveyError.message)
@@ -91,9 +91,9 @@ export default function NewSurveyPage() {
             display_order: index
         }))
 
-        const { error: questionsError } = await supabase
+        const { error: questionsError } = await (supabase
             .from('survey_questions')
-            .insert(questionsToInsert)
+            .insert(questionsToInsert) as any)
 
         setLoading(false)
 

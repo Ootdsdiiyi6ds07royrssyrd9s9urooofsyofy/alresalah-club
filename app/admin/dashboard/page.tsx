@@ -54,7 +54,7 @@ export default async function AdminDashboardPage() {
                 <h2 style={{ marginBottom: 'var(--spacing-lg)' }}>النشاطات الأخيرة</h2>
                 {recentLogs && recentLogs.length > 0 ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
-                        {recentLogs.map((log) => (
+                        {recentLogs.map((log: any) => (
                             <div
                                 key={log.id}
                                 style={{

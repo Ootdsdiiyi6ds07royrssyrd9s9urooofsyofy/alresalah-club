@@ -82,7 +82,7 @@ export default function NewRegistrationFormPage() {
         setLoading(true)
 
         // 1. Insert Form
-        const { data: form, error: formError } = await supabase
+        const { data: form, error: formError } = await (supabase
             .from('registration_forms')
             .insert([{
                 title: formData.title,
@@ -91,7 +91,7 @@ export default function NewRegistrationFormPage() {
                 is_active: formData.is_active
             }])
             .select()
-            .single()
+            .single() as any)
 
         if (formError) {
             alert('حدث خطأ أثناء حفظ النموذج: ' + formError.message)
@@ -111,9 +111,9 @@ export default function NewRegistrationFormPage() {
             options: f.options ? JSON.stringify(f.options) : null
         }))
 
-        const { error: fieldsError } = await supabase
+        const { error: fieldsError } = await (supabase
             .from('form_fields')
-            .insert(fieldsToInsert)
+            .insert(fieldsToInsert) as any)
 
         setLoading(false)
 
@@ -157,7 +157,7 @@ export default function NewRegistrationFormPage() {
                                     onChange={(e) => setFormData({ ...formData, course_id: e.target.value })}
                                 >
                                     <option value="">نموذج عام (غير مرتبط بدورة)</option>
-                                    {courses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+                                    {courses.map((c: any) => <option key={c.id} value={c.id}>{c.title}</option>)}
                                 </select>
                             </div>
                             <div className="form-group">
