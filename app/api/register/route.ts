@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
 
         if (insertError) {
             console.error('Insert error:', insertError)
-            throw new Error('Failed to submit registration')
+            throw new Error('Failed to submit registration: ' + insertError.message)
         }
 
         // Seats are automatically updated by database trigger

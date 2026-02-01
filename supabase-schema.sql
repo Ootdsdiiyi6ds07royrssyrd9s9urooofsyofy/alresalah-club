@@ -248,7 +248,7 @@ BEGIN
   
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 CREATE TRIGGER update_seats_on_registration
   AFTER INSERT OR DELETE ON applicants
