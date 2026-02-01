@@ -26,7 +26,7 @@ export default async function ActivityLogsPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {logs.map((log) => (
+                                {logs.map((log: any) => (
                                     <tr key={log.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
                                         <td style={{ padding: 'var(--spacing-md)', fontSize: 'var(--font-size-sm)' }}>
                                             {new Date(log.created_at).toLocaleString('ar-SA')}

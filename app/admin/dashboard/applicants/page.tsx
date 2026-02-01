@@ -31,7 +31,7 @@ export default async function ApplicantsPage() {
                 <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
                     <h3 style={{ marginBottom: 'var(--spacing-md)' }}>تصدير إلى Excel</h3>
                     <div style={{ display: 'flex', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
-                        {courses.map((course) => (
+                        {courses.map((course: any) => (
                             <a
                                 key={course.id}
                                 href={`/api/export/applicants?courseId=${course.id}`}
@@ -61,7 +61,7 @@ export default async function ApplicantsPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {applicants.map((applicant) => (
+                                {applicants.map((applicant: any) => (
                                     <tr key={applicant.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
                                         <td style={{ padding: 'var(--spacing-md)', fontWeight: 500 }}>
                                             {applicant.full_name}

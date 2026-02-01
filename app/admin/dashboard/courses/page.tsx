@@ -28,7 +28,7 @@ export default async function CoursesPage() {
 
             {courses && courses.length > 0 ? (
                 <div style={{ display: 'grid', gap: 'var(--spacing-lg)' }}>
-                    {courses.map((course) => (
+                    {courses.map((course: any) => (
                         <div key={course.id} className="card">
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 'var(--spacing-md)' }}>
                                 <div style={{ flex: 1 }}>
