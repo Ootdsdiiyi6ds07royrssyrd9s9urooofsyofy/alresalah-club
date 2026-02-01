@@ -62,10 +62,10 @@ export default async function HomePage() {
                 }}
             >
                 <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-                    <h2 className="hero-title" style={{ fontSize: '3.5rem', marginBottom: 'var(--spacing-lg)', color: 'white', textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
+                    <h2 className="hero-title" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', marginBottom: 'var(--spacing-lg)', color: 'white', textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
                         نادي الرسالة التعليمي
                     </h2>
-                    <p className="hero-subtitle" style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-2xl)', opacity: 0.9, maxWidth: '800px', margin: '0 auto var(--spacing-2xl)' }}>
+                    <p className="hero-subtitle" style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)', marginBottom: 'var(--spacing-2xl)', opacity: 0.9, maxWidth: '800px', margin: '0 auto var(--spacing-2xl)' }}>
                         بوابتك نحو التميز والإبداع في رحلتك التعليمية. نقدم لك برامج تدريبية متكاملة تهدف إلى تطوير مهاراتك وبناء مستقبلك.
                     </p>
 
@@ -89,7 +89,7 @@ export default async function HomePage() {
                     position: 'absolute',
                     top: '-50%',
                     right: '-10%',
-                    width: '600px',
+                    width: 'min(600px, 100vw)',
                     height: '600px',
                     background: 'radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%)',
                     borderRadius: '50%',
@@ -125,7 +125,7 @@ export default async function HomePage() {
                             <h2 style={{ fontSize: '2.5rem', marginBottom: 'var(--spacing-md)', color: 'var(--color-navy)' }}>
                                 الفائز بلقب المتعلم الذكي
                             </h2>
-                            <p style={{ fontSize: '1.25rem', color: 'var(--color-text-secondary)', marginBottom: 'var(--spacing-xl)' }}>
+                            <p style={{ fontSize: '1.25rem', color: 'var(--color-navy)', marginBottom: 'var(--spacing-xl)' }}>
                                 {(smartLearner as any).description}
                             </p>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
@@ -145,7 +145,7 @@ export default async function HomePage() {
                                 </div>
                             </div>
                         </div>
-                        <div style={{ flex: 1, minWidth: '300px', textAlign: 'center' }}>
+                        <div style={{ flex: 1, minWidth: '280px', textAlign: 'center' }}>
                             <div style={{
                                 position: 'relative',
                                 display: 'inline-block',

@@ -233,9 +233,9 @@ export default function NewRegistrationFormPage() {
                                             <option value="number">رقم</option>
                                             <option value="date">تاريخ</option>
                                             <option value="textarea">نص طويل</option>
-                                            <option value="select">قائمة خيارات (Dropdown)</option>
-                                            <option value="radio">اختيار واحد (Radio)</option>
-                                            <option value="checkbox">اختيارات متعددة (Checkbox)</option>
+                                            <option value="select">قائمة خيارات</option>
+                                            <option value="radio">اختيار واحد</option>
+                                            <option value="checkbox">اختيارات متعددة</option>
                                         </select>
                                     </div>
                                     <div className="form-group" style={{ display: 'flex', alignItems: 'center', paddingTop: '25px', gap: 'var(--spacing-xs)' }}>
