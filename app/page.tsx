@@ -105,63 +105,64 @@ export default function HomePage() {
             </section>
 
             {/* Smart Learner of the Year Section */}
-            <section style={{ padding: 'var(--spacing-2xl) 0' }}>
+            <section style={{ padding: 'var(--spacing-xl) 0' }}>
                 <div className="container">
                     <div className="card flex-responsive" style={{
                         background: 'linear-gradient(135deg, var(--color-beige) 0%, #fff 100%)',
-                        border: '2px solid var(--color-gold)',
+                        border: '1px solid var(--color-gold)',
                         alignItems: 'center',
-                        gap: 'var(--spacing-2xl)',
-                        padding: 'var(--spacing-2xl)'
+                        gap: 'var(--spacing-xl)',
+                        padding: 'var(--spacing-xl)'
                     }}>
                         <div style={{ flex: 1, minWidth: '300px' }}>
-                            <span className="badge badge-warning" style={{ marginBottom: 'var(--spacing-md)', padding: 'var(--spacing-sm) var(--spacing-lg)' }}>
+                            <span className="badge badge-warning" style={{ marginBottom: 'var(--spacing-sm)', padding: '4px 12px', fontSize: '0.9rem' }}>
                                 لقب العام 🏆
                             </span>
-                            <h2 style={{ fontSize: '2.5rem', marginBottom: 'var(--spacing-md)', color: 'var(--color-navy)' }}>
+                            <h2 style={{ fontSize: '2rem', marginBottom: 'var(--spacing-sm)', color: 'var(--color-navy)' }}>
                                 الفائز بلقب المتعلم الذكي
                             </h2>
-                            <p style={{ fontSize: '1.25rem', color: 'var(--color-navy)', marginBottom: 'var(--spacing-xl)' }}>
+                            <p style={{ fontSize: '1.1rem', color: 'var(--color-navy)', marginBottom: 'var(--spacing-lg)' }}>
                                 {smartLearner.description}
                             </p>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
                                 <div style={{
-                                    width: '80px',
-                                    height: '80px',
+                                    width: '60px',
+                                    height: '60px',
                                     borderRadius: '50%',
                                     backgroundColor: 'var(--color-gold)',
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    fontSize: '2rem',
+                                    fontSize: '1.5rem',
                                     color: 'white'
                                 }}>
-                                    <GraduationCap size={40} />
+                                    <GraduationCap size={30} />
                                 </div>
                                 <div>
-                                    <h3 style={{ margin: 0, color: 'var(--color-primary)' }}>{smartLearner.name}</h3>
-                                    <p style={{ margin: 0, color: 'var(--color-text-muted)' }}>{smartLearner.title} - {smartLearner.cohort}</p>
+                                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--color-primary)' }}>{smartLearner.name}</h3>
+                                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>{smartLearner.title} - {smartLearner.cohort}</p>
                                 </div>
                             </div>
                         </div>
-                        <div style={{ flex: 1, minWidth: '280px', textAlign: 'center' }}>
+                        <div style={{ flex: 1, minWidth: '250px', textAlign: 'center' }}>
                             <div style={{
                                 position: 'relative',
                                 display: 'inline-block',
-                                padding: 'var(--spacing-xl)',
-                                border: '4px dashed var(--color-gold)',
-                                borderRadius: 'var(--radius-xl)'
+                                padding: 'var(--spacing-lg)',
+                                border: '3px dashed var(--color-gold)',
+                                borderRadius: 'var(--radius-lg)'
                             }}>
-                                <span style={{ fontSize: '8rem', color: 'var(--color-gold)' }}>💎</span>
+                                <span style={{ fontSize: '5rem', color: 'var(--color-gold)' }}>💎</span>
                                 <div style={{
                                     position: 'absolute',
-                                    bottom: '-20px',
-                                    right: '-20px',
+                                    bottom: '-15px',
+                                    right: '-15px',
                                     background: 'var(--color-navy)',
                                     color: 'white',
-                                    padding: 'var(--spacing-sm) var(--spacing-md)',
+                                    padding: '4px 12px',
                                     borderRadius: 'var(--radius-md)',
-                                    fontWeight: 'bold'
+                                    fontWeight: 'bold',
+                                    fontSize: '0.9rem'
                                 }}>الذكي 2026</div>
                             </div>
                         </div>
