@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import ShareButton from '@/components/ShareButton'
+import ExportApplicantsButton from '@/components/admin/ExportApplicantsButton'
 
 export default async function CoursesPage() {
     const supabase = await createClient()
@@ -64,7 +65,9 @@ export default async function CoursesPage() {
                                         )}
                                     </div>
                                 </div>
+                                // ...
                                 <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                                    <ExportApplicantsButton courseId={course.id} courseTitle={course.title} />
                                     <ShareButton entityType="course" entityId={course.id} title={course.title} />
                                     <a href={`/admin/dashboard/courses/${course.id}/edit`} className="btn btn-secondary btn-sm">
                                         تعديل
