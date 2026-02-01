@@ -7,7 +7,7 @@ export default async function AnnouncementsPage() {
         .select('*')
         .eq('is_active', true)
         .lte('publish_date', new Date().toISOString())
-        .gte('expiration_date', new Date().toISOString())
+        .or(`expiration_date.is.null,expiration_date.gt.${new Date().toISOString()}`)
         .order('publish_date', { ascending: false })
 
     return (

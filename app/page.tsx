@@ -1,52 +1,48 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
+import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { Megaphone, Image as ImageIcon, BookOpen, GraduationCap, Star, CheckCircle } from 'lucide-react'
 
-export default async function HomePage() {
-    const supabase = await createClient()
-
-    // Fetch data for counters and sections
-    const now = new Date().toISOString()
-
-    const [
-        availableCoursesCount,
-        completedCoursesCount,
-        announcementsResult,
-        featuredCoursesResult,
-        smartLearnerResult
-    ] = await Promise.all([
-        supabase.from('courses').select('*', { count: 'exact', head: true }).eq('is_active', true).gt('available_seats', 0),
-        supabase.from('courses').select('*', { count: 'exact', head: true }).eq('is_active', true).lt('end_date', now),
-        supabase
-            .from('announcements')
-            .select('*')
-            .eq('is_active', true)
-            .lte('publish_date', now)
-            .order('publish_date', { ascending: false })
-            .limit(3),
-        supabase
-            .from('courses')
-            .select('*')
-            .eq('is_active', true)
-            .gt('available_seats', 0)
-            .order('created_at', { ascending: false })
-            .limit(4),
-        supabase.from('site_settings').select('value').eq('id', 'smart_learner').single()
-    ])
-
-    const stats = {
-        available: availableCoursesCount.count || 0,
-        completed: completedCoursesCount.count || 0,
-    }
-    const announcements = announcementsResult.data || []
-    const featuredCourses = featuredCoursesResult.data || []
-
-    // Fallback for Smart Learner if table or data doesn't exist
-    const smartLearner = smartLearnerResult?.data?.value || {
+export default function HomePage() {
+    const supabase = createClient()
+    const [stats, setStats] = useState({ available: 0, completed: 0 })
+    const [announcements, setAnnouncements] = useState<any[]>([])
+    const [featuredCourses, setFeaturedCourses] = useState<any[]>([])
+    const [smartLearner, setSmartLearner] = useState<any>({
         name: 'عبدالله بن محمد',
         title: 'متعلم متميز',
         cohort: 'دفعة 2025',
         description: 'نكرم في كل عام الطالب الأكثر تميزاً ومشاركة في برامجنا التدريبية. الطالب الذي أثبت جدارته بالتفوق والابتكار.'
-    }
+    })
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const now = new Date().toISOString()
+            const [
+                availableResult,
+                completedResult,
+                announcementsRes,
+                featuredRes,
+                smartRes
+            ] = await Promise.all([
+                supabase.from('courses').select('*', { count: 'exact', head: true }).eq('is_active', true).gt('available_seats', 0),
+                supabase.from('courses').select('*', { count: 'exact', head: true }).eq('is_active', true).lt('end_date', now),
+                supabase.from('announcements').select('*').eq('is_active', true).lte('publish_date', now).order('publish_date', { ascending: false }).limit(3),
+                supabase.from('courses').select('*').eq('is_active', true).gt('available_seats', 0).order('created_at', { ascending: false }).limit(4),
+                supabase.from('site_settings').select('value').eq('id', 'smart_learner').single()
+            ])
+
+            setStats({
+                available: availableResult.count || 0,
+                completed: completedResult.count || 0
+            })
+            if (announcementsRes.data) setAnnouncements(announcementsRes.data)
+            if (featuredRes.data) setFeaturedCourses(featuredRes.data)
+            if (smartRes.data?.value) setSmartLearner(smartRes.data.value)
+        }
+        fetchData()
+    }, [])
 
     return (
         <div style={{ backgroundColor: 'var(--color-background)', minHeight: '100vh' }}>
@@ -77,10 +73,10 @@ export default async function HomePage() {
                         maxWidth: '800px',
                         margin: '0 auto'
                     }}>
-                        <QuickButton href="/announcements" icon="📢" label="الإعلانات" color="#3b82f6" />
-                        <QuickButton href="/gallery" icon="🖼️" label="المعرض" color="#10b981" />
-                        <QuickButton href="/courses" icon="📚" label="الدورات" color="#f59e0b" />
-                        <QuickButton href="/programs" icon="🎓" label="البرامج" color="#8b5cf6" />
+                        <QuickButton href="/announcements" icon={<Megaphone size={28} />} label="الإعلانات" color="#3b82f6" />
+                        <QuickButton href="/gallery" icon={<ImageIcon size={28} />} label="المعرض" color="#10b981" />
+                        <QuickButton href="/courses" icon={<BookOpen size={28} />} label="الدورات" color="#f59e0b" />
+                        <QuickButton href="/programs" icon={<GraduationCap size={28} />} label="البرامج" color="#8b5cf6" />
                     </div>
                 </div>
 
@@ -103,8 +99,8 @@ export default async function HomePage() {
                     justifyContent: 'center',
                     gap: 'var(--spacing-2xl)'
                 }}>
-                    <StatBox count={stats.available} label="دورات متاحة حالياً" icon="🌟" color="var(--color-primary)" />
-                    <StatBox count={stats.completed} label="دورات تم إنجازها" icon="✅" color="var(--color-success)" />
+                    <StatBox count={stats.available} label="دورات متاحة حالياً" icon={<Star size={32} />} color="var(--color-primary)" />
+                    <StatBox count={stats.completed} label="دورات تم إنجازها" icon={<CheckCircle size={32} />} color="var(--color-success)" />
                 </div>
             </section>
 
@@ -126,7 +122,7 @@ export default async function HomePage() {
                                 الفائز بلقب المتعلم الذكي
                             </h2>
                             <p style={{ fontSize: '1.25rem', color: 'var(--color-navy)', marginBottom: 'var(--spacing-xl)' }}>
-                                {(smartLearner as any).description}
+                                {smartLearner.description}
                             </p>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
                                 <div style={{
@@ -137,11 +133,14 @@ export default async function HomePage() {
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    fontSize: '2rem'
-                                }}>👤</div>
+                                    fontSize: '2rem',
+                                    color: 'white'
+                                }}>
+                                    <GraduationCap size={40} />
+                                </div>
                                 <div>
-                                    <h3 style={{ margin: 0, color: 'var(--color-primary)' }}>{(smartLearner as any).name}</h3>
-                                    <p style={{ margin: 0, color: 'var(--color-text-muted)' }}>{(smartLearner as any).title} - {(smartLearner as any).cohort}</p>
+                                    <h3 style={{ margin: 0, color: 'var(--color-primary)' }}>{smartLearner.name}</h3>
+                                    <p style={{ margin: 0, color: 'var(--color-text-muted)' }}>{smartLearner.title} - {smartLearner.cohort}</p>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +152,7 @@ export default async function HomePage() {
                                 border: '4px dashed var(--color-gold)',
                                 borderRadius: 'var(--radius-xl)'
                             }}>
-                                <span style={{ fontSize: '8rem' }}>💎</span>
+                                <span style={{ fontSize: '8rem', color: 'var(--color-gold)' }}>💎</span>
                                 <div style={{
                                     position: 'absolute',
                                     bottom: '-20px',
@@ -242,7 +241,7 @@ export default async function HomePage() {
     )
 }
 
-function QuickButton({ href, icon, label, color }: { href: string; icon: string; label: string; color: string }) {
+function QuickButton({ href, icon, label, color }: { href: string; icon: React.ReactNode; label: string; color: string }) {
     return (
         <Link href={href} style={{ textDecoration: 'none' }}>
             <div className="card hover-scale" style={{
@@ -257,7 +256,6 @@ function QuickButton({ href, icon, label, color }: { href: string; icon: string;
                 gap: 'var(--spacing-xs)'
             }}>
                 <div style={{
-                    fontSize: '2rem',
                     width: '60px',
                     height: '60px',
                     borderRadius: '50%',
@@ -266,7 +264,8 @@ function QuickButton({ href, icon, label, color }: { href: string; icon: string;
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginBottom: 'var(--spacing-xs)',
-                    boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                    color: 'white'
                 }}>{icon}</div>
                 <span style={{ color: 'white', fontWeight: 600, fontSize: 'var(--font-size-sm)' }}>{label}</span>
             </div>
@@ -274,10 +273,10 @@ function QuickButton({ href, icon, label, color }: { href: string; icon: string;
     )
 }
 
-function StatBox({ count, label, icon, color }: { count: number; label: string; icon: string; color: string }) {
+function StatBox({ count, label, icon, color }: { count: number; label: string; icon: React.ReactNode; color: string }) {
     return (
         <div style={{ textAlign: 'center', padding: 'var(--spacing-xl)', minWidth: '200px' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: 'var(--spacing-xs)' }}>{icon}</div>
+            <div style={{ color: color, marginBottom: 'var(--spacing-xs)', display: 'inline-flex' }}>{icon}</div>
             <div style={{ fontSize: '3rem', fontWeight: 800, color, lineHeight: 1 }}>{count}</div>
             <div style={{ color: 'var(--color-text-secondary)', fontWeight: 500, marginTop: 'var(--spacing-xs)' }}>{label}</div>
         </div>

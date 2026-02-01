@@ -3,6 +3,20 @@
 import { useState } from 'react'
 import ThemeToggle from '@/components/ThemeToggle'
 import NavLink from '@/components/admin/NavLink'
+import {
+    LayoutDashboard,
+    BookOpen,
+    GraduationCap,
+    Users,
+    ClipboardList,
+    Megaphone,
+    Image as ImageIcon,
+    Activity,
+    Settings,
+    Menu,
+    X,
+    LogOut
+} from 'lucide-react'
 
 interface AdminSidebarProps {
     userEmail: string | null | undefined
@@ -40,7 +54,7 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                         boxShadow: 'var(--shadow-lg)'
                     }}
                 >
-                    {isOpen ? '✕' : '☰'}
+                    {isOpen ? <X size={20} /> : <Menu size={20} />}
                 </button>
             </div>
 
@@ -89,16 +103,15 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
 
                 <nav style={{ flex: 1, overflowY: 'auto' }}>
                     <div onClick={() => setIsOpen(false)}>
-                        <NavLink href="/admin/dashboard" icon="📊">لوحة التحكم</NavLink>
-                        <NavLink href="/admin/dashboard/courses" icon="📚">الدورات</NavLink>
-                        <NavLink href="/admin/dashboard/programs" icon="🎓">البرامج</NavLink>
-                        <NavLink href="/admin/dashboard/forms" icon="📝">نماذج التسجيل</NavLink>
-                        <NavLink href="/admin/dashboard/applicants" icon="👥">المتقدمين</NavLink>
-                        <NavLink href="/admin/dashboard/surveys" icon="📋">الاستبيانات</NavLink>
-                        <NavLink href="/admin/dashboard/announcements" icon="📢">الإعلانات</NavLink>
-                        <NavLink href="/admin/dashboard/gallery" icon="🖼️">معرض الوسائط</NavLink>
-                        <NavLink href="/admin/dashboard/logs" icon="📜">سجل النشاطات</NavLink>
-                        <NavLink href="/admin/dashboard/settings" icon="⚙️">إعدادات المتعلم الذكي</NavLink>
+                        <NavLink href="/admin/dashboard" icon={<LayoutDashboard size={20} />}>لوحة التحكم</NavLink>
+                        <NavLink href="/admin/dashboard/courses" icon={<BookOpen size={20} />}>الدورات</NavLink>
+                        <NavLink href="/admin/dashboard/programs" icon={<GraduationCap size={20} />}>البرامج</NavLink>
+                        <NavLink href="/admin/dashboard/applicants" icon={<Users size={20} />}>المتقدمين</NavLink>
+                        <NavLink href="/admin/dashboard/surveys" icon={<ClipboardList size={20} />}>الاستبيانات</NavLink>
+                        <NavLink href="/admin/dashboard/announcements" icon={<Megaphone size={20} />}>الإعلانات</NavLink>
+                        <NavLink href="/admin/dashboard/gallery" icon={<ImageIcon size={20} />}>معرض الوسائط</NavLink>
+                        <NavLink href="/admin/dashboard/logs" icon={<Activity size={20} />}>سجل النشاطات</NavLink>
+                        <NavLink href="/admin/dashboard/settings" icon={<Settings size={20} />}>إعدادات المتعلم الذكي</NavLink>
                     </div>
                 </nav>
 
@@ -109,7 +122,8 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                     </div>
                     <div style={{ display: 'flex', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
                         <ThemeToggle />
-                        <button onClick={handleSignOut} className="btn btn-secondary btn-sm">
+                        <button onClick={handleSignOut} className="btn btn-secondary btn-sm" style={{ display: 'flex', gap: '8px' }}>
+                            <LogOut size={16} />
                             تسجيل الخروج
                         </button>
                     </div>
