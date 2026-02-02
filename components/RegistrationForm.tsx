@@ -60,8 +60,20 @@ export default function RegistrationForm({ formId, courseId, courseTitle, availa
         setError('')
 
         try {
-            // Validate
-            for (const field of fields) {
+            // Validate static fields first
+            if (!formData.full_name || formData.full_name.trim() === '') {
+                throw new Error('الاسم الكامل مطلوب')
+            }
+            if (!formData.email || formData.email.trim() === '') {
+                throw new Error('البريد الإلكتروني مطلوب')
+            }
+            if (!formData.phone || formData.phone.trim() === '') {
+                throw new Error('رقم الجوال مطلوب')
+            }
+
+            // Validate dynamic fields
+            const filteredFields = fields.filter(field => !['الاسم الكامل', 'البريد الإلكتروني', 'رقم الجوال'].includes(field.field_label))
+            for (const field of filteredFields) {
                 if (field.is_required && !formData[field.field_name]) {
                     throw new Error(`${field.field_label} مطلوب`)
                 }
