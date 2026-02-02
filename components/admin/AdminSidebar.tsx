@@ -101,7 +101,13 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                     </p>
                 </div>
 
-                <nav style={{ flex: 1, overflowY: 'auto', paddingLeft: 'var(--spacing-xs)', marginRight: 'calc(var(--spacing-xs) * -1)' }}>
+                <nav style={{
+                    flex: 1,
+                    overflowY: 'auto',
+                    paddingLeft: 'var(--spacing-xs)',
+                    marginRight: 'calc(var(--spacing-xs) * -1)',
+                    paddingBottom: 'var(--spacing-xl)' // Added padding at bottom for scroll space
+                }}>
                     <div onClick={() => setIsOpen(false)}>
                         <NavLink href="/admin/dashboard" icon={<LayoutDashboard size={20} />}>لوحة التحكم</NavLink>
                         <NavLink href="/admin/dashboard/courses" icon={<BookOpen size={20} />}>الدورات</NavLink>
@@ -115,7 +121,13 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                     </div>
                 </nav>
 
-                <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: 'var(--spacing-md)', marginTop: 'var(--spacing-md)', paddingBottom: 'var(--spacing-md)' }}>
+                <div style={{
+                    borderTop: '1px solid var(--color-border)',
+                    paddingTop: 'var(--spacing-md)',
+                    marginTop: 'auto',
+                    paddingBottom: 'calc(var(--spacing-md) + env(safe-area-inset-bottom, 0px))',
+                    backgroundColor: 'var(--color-surface)' // Keep background for sticky look if needed
+                }}>
                     <div style={{ marginBottom: 'var(--spacing-md)' }}>
                         <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)', marginBottom: '4px' }}>مسجل كـ:</p>
                         <p style={{ fontSize: 'var(--font-size-xs)', fontWeight: 500, wordBreak: 'break-all', opacity: 0.8 }}>{userEmail}</p>
@@ -133,6 +145,7 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                     .admin-sidebar {
                         scrollbar-width: thin;
                         scrollbar-color: var(--color-border) transparent;
+                        overflow-y: auto; /* Ensure the whole sidebar can scroll if nav doesn't */
                     }
                     .admin-sidebar::-webkit-scrollbar {
                         width: 4px;
@@ -151,6 +164,7 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                     @media (max-width: 768px) {
                         .admin-sidebar {
                             width: 280px !important;
+                            height: 100dvh !important; /* Use dynamic viewport height */
                         }
                     }
                 `}</style>

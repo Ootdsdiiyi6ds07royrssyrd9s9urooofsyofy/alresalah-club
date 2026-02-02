@@ -416,14 +416,38 @@ export default function EditCoursePage({ params }: { params: { id: string } }) {
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'flex-end' }}>
-                    <button type="button" onClick={() => router.back()} className="btn btn-secondary">
-                        إلغاء
+                <div style={{ display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <button
+                        type="button"
+                        onClick={async () => {
+                            if (!confirm(`هل أنت متأكد من حذف الدورة "${formData.title}"؟ سيمسح هذا جميع البيانات المتعلقة بها!`)) return
+                            setSaving(true)
+                            const { error } = await supabase.from('courses').delete().eq('id', params.id)
+                            if (error) {
+                                alert('فشل الحذف: ' + error.message)
+                                setSaving(false)
+                            } else {
+                                alert('تم الحذف بنجاح')
+                                router.push('/admin/dashboard/courses')
+                                router.refresh()
+                            }
+                        }}
+                        className="btn btn-error"
+                        disabled={saving}
+                        style={{ display: 'flex', gap: '8px', alignItems: 'center' }}
+                    >
+                        <Trash2 size={18} />
+                        حذف الدورة
                     </button>
-                    <button type="submit" className="btn btn-primary" disabled={saving} style={{ minWidth: '150px', display: 'flex', justifyContent: 'center', gap: '8px' }}>
-                        <Save size={20} />
-                        {saving ? 'جاري الحفظ...' : 'حفظ التغييرات'}
-                    </button>
+                    <div style={{ display: 'flex', gap: 'var(--spacing-md)' }}>
+                        <button type="button" onClick={() => router.back()} className="btn btn-secondary">
+                            إلغاء
+                        </button>
+                        <button type="submit" className="btn btn-primary" disabled={saving} style={{ minWidth: '150px', display: 'flex', justifyContent: 'center', gap: '8px' }}>
+                            <Save size={20} />
+                            {saving ? 'جاري الحفظ...' : 'حفظ التغييرات'}
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
