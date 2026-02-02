@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Header from '@/components/Header'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
     title: 'نادي الرسالة التعليمي - دورات وبرامج تعليمية متميزة',
     description: 'نادي الرسالة - منصة تعليمية رقمية متكاملة تقدم دورات وبرامج تدريبية متخصصة لتطوير المهارات وتعزيز التعلم المستمر في بيئة تعليمية احترافية',
