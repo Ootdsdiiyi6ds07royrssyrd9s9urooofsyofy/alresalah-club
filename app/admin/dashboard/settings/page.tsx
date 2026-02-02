@@ -77,7 +77,8 @@ export default function SmartLearnerSettings() {
         setSaving(false)
 
         if (error) {
-            alert('خطأ في الحفظ: تأكد من أنك قمت بإنشاء جدول site_settings في قاعدة البيانات.\n\n' + error.message)
+            console.error('Error saving settings:', error)
+            alert('حدث خطأ أثناء الحفظ. يرجى المحاولة مرة أخرى لاحقاً.')
         } else {
             alert('تم حفظ التغييرات بنجاح')
         }

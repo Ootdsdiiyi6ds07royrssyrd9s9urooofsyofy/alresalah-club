@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect } from 'react'
+import { Home, BookOpen, GraduationCap, Megaphone, CheckSquare, Image as ImageIcon, LayoutDashboard, X } from 'lucide-react'
 
 interface SideMenuProps {
     isOpen: boolean
@@ -67,22 +68,19 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                             padding: 'var(--spacing-sm)',
                         }}
                     >
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18" />
-                            <line x1="6" y1="6" x2="18" y2="18" />
-                        </svg>
+                        <X size={24} />
                     </button>
                 </div>
 
                 <nav style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
-                    <MenuLink href="/" onClick={onClose} icon="🏠">الرئيسية</MenuLink>
-                    <MenuLink href="/courses" onClick={onClose} icon="📚">الدورات المتاحة</MenuLink>
-                    <MenuLink href="/programs" onClick={onClose} icon="🎓">البرامج التعليمية</MenuLink>
-                    <MenuLink href="/announcements" onClick={onClose} icon="📢">آخر الإعلانات</MenuLink>
-                    <MenuLink href="/surveys" onClick={onClose} icon="📊">الاستبيانات</MenuLink>
-                    <MenuLink href="/gallery" onClick={onClose} icon="🖼️">معرض الصور</MenuLink>
+                    <MenuLink href="/" onClick={onClose} icon={<Home size={20} />}>الرئيسية</MenuLink>
+                    <MenuLink href="/courses" onClick={onClose} icon={<BookOpen size={20} />}>الدورات المتاحة</MenuLink>
+                    <MenuLink href="/programs" onClick={onClose} icon={<GraduationCap size={20} />}>البرامج التعليمية</MenuLink>
+                    <MenuLink href="/announcements" onClick={onClose} icon={<Megaphone size={20} />}>آخر الإعلانات</MenuLink>
+                    <MenuLink href="/surveys" onClick={onClose} icon={<CheckSquare size={20} />}>الاستبيانات</MenuLink>
+                    <MenuLink href="/gallery" onClick={onClose} icon={<ImageIcon size={20} />}>معرض الصور</MenuLink>
                     <div style={{ margin: 'var(--spacing-md) 0', borderTop: '1px solid var(--color-border)' }} />
-                    <MenuLink href="/admin/login" onClick={onClose} icon="🔐">لوحة التحكم</MenuLink>
+                    <MenuLink href="/admin/login" onClick={onClose} icon={<LayoutDashboard size={20} />}>لوحة التحكم</MenuLink>
                 </nav>
 
                 <div style={{ marginTop: 'auto', textAlign: 'center' }}>
@@ -95,7 +93,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
     )
 }
 
-function MenuLink({ href, children, onClick, icon }: { href: string; children: React.ReactNode; onClick: () => void; icon: string }) {
+function MenuLink({ href, children, onClick, icon }: { href: string; children: React.ReactNode; onClick: () => void; icon: React.ReactNode }) {
     return (
         <Link
             href={href}
@@ -113,7 +111,7 @@ function MenuLink({ href, children, onClick, icon }: { href: string; children: R
             }}
             className="menu-link-hover"
         >
-            <span style={{ fontSize: '1.25rem' }}>{icon}</span>
+            <span style={{ color: 'var(--color-primary)' }}>{icon}</span>
             {children}
             <style jsx>{`
                 .menu-link-hover:hover {

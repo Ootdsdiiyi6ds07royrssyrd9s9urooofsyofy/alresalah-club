@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { Megaphone, Image as ImageIcon, BookOpen, GraduationCap, Star, CheckCircle } from 'lucide-react'
+import { Megaphone, Image as ImageIcon, BookOpen, GraduationCap, Star, CheckCircle, CheckSquare, Trophy, Gem } from 'lucide-react'
 
 export default function HomePage() {
     const supabase = createClient()
@@ -75,6 +75,7 @@ export default function HomePage() {
                         margin: '0 auto'
                     }}>
                         <QuickButton href="/announcements" icon={<Megaphone size={28} />} label="الإعلانات" color="#3b82f6" />
+                        <QuickButton href="/surveys" icon={<CheckSquare size={28} />} label="الاستبيانات" color="#ef4444" />
                         <QuickButton href="/gallery" icon={<ImageIcon size={28} />} label="المعرض" color="#10b981" />
                         <QuickButton href="/courses" icon={<BookOpen size={28} />} label="الدورات" color="#f59e0b" />
                         <QuickButton href="/programs" icon={<GraduationCap size={28} />} label="البرامج" color="#8b5cf6" />
@@ -116,8 +117,8 @@ export default function HomePage() {
                         padding: 'var(--spacing-xl)'
                     }}>
                         <div style={{ flex: 1, minWidth: '300px' }}>
-                            <span className="badge badge-warning" style={{ marginBottom: 'var(--spacing-sm)', padding: '4px 12px', fontSize: '0.9rem' }}>
-                                لقب العام 🏆
+                            <span className="badge badge-warning" style={{ marginBottom: 'var(--spacing-sm)', padding: '4px 12px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                                <Trophy size={16} /> لقب العام
                             </span>
                             <h2 style={{ fontSize: '2rem', marginBottom: 'var(--spacing-sm)', color: 'var(--color-navy)' }}>
                                 الفائز بلقب المتعلم الذكي
@@ -157,12 +158,9 @@ export default function HomePage() {
                         <div style={{ flex: 1, minWidth: '250px', textAlign: 'center' }}>
                             <div style={{
                                 position: 'relative',
-                                display: 'inline-block',
-                                padding: 'var(--spacing-lg)',
-                                border: '3px dashed var(--color-gold)',
                                 borderRadius: 'var(--radius-lg)'
                             }}>
-                                <span style={{ fontSize: '5rem', color: 'var(--color-gold)' }}>💎</span>
+                                <span style={{ color: 'var(--color-gold)' }}><Gem size={80} /></span>
                                 <div style={{
                                     position: 'absolute',
                                     bottom: '-15px',
