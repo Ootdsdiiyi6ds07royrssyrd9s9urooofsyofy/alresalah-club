@@ -1,17 +1,50 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
+
+import { createClient } from '@/lib/supabase/client'
+import { useEffect, useState } from 'react'
 import ShareButton from '@/components/ShareButton'
 import ExportApplicantsButton from '@/components/admin/ExportApplicantsButton'
 
-export default async function CoursesPage() {
-    const supabase = await createClient()
-    const { data: courses, error } = await (supabase
-        .from('courses')
-        .select('*')
-        .order('created_at', { ascending: false }) as any)
+export default function CoursesPage() {
+    const supabase = createClient()
+    const [courses, setCourses] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
 
-    if (error) {
-        console.error('Error fetching courses:', error)
+    useEffect(() => {
+        loadCourses()
+    }, [])
+
+    const loadCourses = async () => {
+        const { data, error } = await supabase
+            .from('courses')
+            .select('*')
+            .order('created_at', { ascending: false })
+
+        if (error) {
+            console.error('Error fetching courses:', error)
+        } else {
+            setCourses(data || [])
+        }
+        setLoading(false)
     }
+
+    const handleDelete = async (id: string, title: string) => {
+        if (!confirm(`هل أنت متأكد من حذف الدورة "${title}"؟ سيمسح هذا جميع البيانات المتعلقة بها!`)) return
+
+        const { error } = await supabase
+            .from('courses')
+            .delete()
+            .eq('id', id)
+
+        if (error) {
+            alert('فشل الحذف: ' + error.message)
+        } else {
+            alert('تم الحذف بنجاح')
+            loadCourses()
+        }
+    }
+
+    if (loading) return <div className="loading" style={{ margin: '2rem auto' }}></div>
 
     return (
         <div>
@@ -44,7 +77,7 @@ export default async function CoursesPage() {
                                             {course.description}
                                         </p>
                                     )}
-                                    <div style={{ display: 'flex', gap: 'var(--spacing-xl)', fontSize: 'var(--font-size-sm)' }}>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-xl)', fontSize: 'var(--font-size-sm)' }}>
                                         {course.instructor && (
                                             <div>
                                                 <span style={{ color: 'var(--color-text-muted)' }}>المحاضر: </span>
@@ -65,13 +98,18 @@ export default async function CoursesPage() {
                                         )}
                                     </div>
                                 </div>
-                                // ...
-                                <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                                <div style={{ display: 'flex', gap: 'var(--spacing-sm)', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                                     <ExportApplicantsButton courseId={course.id} courseTitle={course.title} />
                                     <ShareButton entityType="course" entityId={course.id} title={course.title} />
                                     <a href={`/admin/dashboard/courses/${course.id}/edit`} className="btn btn-secondary btn-sm">
                                         تعديل
                                     </a>
+                                    <button
+                                        onClick={() => handleDelete(course.id, course.title)}
+                                        className="btn btn-error btn-sm"
+                                    >
+                                        حذف
+                                    </button>
                                 </div>
                             </div>
 

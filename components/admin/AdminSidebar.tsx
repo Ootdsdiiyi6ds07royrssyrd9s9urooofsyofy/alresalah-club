@@ -82,24 +82,26 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                     padding: 'var(--spacing-lg)',
                     display: 'flex',
                     flexDirection: 'column',
-                    height: '100vh',
+                    height: '100%',
+                    minHeight: '100dvh',
                     position: 'fixed',
                     right: 0,
                     top: 0,
                     transition: 'transform 0.3s ease-in-out',
                     transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
                     zIndex: 2001,
+                    boxShadow: isOpen ? 'var(--shadow-2xl)' : 'none'
                 }}
                 className="admin-sidebar"
             >
-                <div style={{ marginBottom: 'var(--spacing-2xl)', textAlign: 'center' }}>
-                    <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '130px', marginBottom: 'var(--spacing-sm)' }} />
-                    <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                <div style={{ marginBottom: 'var(--spacing-lg)', textAlign: 'center' }}>
+                    <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '100px', width: 'auto', marginBottom: 'var(--spacing-xs)', objectFit: 'contain' }} />
+                    <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
                         لوحة تحكم المسؤول
                     </p>
                 </div>
 
-                <nav style={{ flex: 1, overflowY: 'auto' }}>
+                <nav style={{ flex: 1, overflowY: 'auto', paddingLeft: 'var(--spacing-xs)', marginRight: 'calc(var(--spacing-xs) * -1)' }}>
                     <div onClick={() => setIsOpen(false)}>
                         <NavLink href="/admin/dashboard" icon={<LayoutDashboard size={20} />}>لوحة التحكم</NavLink>
                         <NavLink href="/admin/dashboard/courses" icon={<BookOpen size={20} />}>الدورات</NavLink>
@@ -113,25 +115,42 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                     </div>
                 </nav>
 
-                <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: 'var(--spacing-md)', marginTop: 'var(--spacing-md)' }}>
+                <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: 'var(--spacing-md)', marginTop: 'var(--spacing-md)', paddingBottom: 'var(--spacing-md)' }}>
                     <div style={{ marginBottom: 'var(--spacing-md)' }}>
-                        <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>مسجل كـ:</p>
-                        <p style={{ fontSize: 'var(--font-size-sm)', fontWeight: 500, wordBreak: 'break-all' }}>{userEmail}</p>
+                        <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)', marginBottom: '4px' }}>مسجل كـ:</p>
+                        <p style={{ fontSize: 'var(--font-size-xs)', fontWeight: 500, wordBreak: 'break-all', opacity: 0.8 }}>{userEmail}</p>
                     </div>
-                    <div style={{ display: 'flex', gap: 'var(--spacing-sm)', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: 'var(--spacing-xs)', flexWrap: 'wrap', alignItems: 'center' }}>
                         <ThemeToggle />
-                        <button onClick={handleSignOut} className="btn btn-secondary btn-sm" style={{ display: 'flex', gap: '8px' }}>
-                            <LogOut size={16} />
-                            تسجيل الخروج
+                        <button onClick={handleSignOut} className="btn btn-secondary btn-sm" style={{ display: 'flex', gap: '6px', fontSize: 'var(--font-size-xs)', padding: '6px 10px' }}>
+                            <LogOut size={14} />
+                            خروج
                         </button>
                     </div>
                 </div>
 
                 <style jsx>{`
+                    .admin-sidebar {
+                        scrollbar-width: thin;
+                        scrollbar-color: var(--color-border) transparent;
+                    }
+                    .admin-sidebar::-webkit-scrollbar {
+                        width: 4px;
+                    }
+                    .admin-sidebar::-webkit-scrollbar-thumb {
+                        background-color: var(--color-border);
+                        border-radius: 10px;
+                    }
                     @media (min-width: 769px) {
                         .admin-sidebar {
                             transform: none !important;
                             position: sticky !important;
+                            height: 100vh !important;
+                        }
+                    }
+                    @media (max-width: 768px) {
+                        .admin-sidebar {
+                            width: 280px !important;
                         }
                     }
                 `}</style>

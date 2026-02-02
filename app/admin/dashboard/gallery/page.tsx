@@ -1,11 +1,43 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
 
-export default async function AdminGalleryPage() {
-    const supabase = await createClient()
-    const { data: media } = await supabase
-        .from('media_gallery')
-        .select('*')
-        .order('created_at', { ascending: false })
+import { createClient } from '@/lib/supabase/client'
+import { useEffect, useState } from 'react'
+
+export default function AdminGalleryPage() {
+    const supabase = createClient()
+    const [media, setMedia] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        loadMedia()
+    }, [])
+
+    const loadMedia = async () => {
+        const { data } = await supabase
+            .from('media_gallery')
+            .select('*')
+            .order('created_at', { ascending: false })
+        setMedia(data || [])
+        setLoading(false)
+    }
+
+    const handleDelete = async (id: string, title: string) => {
+        if (!confirm(`هل أنت متأكد من حذف "${title}" من المعرض؟`)) return
+
+        const { error } = await supabase
+            .from('media_gallery')
+            .delete()
+            .eq('id', id)
+
+        if (error) {
+            alert('فشل الحذف: ' + error.message)
+        } else {
+            alert('تم الحذف بنجاح')
+            loadMedia()
+        }
+    }
+
+    if (loading) return <div className="loading" style={{ margin: '2rem auto' }}></div>
 
     return (
         <div>
@@ -36,6 +68,8 @@ export default async function AdminGalleryPage() {
                                     overflow: 'hidden',
                                     border: '1px solid var(--color-border)',
                                     backgroundColor: 'var(--color-background)',
+                                    display: 'flex',
+                                    flexDirection: 'column'
                                 }}
                             >
                                 <div style={{ height: '150px', backgroundColor: '#f0f0f0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -45,13 +79,19 @@ export default async function AdminGalleryPage() {
                                         <div style={{ fontSize: '2rem' }}>🎥</div>
                                     )}
                                 </div>
-                                <div style={{ padding: 'var(--spacing-sm)' }}>
-                                    <p style={{ fontWeight: 500, fontSize: 'var(--font-size-sm)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                <div style={{ padding: 'var(--spacing-sm)', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                    <p style={{ fontWeight: 500, fontSize: 'var(--font-size-sm)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: 'var(--spacing-sm)' }}>
                                         {item.title}
                                     </p>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--spacing-xs)' }}>
-                                        <a href={`/admin/dashboard/gallery/${item.id}/edit`} className="btn btn-sm btn-secondary">تعديل</a>
-                                        <button className="btn btn-sm btn-error">حذف</button>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', gap: 'var(--spacing-xs)' }}>
+                                        <a href={`/admin/dashboard/gallery/${item.id}/edit`} className="btn btn-sm btn-secondary" style={{ flex: 1 }}>تعديل</a>
+                                        <button
+                                            onClick={() => handleDelete(item.id, item.title)}
+                                            className="btn btn-sm btn-error"
+                                            style={{ flex: 1 }}
+                                        >
+                                            حذف
+                                        </button>
                                     </div>
                                 </div>
                             </div>

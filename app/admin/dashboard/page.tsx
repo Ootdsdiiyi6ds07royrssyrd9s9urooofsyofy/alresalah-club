@@ -38,7 +38,7 @@ export default async function AdminDashboardPage() {
             <div
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                     gap: 'var(--spacing-lg)',
                     marginBottom: 'var(--spacing-2xl)',
                 }}

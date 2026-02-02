@@ -50,7 +50,7 @@ export default function AdminDashboardLayout({
             <AdminSidebar userEmail={user?.email} handleSignOut={handleSignOut} />
 
             {/* Main Content */}
-            <main style={{ flex: 1, padding: 'var(--spacing-xl)', overflow: 'auto', width: '100%' }}>
+            <main style={{ flex: 1, padding: 'var(--spacing-xl)', overflowY: 'auto', width: '100%' }}>
                 {children}
             </main>
 
@@ -58,13 +58,21 @@ export default function AdminDashboardLayout({
                 @media (max-width: 768px) {
                     main {
                         padding: var(--spacing-md) !important;
-                        margin-top: 60px; /* Space for mobile menu button */
+                        margin-top: 50px; /* Space for mobile menu button */
+                        width: 100% !important;
+                        overflow-x: hidden;
                     }
                     .table-container {
+                        margin: 0 -1rem;
+                        padding: 0 1rem;
                         overflow-x: auto;
+                        -webkit-overflow-scrolling: touch;
                     }
                     table {
                         min-width: 600px;
+                    }
+                    .card {
+                        padding: var(--spacing-md) !important;
                     }
                 }
             `}</style>
