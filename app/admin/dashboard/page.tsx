@@ -3,19 +3,22 @@ import { createClient } from '@/lib/supabase/server'
 export default async function AdminDashboardPage() {
     const supabase = await createClient()
 
-    // Fetch statistics
-    const [coursesResult, applicantsResult, surveysResult, announcementsResult] = await Promise.all([
+    // Fetch statistics with error handling
+    const results = await Promise.allSettled([
         supabase.from('courses').select('*', { count: 'exact', head: true }),
         supabase.from('applicants').select('*', { count: 'exact', head: true }),
         supabase.from('surveys').select('*', { count: 'exact', head: true }),
         supabase.from('announcements').select('*', { count: 'exact', head: true }),
     ])
 
+    const getCount = (result: PromiseSettledResult<any>) =>
+        result.status === 'fulfilled' && result.value.count ? result.value.count : 0
+
     const stats = {
-        courses: coursesResult.count || 0,
-        applicants: applicantsResult.count || 0,
-        surveys: surveysResult.count || 0,
-        announcements: announcementsResult.count || 0,
+        courses: getCount(results[0]),
+        applicants: getCount(results[1]),
+        surveys: getCount(results[2]),
+        announcements: getCount(results[3]),
     }
 
     // Fetch recent activity

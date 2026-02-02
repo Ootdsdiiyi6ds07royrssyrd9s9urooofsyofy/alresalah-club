@@ -46,9 +46,11 @@ export default async function AdminFormsPage() {
                                             {new Date(form.created_at).toLocaleDateString('ar-SA')}
                                         </td>
                                         <td style={{ padding: 'var(--spacing-md)' }}>
-                                            <button className="btn btn-sm btn-secondary" style={{ marginLeft: 'var(--spacing-xs)' }}>تعديل</button>
-                                            <button className="btn btn-sm btn-info" style={{ marginLeft: 'var(--spacing-xs)' }}>معاينة</button>
-                                            <button className="btn btn-sm btn-error">حذف</button>
+                                            <div style={{ display: 'flex', gap: 'var(--spacing-xs)' }}>
+                                                <a href={`/admin/dashboard/forms/${form.id}/edit`} className="btn btn-sm btn-secondary">تعديل</a>
+                                                <button className="btn btn-sm btn-info">معاينة</button>
+                                                <DeleteFormButton id={form.id} title={form.title} />
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -65,5 +67,34 @@ export default async function AdminFormsPage() {
                 )}
             </div>
         </div>
+    )
+}
+
+function DeleteFormButton({ id, title }: { id: string; title: string }) {
+    'use client'
+    const { createClient } = require('@/lib/supabase/client')
+    const { useRouter } = require('next/navigation')
+    const supabase = createClient()
+    const router = useRouter()
+
+    const handleDelete = async () => {
+        if (!confirm(`هل أنت متأكد من حذف نموذج "${title}"؟`)) return
+
+        const { error } = await supabase
+            .from('registration_forms')
+            .delete()
+            .eq('id', id)
+
+        if (error) {
+            alert('فشل الحذف: ' + error.message)
+        } else {
+            router.refresh()
+        }
+    }
+
+    return (
+        <button onClick={handleDelete} className="btn btn-sm btn-error">
+            حذف
+        </button>
     )
 }

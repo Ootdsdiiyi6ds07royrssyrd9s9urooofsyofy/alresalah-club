@@ -17,6 +17,14 @@ export default async function SurveysPage() {
 
     if (error) {
         console.error('Error fetching surveys:', error)
+        return (
+            <div className="container" style={{ paddingTop: 'var(--spacing-2xl)', textAlign: 'center' }}>
+                <div className="card" style={{ border: '1px solid var(--color-error)', backgroundColor: '#fff5f5' }}>
+                    <h3 style={{ color: 'var(--color-error)' }}>عذراً، حدث خطأ أثناء تحميل الاستبيانات</h3>
+                    <p>يرجى المحاولة مرة أخرى لاحقاً</p>
+                </div>
+            </div>
+        )
     }
 
     return (

@@ -110,24 +110,26 @@ export default function HomePage() {
             {/* Smart Learner of the Year Section */}
             <section style={{ padding: 'var(--spacing-xl) 0' }}>
                 <div className="container">
-                    <div className="card flex-responsive" style={{
+                    <div className="card" style={{
                         background: 'linear-gradient(135deg, var(--color-beige) 0%, #fff 100%)',
                         border: '1px solid var(--color-gold)',
+                        display: 'flex',
+                        flexWrap: 'wrap',
                         alignItems: 'center',
                         gap: 'var(--spacing-xl)',
                         padding: 'var(--spacing-xl)'
                     }}>
-                        <div style={{ flex: 1, minWidth: '300px' }}>
+                        <div style={{ flex: '1 1 300px' }}>
                             <span className="badge badge-warning" style={{ marginBottom: 'var(--spacing-sm)', padding: '4px 12px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                                 <Trophy size={16} /> لقب العام
                             </span>
                             <h2 style={{ fontSize: '2rem', marginBottom: 'var(--spacing-sm)', color: 'var(--color-navy)' }}>
                                 الفائز بلقب المتعلم الذكي
                             </h2>
-                            <p style={{ fontSize: '1.1rem', color: 'var(--color-navy)', marginBottom: 'var(--spacing-lg)' }}>
+                            <p style={{ fontSize: '1.1rem', color: 'var(--color-navy)', marginBottom: 'var(--spacing-lg)', lineHeight: '1.6' }}>
                                 {smartLearner.description}
                             </p>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap' }}>
                                 <div style={{
                                     width: '60px',
                                     height: '60px',
@@ -138,7 +140,8 @@ export default function HomePage() {
                                     alignItems: 'center',
                                     fontSize: '1.5rem',
                                     color: 'white',
-                                    overflow: 'hidden'
+                                    overflow: 'hidden',
+                                    flexShrink: 0
                                 }}>
                                     {smartLearner.image_url ? (
                                         <img
@@ -156,7 +159,7 @@ export default function HomePage() {
                                 </div>
                             </div>
                         </div>
-                        <div style={{ flex: 1, minWidth: '250px', textAlign: 'center' }}>
+                        <div style={{ flex: '1 1 250px', textAlign: 'center' }}>
                             <div style={{
                                 position: 'relative',
                                 borderRadius: 'var(--radius-lg)'
