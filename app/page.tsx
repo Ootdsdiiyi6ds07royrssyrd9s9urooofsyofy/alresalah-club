@@ -68,10 +68,11 @@ export default function HomePage() {
 
                     {/* Quick Access Buttons */}
                     <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                        gap: 'var(--spacing-md)',
-                        maxWidth: '800px',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'center',
+                        gap: 'var(--spacing-lg)',
+                        maxWidth: '900px',
                         margin: '0 auto'
                     }}>
                         <QuickButton href="/announcements" icon={<Megaphone size={28} />} label="الإعلانات" color="#3b82f6" />
@@ -252,7 +253,7 @@ export default function HomePage() {
 
 function QuickButton({ href, icon, label, color }: { href: string; icon: React.ReactNode; label: string; color: string }) {
     return (
-        <Link href={href} style={{ textDecoration: 'none' }}>
+        <Link href={href} style={{ textDecoration: 'none', width: '160px' }}>
             <div className="card hover-scale" style={{
                 padding: 'var(--spacing-md)',
                 textAlign: 'center',
