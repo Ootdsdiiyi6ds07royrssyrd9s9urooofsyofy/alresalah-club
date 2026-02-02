@@ -1,11 +1,43 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
 
-export default async function AdminProgramsPage() {
-    const supabase = await createClient()
-    const { data: programs } = await (supabase
-        .from('programs')
-        .select('*')
-        .order('created_at', { ascending: false }) as any)
+import { createClient } from '@/lib/supabase/client'
+import { useEffect, useState } from 'react'
+
+export default function AdminProgramsPage() {
+    const supabase = createClient()
+    const [programs, setPrograms] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        loadPrograms()
+    }, [])
+
+    const loadPrograms = async () => {
+        const { data } = await supabase
+            .from('programs')
+            .select('*')
+            .order('created_at', { ascending: false })
+        setPrograms(data || [])
+        setLoading(false)
+    }
+
+    const handleDelete = async (id: string, title: string) => {
+        if (!confirm(`هل أنت متأكد من حذف برنامج "${title}"؟`)) return
+
+        const { error } = await supabase
+            .from('programs')
+            .delete()
+            .eq('id', id)
+
+        if (error) {
+            alert('فشل الحذف: ' + error.message)
+        } else {
+            alert('تم الحذف بنجاح')
+            loadPrograms()
+        }
+    }
+
+    if (loading) return <div className="loading" style={{ margin: '2rem auto' }}></div>
 
     return (
         <div>
@@ -44,8 +76,19 @@ export default async function AdminProgramsPage() {
                                             </span>
                                         </td>
                                         <td style={{ padding: 'var(--spacing-md)' }}>
-                                            <a href={`/admin/dashboard/programs/${program.id}/edit`} className="btn btn-sm btn-secondary" style={{ marginLeft: 'var(--spacing-xs)' }}>تعديل</a>
-                                            <button className="btn btn-sm btn-error">حذف</button>
+                                            <a
+                                                href={`/admin/dashboard/programs/${program.id}/edit`}
+                                                className="btn btn-sm btn-secondary"
+                                                style={{ marginLeft: 'var(--spacing-xs)' }}
+                                            >
+                                                تعديل
+                                            </a>
+                                            <button
+                                                onClick={() => handleDelete(program.id, program.title)}
+                                                className="btn btn-sm btn-error"
+                                            >
+                                                حذف
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}

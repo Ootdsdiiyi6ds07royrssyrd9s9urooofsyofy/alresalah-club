@@ -1,11 +1,45 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
 
-export default async function AdminSurveysPage() {
-    const supabase = await createClient()
-    const { data: surveys } = await supabase
-        .from('surveys')
-        .select('*, courses(title)')
-        .order('created_at', { ascending: false })
+import { createClient } from '@/lib/supabase/client'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+export default function AdminSurveysPage() {
+    const router = useRouter()
+    const supabase = createClient()
+    const [surveys, setSurveys] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        loadSurveys()
+    }, [])
+
+    const loadSurveys = async () => {
+        const { data } = await supabase
+            .from('surveys')
+            .select('*, courses(title)')
+            .order('created_at', { ascending: false })
+        setSurveys(data || [])
+        setLoading(false)
+    }
+
+    const handleDelete = async (id: string, title: string) => {
+        if (!confirm(`هل أنت متأكد من حذف الاستبيان "${title}"؟`)) return
+
+        const { error } = await supabase
+            .from('surveys')
+            .delete()
+            .eq('id', id)
+
+        if (error) {
+            alert('فشل الحذف: ' + error.message)
+        } else {
+            alert('تم الحذف بنجاح')
+            loadSurveys()
+        }
+    }
+
+    if (loading) return <div className="loading" style={{ margin: '2rem auto' }}></div>
 
     return (
         <div>
@@ -46,9 +80,26 @@ export default async function AdminSurveysPage() {
                                             {survey.start_date ? new Date(survey.start_date).toLocaleDateString('ar-SA') : 'غير محدد'}
                                         </td>
                                         <td style={{ padding: 'var(--spacing-md)' }}>
-                                            <button className="btn btn-sm btn-secondary" style={{ marginLeft: 'var(--spacing-xs)' }}>تعديل</button>
-                                            <button className="btn btn-sm btn-info" style={{ marginLeft: 'var(--spacing-xs)' }}>النتائج</button>
-                                            <button className="btn btn-sm btn-error">حذف</button>
+                                            <button
+                                                onClick={() => router.push(`/admin/dashboard/surveys/${survey.id}/edit`)}
+                                                className="btn btn-sm btn-secondary"
+                                                style={{ marginLeft: 'var(--spacing-xs)' }}
+                                            >
+                                                تعديل
+                                            </button>
+                                            <button
+                                                onClick={() => router.push(`/admin/dashboard/surveys/${survey.id}/results`)}
+                                                className="btn btn-sm btn-info"
+                                                style={{ marginLeft: 'var(--spacing-xs)' }}
+                                            >
+                                                النتائج
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(survey.id, survey.title)}
+                                                className="btn btn-sm btn-error"
+                                            >
+                                                حذف
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}

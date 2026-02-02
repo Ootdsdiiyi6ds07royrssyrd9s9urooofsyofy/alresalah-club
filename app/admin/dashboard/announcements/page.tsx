@@ -1,15 +1,47 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
+
+import { createClient } from '@/lib/supabase/client'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Database } from '@/lib/types/database'
 
 type Announcement = Database['public']['Tables']['announcements']['Row']
 
-export default async function AdminAnnouncementsPage() {
-    const supabase = await createClient()
-    const { data: announcements } = await (supabase
-        .from('announcements')
-        .select('*')
-        .order('publish_date', { ascending: false }) as any)
+export default function AdminAnnouncementsPage() {
+    const supabase = createClient()
+    const [announcements, setAnnouncements] = useState<Announcement[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        loadAnnouncements()
+    }, [])
+
+    const loadAnnouncements = async () => {
+        const { data } = await supabase
+            .from('announcements')
+            .select('*')
+            .order('publish_date', { ascending: false })
+        setAnnouncements(data || [])
+        setLoading(false)
+    }
+
+    const handleDelete = async (id: string, title: string) => {
+        if (!confirm(`هل أنت متأكد من حذف إعلان "${title}"؟`)) return
+
+        const { error } = await supabase
+            .from('announcements')
+            .delete()
+            .eq('id', id)
+
+        if (error) {
+            alert('فشل الحذف: ' + error.message)
+        } else {
+            alert('تم الحذف بنجاح')
+            loadAnnouncements()
+        }
+    }
+
+    if (loading) return <div className="loading" style={{ margin: '2rem auto' }}></div>
 
     return (
         <div>
@@ -54,8 +86,19 @@ export default async function AdminAnnouncementsPage() {
                                             {announcement.publish_date ? new Date(announcement.publish_date).toLocaleDateString('ar-SA') : '-'}
                                         </td>
                                         <td style={{ padding: 'var(--spacing-md)' }}>
-                                            <Link href={`/admin/dashboard/announcements/${announcement.id}/edit`} className="btn btn-sm btn-secondary" style={{ marginLeft: 'var(--spacing-xs)' }}>تعديل</Link>
-                                            <button className="btn btn-sm btn-error">حذف</button>
+                                            <Link
+                                                href={`/admin/dashboard/announcements/${announcement.id}/edit`}
+                                                className="btn btn-sm btn-secondary"
+                                                style={{ marginLeft: 'var(--spacing-xs)' }}
+                                            >
+                                                تعديل
+                                            </Link>
+                                            <button
+                                                onClick={() => handleDelete(announcement.id, announcement.title)}
+                                                className="btn btn-sm btn-error"
+                                            >
+                                                حذف
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
