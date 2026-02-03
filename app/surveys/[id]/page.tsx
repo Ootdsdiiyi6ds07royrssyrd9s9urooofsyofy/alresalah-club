@@ -159,7 +159,17 @@ export default function SurveyPage({ params }: { params: { id: string } }) {
                                 {question.question_text} {question.is_required && '*'}
                             </label>
 
-                            {question.question_type === 'text' && (
+                            {(question.question_type === 'text' || question.question_type === 'email' || question.question_type === 'phone' || question.question_type === 'number' || question.question_type === 'date') && (
+                                <input
+                                    type={question.question_type === 'phone' ? 'tel' : question.question_type}
+                                    className="input"
+                                    required={question.is_required}
+                                    value={responses[question.id] || ''}
+                                    onChange={(e) => setResponses({ ...responses, [question.id]: e.target.value })}
+                                />
+                            )}
+
+                            {question.question_type === 'textarea' && (
                                 <textarea
                                     className="input"
                                     required={question.is_required}
@@ -211,7 +221,21 @@ export default function SurveyPage({ params }: { params: { id: string } }) {
                                 </div>
                             )}
 
-                            {question.question_type === 'multiple_choice' && question.options && (
+                            {question.question_type === 'select' && question.options && (
+                                <select
+                                    className="input"
+                                    required={question.is_required}
+                                    value={responses[question.id] || ''}
+                                    onChange={(e) => setResponses({ ...responses, [question.id]: e.target.value })}
+                                >
+                                    <option value="">اختر...</option>
+                                    {JSON.parse(question.options as string).map((option: string) => (
+                                        <option key={option} value={option}>{option}</option>
+                                    ))}
+                                </select>
+                            )}
+
+                            {question.question_type === 'radio' && question.options && (
                                 <div style={{ display: 'grid', gap: 'var(--spacing-sm)' }}>
                                     {JSON.parse(question.options as string).map((option: string) => (
                                         <label key={option} style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', cursor: 'pointer' }}>
@@ -221,6 +245,28 @@ export default function SurveyPage({ params }: { params: { id: string } }) {
                                                 required={question.is_required}
                                                 checked={responses[question.id] === option}
                                                 onChange={() => setResponses({ ...responses, [question.id]: option })}
+                                            />
+                                            {option}
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+
+                            {question.question_type === 'checkbox' && question.options && (
+                                <div style={{ display: 'grid', gap: 'var(--spacing-sm)' }}>
+                                    {JSON.parse(question.options as string).map((option: string) => (
+                                        <label key={option} style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', cursor: 'pointer' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={(responses[question.id] || []).includes(option)}
+                                                onChange={(e) => {
+                                                    const current = responses[question.id] || []
+                                                    if (e.target.checked) {
+                                                        setResponses({ ...responses, [question.id]: [...current, option] })
+                                                    } else {
+                                                        setResponses({ ...responses, [question.id]: current.filter((o: string) => o !== option) })
+                                                    }
+                                                }}
                                             />
                                             {option}
                                         </label>

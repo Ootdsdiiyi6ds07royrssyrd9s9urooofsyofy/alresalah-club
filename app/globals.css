@@ -29,6 +29,7 @@
   --color-text-muted: #9ca3af;
   --color-border: #e5e7eb;
   --color-border-focus: var(--color-navy);
+  --color-learner-badge: var(--color-navy);
 
   /* Status Colors */
   --color-success: #10b981;
@@ -96,6 +97,7 @@
   --color-text-muted: #94a3b8;
   --color-border: #334155;
   --color-border-focus: var(--color-gold);
+  --color-learner-badge: var(--color-gold);
 
   /* Adjust shadows for dark mode */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);

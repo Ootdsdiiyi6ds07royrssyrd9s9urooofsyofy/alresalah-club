@@ -11,6 +11,7 @@ export default function ApplicantsPage() {
     const [applicants, setApplicants] = useState<any[]>([])
     const [loadingCourses, setLoadingCourses] = useState(true)
     const [loadingApplicants, setLoadingApplicants] = useState(false)
+    const [viewingApplicant, setViewingApplicant] = useState<any>(null)
 
     useEffect(() => {
         loadCourses()
@@ -103,6 +104,7 @@ export default function ApplicantsPage() {
                                             <th style={{ padding: 'var(--spacing-md)', textAlign: 'right' }}>رقم الجوال</th>
                                             <th style={{ padding: 'var(--spacing-md)', textAlign: 'right' }}>البريد الإلكتروني</th>
                                             <th style={{ padding: 'var(--spacing-md)', textAlign: 'right' }}>تاريخ التسجيل</th>
+                                            <th style={{ padding: 'var(--spacing-md)', textAlign: 'right' }}>التفاصيل</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -132,6 +134,14 @@ export default function ApplicantsPage() {
                                                         {new Date(applicant.registration_date).toLocaleDateString('ar-SA')}
                                                     </div>
                                                 </td>
+                                                <td style={{ padding: 'var(--spacing-md)' }}>
+                                                    <button
+                                                        onClick={() => setViewingApplicant(applicant)}
+                                                        className="btn btn-sm btn-secondary"
+                                                    >
+                                                        عرض
+                                                    </button>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -148,6 +158,71 @@ export default function ApplicantsPage() {
                 <div className="card" style={{ textAlign: 'center', padding: 'var(--spacing-2xl)', border: '2px dashed var(--color-border)', background: 'transparent' }}>
                     <BookOpen size={48} style={{ color: 'var(--color-border)', marginBottom: 'var(--spacing-md)' }} />
                     <h3 style={{ color: 'var(--color-text-muted)' }}>يرجى اختيار دورة من القائمة أعلاه لعرض المسجلين</h3>
+                </div>
+            )}
+
+            {/* Applicant Details Modal */}
+            {viewingApplicant && (
+                <div style={{
+                    position: 'fixed',
+                    inset: 0,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    backdropFilter: 'blur(4px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 3000,
+                    padding: 'var(--spacing-md)'
+                }}>
+                    <div className="card" style={{ maxWidth: '600px', width: '100%', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}>
+                        <button
+                            onClick={() => setViewingApplicant(null)}
+                            style={{ position: 'absolute', top: 'var(--spacing-md)', left: 'var(--spacing-md)', padding: '5px', borderRadius: '50%', background: 'var(--color-border)', border: 'none', cursor: 'pointer' }}
+                        >
+                            ✕
+                        </button>
+
+                        <h2 style={{ marginBottom: 'var(--spacing-lg)', borderBottom: '2px solid var(--color-primary)', paddingBottom: 'var(--spacing-xs)' }}>
+                            تفاصيل المسجل: {viewingApplicant.full_name}
+                        </h2>
+
+                        <div style={{ display: 'grid', gap: 'var(--spacing-md)' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 'var(--spacing-md)' }}>
+                                <span style={{ fontWeight: 600 }}>رقم الجوال:</span>
+                                <span dir="ltr">{viewingApplicant.phone}</span>
+
+                                <span style={{ fontWeight: 600 }}>البريد الإلكتروني:</span>
+                                <span>{viewingApplicant.email}</span>
+
+                                <span style={{ fontWeight: 600 }}>تاريخ التسجيل:</span>
+                                <span>{new Date(viewingApplicant.registration_date).toLocaleString('ar-SA')}</span>
+                            </div>
+
+                            <div style={{ marginTop: 'var(--spacing-lg)' }}>
+                                <h3 style={{ fontSize: '1.1rem', marginBottom: 'var(--spacing-md)', color: 'var(--color-primary)' }}>ردود النموذج:</h3>
+                                <div style={{ background: 'var(--color-background)', padding: 'var(--spacing-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}>
+                                    {Object.entries(viewingApplicant.form_responses || {}).length > 0 ? (
+                                        <div style={{ display: 'grid', gap: 'var(--spacing-sm)' }}>
+                                            {Object.entries(viewingApplicant.form_responses).map(([key, value]: [string, any]) => (
+                                                <div key={key} style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '4px' }}>
+                                                    <div style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginBottom: '2px' }}>{key}</div>
+                                                    <div style={{ fontWeight: 500 }}>
+                                                        {Array.isArray(value) ? value.join(', ') : String(value)}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p style={{ color: 'var(--color-text-muted)', fontStyle: 'italic', textAlign: 'center' }}>لا توجد ردود إضافية</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ marginTop: 'var(--spacing-xl)', textAlign: 'center' }}>
+                            <button onClick={() => setViewingApplicant(null)} className="btn btn-primary" style={{ width: '100%' }}>إغلاق</button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

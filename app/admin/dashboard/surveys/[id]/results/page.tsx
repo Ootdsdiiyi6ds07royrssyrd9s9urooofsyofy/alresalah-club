@@ -64,11 +64,17 @@ export default function SurveyResultsPage() {
                 .order('created_at', { ascending: false })
 
             if (rError) throw rError
-            setResponses(responsesData)
+            console.log('Survey Results Debug:', {
+                survey: surveyData,
+                questionsCount: questionsData?.length,
+                responsesCount: responsesData?.length,
+                sampleResponse: (responsesData?.[0] as any)?.responses
+            })
+            setResponses(responsesData || [])
 
         } catch (error: any) {
             console.error('Error loading results:', error)
-            alert('فشل تحميل النتائج')
+            alert('فشل تحميل النتائج: ' + error.message)
         } finally {
             setLoading(false)
         }
@@ -77,7 +83,7 @@ export default function SurveyResultsPage() {
     const getQuestionStats = (questionId: string, type: string) => {
         if (!responses.length) return 'لا توجد إجابات بعد'
 
-        const answers = responses.map(r => r.responses[questionId]).filter(Boolean)
+        let answers = responses.map(r => r.responses[questionId]).filter(v => v !== undefined && v !== null && v !== '')
 
         if (answers.length === 0) return 'لا توجد إجابات لهذا السؤال'
 
@@ -87,14 +93,20 @@ export default function SurveyResultsPage() {
             return `المتوسط: ${avg} / 5 (${answers.length} إجابة)`
         }
 
-        if (type === 'yes_no' || type === 'multiple_choice') {
+        if (['yes_no', 'multiple_choice', 'select', 'radio', 'checkbox'].includes(type)) {
             const counts: any = {}
             answers.forEach((a: any) => {
-                counts[a] = (counts[a] || 0) + 1
+                if (Array.isArray(a)) {
+                    a.forEach(val => {
+                        counts[val] = (counts[val] || 0) + 1
+                    })
+                } else {
+                    counts[a] = (counts[a] || 0) + 1
+                }
             })
             return Object.entries(counts)
                 .map(([key, value]) => `${key}: ${value}`)
-                .join(' | ')
+                .join(' | ') + ` (${answers.length} إجابة)`
         }
 
         return `تمت الإجابة ${answers.length} مرة (نص)`

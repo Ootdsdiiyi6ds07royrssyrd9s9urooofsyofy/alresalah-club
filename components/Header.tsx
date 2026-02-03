@@ -47,7 +47,7 @@ export default function Header() {
                             </svg>
                         </button>
                         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
-                            <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '90px', width: 'auto' }} />
+                            <img src="/logo.png" alt="Al-Resalah Club Logo" className="header-logo" />
                         </Link>
                     </div>
 
@@ -75,10 +75,18 @@ export default function Header() {
                     font-size: var(--font-size-sm);
                     transition: color var(--transition-fast);
                 }
+                .header-logo {
+                    height: 90px;
+                    width: auto;
+                    transition: height var(--transition-base);
+                }
                 .nav-link:hover {
                     color: var(--color-primary);
                 }
                 @media (max-width: 768px) {
+                    .header-logo {
+                        height: 50px;
+                    }
                     .no-mobile {
                         display: none;
                     }

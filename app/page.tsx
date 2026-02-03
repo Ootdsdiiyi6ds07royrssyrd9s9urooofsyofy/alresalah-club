@@ -111,7 +111,7 @@ export default function HomePage() {
             <section style={{ padding: 'var(--spacing-xl) 0' }}>
                 <div className="container">
                     <div className="card" style={{
-                        background: 'linear-gradient(135deg, var(--color-beige) 0%, #fff 100%)',
+                        background: 'var(--color-surface)',
                         border: '1px solid var(--color-gold)',
                         display: 'flex',
                         flexWrap: 'wrap',
@@ -123,10 +123,10 @@ export default function HomePage() {
                             <span className="badge badge-warning" style={{ marginBottom: 'var(--spacing-sm)', padding: '4px 12px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                                 <Trophy size={16} /> لقب العام
                             </span>
-                            <h2 style={{ fontSize: '2rem', marginBottom: 'var(--spacing-sm)', color: 'var(--color-navy)' }}>
+                            <h2 style={{ fontSize: '2rem', marginBottom: 'var(--spacing-sm)', color: 'var(--color-text)' }}>
                                 الفائز بلقب المتعلم الذكي
                             </h2>
-                            <p style={{ fontSize: '1.1rem', color: 'var(--color-navy)', marginBottom: 'var(--spacing-lg)', lineHeight: '1.6' }}>
+                            <p style={{ fontSize: '1.1rem', color: 'var(--color-text-secondary)', marginBottom: 'var(--spacing-lg)', lineHeight: '1.6' }}>
                                 {smartLearner.description}
                             </p>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', flexWrap: 'wrap' }}>
@@ -161,12 +161,14 @@ export default function HomePage() {
                                     position: 'absolute',
                                     bottom: '-15px',
                                     right: '-15px',
-                                    background: 'var(--color-navy)',
+                                    background: 'var(--color-learner-badge)',
                                     color: 'white',
                                     padding: '4px 12px',
                                     borderRadius: 'var(--radius-md)',
                                     fontWeight: 'bold',
-                                    fontSize: '0.9rem'
+                                    fontSize: '0.9rem',
+                                    boxShadow: 'var(--shadow-md)',
+                                    zIndex: 2
                                 }}>الذكي 2026</div>
                             </div>
                         </div>

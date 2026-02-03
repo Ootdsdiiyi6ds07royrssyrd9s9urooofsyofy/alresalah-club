@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 
 interface Question {
     text: string
-    type: 'text' | 'rating' | 'multiple_choice' | 'yes_no'
+    type: 'text' | 'email' | 'phone' | 'number' | 'date' | 'select' | 'textarea' | 'checkbox' | 'radio' | 'rating' | 'yes_no'
     required: boolean
     options?: string[]
 }
@@ -98,7 +98,7 @@ export default function NewSurveyPage() {
 
         const { error: questionsError } = await (supabase
             .from('survey_questions')
-            .insert(questionsToInsert) as any)
+            .insert(questionsToInsert as any) as any)
 
         setLoading(false)
 
@@ -188,17 +188,31 @@ export default function NewSurveyPage() {
                                         <select
                                             className="input"
                                             value={q.type}
-                                            onChange={(e) => updateQuestion(qIndex, { type: e.target.value as any, options: e.target.value === 'multiple_choice' ? [''] : undefined })}
+                                            onChange={(e) => {
+                                                const newType = e.target.value as any
+                                                const needsOptions = ['select', 'radio', 'checkbox'].includes(newType)
+                                                updateQuestion(qIndex, {
+                                                    type: newType,
+                                                    options: needsOptions ? (q.options || ['']) : undefined
+                                                })
+                                            }}
                                         >
                                             <option value="text">نص (إجابة حرة)</option>
+                                            <option value="textarea">نص طويل (textarea)</option>
                                             <option value="rating">تقييم (1-5 نجوم)</option>
-                                            <option value="multiple_choice">خيارات متعددة</option>
+                                            <option value="select">قائمة خيارات (select)</option>
+                                            <option value="radio">اختيار واحد (radio)</option>
+                                            <option value="checkbox">اختيارات متعددة (checkbox)</option>
                                             <option value="yes_no">نعم / لا</option>
+                                            <option value="email">بريد إلكتروني</option>
+                                            <option value="phone">رقم جوال</option>
+                                            <option value="number">رقم</option>
+                                            <option value="date">تاريخ</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                {q.type === 'multiple_choice' && (
+                                {['select', 'radio', 'checkbox'].includes(q.type) && (
                                     <div style={{ marginLeft: 'var(--spacing-xl)', marginBottom: 'var(--spacing-md)', padding: 'var(--spacing-md)', backgroundColor: 'var(--color-border)', borderRadius: 'var(--radius-sm)' }}>
                                         <label className="label">الخيارات:</label>
                                         {q.options?.map((opt, oIndex) => (
