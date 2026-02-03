@@ -15,6 +15,13 @@ export default function EditProgramPage({ params }: { params: { id: string } }) 
         description: '',
         duration: '',
         category: '',
+        instructor: '',
+        start_date: '',
+        end_date: '',
+        location: '',
+        price: 0,
+        total_seats: 0,
+        available_seats: 0,
         is_active: true
     })
 
@@ -29,16 +36,25 @@ export default function EditProgramPage({ params }: { params: { id: string } }) 
             .eq('id', params.id)
             .single()
 
+        const programData = data as any;
+
         if (error) {
             console.error('Error fetching program:', error)
             alert('فشل تحميل بيانات البرنامج')
         } else {
             setFormData({
-                title: data.title,
-                description: data.description || '',
-                duration: data.duration || '',
-                category: data.category || '',
-                is_active: data.is_active
+                title: programData.title,
+                description: programData.description || '',
+                duration: programData.duration || '',
+                category: programData.category || '',
+                instructor: programData.instructor || '',
+                start_date: programData.start_date || '',
+                end_date: programData.end_date || '',
+                location: programData.location || '',
+                price: programData.price || 0,
+                total_seats: programData.total_seats || 0,
+                available_seats: programData.available_seats || 0,
+                is_active: programData.is_active
             })
         }
         setLoading(false)
@@ -127,12 +143,73 @@ export default function EditProgramPage({ params }: { params: { id: string } }) 
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-md)' }}>
                     <div className="form-group">
+                        <label className="label">المحاضر / المسؤول</label>
+                        <input
+                            type="text"
+                            className="input"
+                            value={formData.instructor}
+                            onChange={(e) => setFormData({ ...formData, instructor: e.target.value })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label className="label">الموقع</label>
+                        <input
+                            type="text"
+                            className="input"
+                            value={formData.location}
+                            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                            placeholder="مثال: قاعة النادي، عن بعد"
+                        />
+                    </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--spacing-md)' }}>
+                    <div className="form-group">
+                        <label className="label">السعر</label>
+                        <input
+                            type="number"
+                            className="input"
+                            value={formData.price}
+                            onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label className="label">إجمالي المقاعد</label>
+                        <input
+                            type="number"
+                            className="input"
+                            value={formData.total_seats}
+                            onChange={(e) => setFormData({ ...formData, total_seats: parseInt(e.target.value), available_seats: parseInt(e.target.value) })}
+                        />
+                    </div>
+                    <div className="form-group">
                         <label className="label">الفئة</label>
                         <input
                             type="text"
                             className="input"
                             value={formData.category}
                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        />
+                    </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--spacing-md)' }}>
+                    <div className="form-group">
+                        <label className="label">تاريخ البدء</label>
+                        <input
+                            type="date"
+                            className="input"
+                            value={formData.start_date}
+                            onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label className="label">تاريخ الانتهاء</label>
+                        <input
+                            type="date"
+                            className="input"
+                            value={formData.end_date}
+                            onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
                         />
                     </div>
                     <div className="form-group">

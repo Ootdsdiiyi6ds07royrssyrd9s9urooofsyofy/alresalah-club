@@ -115,9 +115,7 @@ export default function RegistrationForm({ formId, courseId, courseTitle, availa
                 <div style={{ fontSize: '3rem', marginBottom: 'var(--spacing-md)' }}>✅</div>
                 <h3 style={{ marginBottom: 'var(--spacing-md)', color: 'var(--color-success)' }}>تم التسجيل بنجاح!</h3>
                 <p>تم استلام طلبك للتسجيل في {courseTitle}.</p>
-                <div style={{ marginTop: 'var(--spacing-lg)' }}>
-                    <button onClick={() => window.location.reload()} className="btn btn-secondary btn-sm">تسجيل آخر</button>
-                </div>
+
             </div>
         )
     }

@@ -143,15 +143,7 @@ export default function HomePage() {
                                     overflow: 'hidden',
                                     flexShrink: 0
                                 }}>
-                                    {smartLearner.image_url ? (
-                                        <img
-                                            src={smartLearner.image_url}
-                                            alt={smartLearner.name}
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                        />
-                                    ) : (
-                                        <GraduationCap size={30} />
-                                    )}
+                                    <GraduationCap size={30} />
                                 </div>
                                 <div>
                                     <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--color-primary)' }}>{smartLearner.name}</h3>

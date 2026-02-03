@@ -22,7 +22,8 @@ export default function NewSurveyPage() {
     })
 
     const [questions, setQuestions] = useState<Question[]>([
-        { text: '', type: 'text', required: true }
+        { text: 'الاسم الكامل', type: 'text', required: true },
+        { text: 'البريد الإلكتروني', type: 'text', required: true }
     ])
 
     const addQuestion = () => {
@@ -30,6 +31,10 @@ export default function NewSurveyPage() {
     }
 
     const removeQuestion = (index: number) => {
+        if (index < 2) {
+            alert('لا يمكن حذف حقول الهوية الأساسية (الاسم والبريد)')
+            return
+        }
         const newQuestions = [...questions]
         newQuestions.splice(index, 1)
         setQuestions(newQuestions)
@@ -153,14 +158,18 @@ export default function NewSurveyPage() {
                     <div style={{ display: 'grid', gap: 'var(--spacing-md)' }}>
                         {questions.map((q, qIndex) => (
                             <div key={qIndex} className="card" style={{ borderRight: '4px solid var(--color-primary)', position: 'relative' }}>
-                                <button
-                                    type="button"
-                                    onClick={() => removeQuestion(qIndex)}
-                                    style={{ position: 'absolute', top: '10px', left: '10px', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-error)' }}
-                                    title="حذف السؤال"
-                                >
-                                    ❌
-                                </button>
+                                {qIndex >= 2 ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => removeQuestion(qIndex)}
+                                        style={{ position: 'absolute', top: '10px', left: '10px', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-error)' }}
+                                        title="حذف السؤال"
+                                    >
+                                        ❌
+                                    </button>
+                                ) : (
+                                    <span style={{ fontSize: '0.75rem', position: 'absolute', top: '10px', left: '10px', color: 'var(--color-accent)' }}>حقل أساسي 🔒</span>
+                                )}
 
                                 <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
                                     <div className="form-group">

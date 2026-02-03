@@ -13,6 +13,13 @@ export default function NewProgramPage() {
         description: '',
         duration: '',
         category: '',
+        instructor: '',
+        start_date: '',
+        end_date: '',
+        location: '',
+        price: 0,
+        total_seats: 0,
+        available_seats: 0,
         is_active: true
     })
 
@@ -65,6 +72,46 @@ export default function NewProgramPage() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-md)' }}>
                     <div className="form-group">
+                        <label className="label">المحاضر / المسؤول</label>
+                        <input
+                            type="text"
+                            className="input"
+                            value={formData.instructor}
+                            onChange={(e) => setFormData({ ...formData, instructor: e.target.value })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label className="label">الموقع</label>
+                        <input
+                            type="text"
+                            className="input"
+                            value={formData.location}
+                            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                            placeholder="مثال: قاعة النادي، عن بعد"
+                        />
+                    </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--spacing-md)' }}>
+                    <div className="form-group">
+                        <label className="label">السعر</label>
+                        <input
+                            type="number"
+                            className="input"
+                            value={formData.price}
+                            onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label className="label">إجمالي المقاعد</label>
+                        <input
+                            type="number"
+                            className="input"
+                            value={formData.total_seats}
+                            onChange={(e) => setFormData({ ...formData, total_seats: parseInt(e.target.value), available_seats: parseInt(e.target.value) })}
+                        />
+                    </div>
+                    <div className="form-group">
                         <label className="label">الفئة</label>
                         <input
                             type="text"
@@ -72,6 +119,27 @@ export default function NewProgramPage() {
                             value={formData.category}
                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                             placeholder="مثال: تربوي، تقني"
+                        />
+                    </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--spacing-md)' }}>
+                    <div className="form-group">
+                        <label className="label">تاريخ البدء</label>
+                        <input
+                            type="date"
+                            className="input"
+                            value={formData.start_date}
+                            onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label className="label">تاريخ الانتهاء</label>
+                        <input
+                            type="date"
+                            className="input"
+                            value={formData.end_date}
+                            onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
                         />
                     </div>
                     <div className="form-group">

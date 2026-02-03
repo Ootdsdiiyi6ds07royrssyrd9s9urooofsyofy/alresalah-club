@@ -27,79 +27,61 @@ export async function exportApplicantsToExcel(options: ExportOptions): Promise<B
 
     // Create workbook and worksheet
     const workbook = new ExcelJS.Workbook()
-    const worksheet = workbook.addWorksheet(options.courseName)
-
-    // Get all unique form field keys from responses
-    const allFieldKeys = new Set<string>()
-    applicants.forEach(applicant => {
-        if (applicant.form_responses && typeof applicant.form_responses === 'object') {
-            Object.keys(applicant.form_responses).forEach(key => allFieldKeys.add(key))
-        }
+    const worksheet = workbook.addWorksheet(options.courseName, {
+        views: [{ rightToLeft: true }] // Set RTL for Arabic users
     })
 
-    // Define columns
+    // Define columns in Arabic
     const columns: Partial<ExcelJS.Column>[] = [
-        { header: 'Registration ID', key: 'id', width: 38 },
-        { header: 'Full Name', key: 'full_name', width: 25 },
-        { header: 'Email', key: 'email', width: 30 },
-        { header: 'Phone', key: 'phone', width: 18 },
-        { header: 'Status', key: 'status', width: 12 },
-        { header: 'Registration Date', key: 'registration_date', width: 20 },
+        { header: 'الاسم الكامل', key: 'full_name', width: 30 },
+        { header: 'البريد الإلكتروني', key: 'email', width: 35 },
+        { header: 'رقم الجوال', key: 'phone', width: 20 },
+        { header: 'تاريخ التسجيل', key: 'registration_date', width: 22 },
     ]
 
-    // Add dynamic form field columns
-    Array.from(allFieldKeys).forEach(key => {
-        columns.push({
-            header: key,
-            key: `field_${key}`,
-            width: 20,
-        })
-    })
+    // Style configuration
+    const headerStyle: Partial<ExcelJS.Style> = {
+        font: { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 },
+        fill: {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FF1E3A8A' } // Dark Blue
+        },
+        alignment: { horizontal: 'center', vertical: 'middle' },
+        border: {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+        }
+    }
 
     worksheet.columns = columns
-
-    // Style header row
-    worksheet.getRow(1).font = { bold: true, size: 12 }
-    worksheet.getRow(1).fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FF1a3a52' }, // Navy Blue
-    }
-    worksheet.getRow(1).font = { bold: true, color: { argb: 'FFf5f1e8' } } // Beige text
-    worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' }
-    worksheet.getRow(1).height = 25
+    worksheet.getRow(1).style = headerStyle
 
     // Add data rows
     applicants.forEach(applicant => {
-        const rowData: any = {
-            id: applicant.id,
+        worksheet.addRow({
             full_name: applicant.full_name,
             email: applicant.email,
             phone: applicant.phone,
-            status: applicant.status,
-            registration_date: format(new Date(applicant.registration_date), 'yyyy-MM-dd HH:mm:ss'),
-        }
-
-        // Add form field responses
-        if (applicant.form_responses && typeof applicant.form_responses === 'object') {
-            Object.entries(applicant.form_responses).forEach(([key, value]) => {
-                rowData[`field_${key}`] = typeof value === 'object' ? JSON.stringify(value) : value
-            })
-        }
-
-        worksheet.addRow(rowData)
+            registration_date: format(new Date(applicant.registration_date), 'yyyy-MM-dd HH:mm'),
+        })
     })
 
-    // Add borders to all cells
+    // Style data rows
     worksheet.eachRow((row, rowNumber) => {
-        row.eachCell((cell) => {
-            cell.border = {
-                top: { style: 'thin' },
-                left: { style: 'thin' },
-                bottom: { style: 'thin' },
-                right: { style: 'thin' },
-            }
-        })
+        if (rowNumber > 1) {
+            row.alignment = { horizontal: 'right', vertical: 'middle' }
+            row.eachCell((cell) => {
+                cell.border = {
+                    top: { style: 'thin' },
+                    left: { style: 'thin' },
+                    bottom: { style: 'thin' },
+                    right: { style: 'thin' }
+                }
+            })
+        }
     })
 
     // Auto-filter

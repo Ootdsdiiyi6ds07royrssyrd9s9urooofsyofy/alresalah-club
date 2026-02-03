@@ -100,27 +100,7 @@ export default function SmartLearnerSettings() {
                     />
                 </div>
 
-                <div className="form-group">
-                    <label className="label">صورة المتعلم (اختياري)</label>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
-                        {learner.image_url && (
-                            <img
-                                src={learner.image_url}
-                                alt="Preview"
-                                style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--color-border)' }}
-                            />
-                        )}
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            disabled={uploading}
-                            className="input"
-                            style={{ padding: '8px' }}
-                        />
-                    </div>
-                    {uploading && <span style={{ fontSize: '0.8rem', color: 'var(--color-primary)' }}>جاري الرفع...</span>}
-                </div>
+
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-md)' }}>
                     <div className="form-group">

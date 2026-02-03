@@ -86,7 +86,7 @@ export default async function CoursesListPage() {
                                     <a href={`/courses/${course.id}`} className="btn btn-secondary">
                                         التفاصيل
                                     </a>
-                                    <a href={`/register?courseId=${course.id}`} className="btn btn-primary">
+                                    <a href={`/courses/${course.id}#register`} className="btn btn-primary">
                                         سجل الآن
                                     </a>
                                 </div>

@@ -53,7 +53,7 @@ export default async function ProgramsPage() {
                                             <span>⏱️</span>
                                             <span>{program.duration || 'غير محدد'}</span>
                                         </div>
-                                        <button className="btn btn-secondary btn-sm">تعرف أكثر</button>
+                                        <a href={`/programs/${program.id}`} className="btn btn-secondary btn-sm">تعرف أكثر</a>
                                     </div>
                                 </div>
                             </div>
