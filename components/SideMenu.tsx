@@ -57,7 +57,9 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 }}
             >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-2xl)' }}>
-                    <h2 style={{ color: 'var(--color-primary)', margin: 0 }}>نادي الرسالة</h2>
+                    <Link href="/" onClick={onClose} style={{ textDecoration: 'none' }}>
+                        <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '140px', width: 'auto', objectFit: 'contain' }} />
+                    </Link>
                     <button
                         onClick={onClose}
                         style={{

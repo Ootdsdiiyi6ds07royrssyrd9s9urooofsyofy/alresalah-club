@@ -4,9 +4,15 @@ import { useState } from 'react'
 import ThemeToggle from './ThemeToggle'
 import SideMenu from './SideMenu'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const pathname = usePathname()
+
+    const isAdmin = pathname?.startsWith('/admin')
+
+    if (isAdmin) return null
 
     return (
         <>
@@ -76,7 +82,7 @@ export default function Header() {
                     transition: color var(--transition-fast);
                 }
                 .header-logo {
-                    height: 110px;
+                    height: 140px;
                     width: auto;
                     transition: height var(--transition-base);
                 }
@@ -85,7 +91,7 @@ export default function Header() {
                 }
                 @media (max-width: 768px) {
                     .header-logo {
-                        height: 65px;
+                        height: 90px;
                     }
                     .no-mobile {
                         display: none;

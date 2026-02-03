@@ -15,7 +15,9 @@ import {
     Settings,
     Menu,
     X,
-    LogOut
+    LogOut,
+    Home,
+    Globe
 } from 'lucide-react'
 
 interface AdminSidebarProps {
@@ -95,8 +97,8 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                 className="admin-sidebar"
             >
                 <div style={{ marginBottom: 'var(--spacing-lg)', textAlign: 'center' }}>
-                    <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '100px', width: 'auto', marginBottom: 'var(--spacing-xs)', objectFit: 'contain' }} />
-                    <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
+                    <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '140px', width: 'auto', marginBottom: 'var(--spacing-xs)', objectFit: 'contain' }} />
+                    <p style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'bold', color: 'var(--color-primary)' }}>
                         لوحة تحكم المسؤول
                     </p>
                 </div>
@@ -109,15 +111,38 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                     paddingBottom: 'var(--spacing-xl)' // Added padding at bottom for scroll space
                 }}>
                     <div onClick={() => setIsOpen(false)}>
-                        <NavLink href="/admin/dashboard" icon={<LayoutDashboard size={20} />}>لوحة التحكم</NavLink>
-                        <NavLink href="/admin/dashboard/courses" icon={<BookOpen size={20} />}>الدورات</NavLink>
-                        <NavLink href="/admin/dashboard/programs" icon={<GraduationCap size={20} />}>البرامج</NavLink>
-                        <NavLink href="/admin/dashboard/applicants" icon={<Users size={20} />}>المتقدمين</NavLink>
-                        <NavLink href="/admin/dashboard/surveys" icon={<ClipboardList size={20} />}>الاستبيانات</NavLink>
-                        <NavLink href="/admin/dashboard/announcements" icon={<Megaphone size={20} />}>الإعلانات</NavLink>
-                        <NavLink href="/admin/dashboard/gallery" icon={<ImageIcon size={20} />}>معرض الوسائط</NavLink>
-                        <NavLink href="/admin/dashboard/logs" icon={<Activity size={20} />}>سجل النشاطات</NavLink>
-                        <NavLink href="/admin/dashboard/settings" icon={<Settings size={20} />}>إعدادات المتعلم الذكي</NavLink>
+                        <div style={{ marginBottom: 'var(--spacing-md)' }}>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', padding: '0 var(--spacing-md)', marginBottom: 'var(--spacing-xs)', textTransform: 'uppercase', letterSpacing: '1px' }}>الإدارة</p>
+                            <NavLink href="/admin/dashboard" icon={<LayoutDashboard size={20} />}>الرئيسية (لوحة التحكم)</NavLink>
+                            <NavLink href="/admin/dashboard/applicants" icon={<Users size={20} />}>المتقدمين للمسارات</NavLink>
+                            <NavLink href="/admin/dashboard/surveys" icon={<ClipboardList size={20} />}>نتائج الاستبيانات</NavLink>
+                            <NavLink href="/admin/dashboard/logs" icon={<Activity size={20} />}>سجل النظام</NavLink>
+                        </div>
+
+                        <div style={{ marginBottom: 'var(--spacing-md)' }}>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', padding: '0 var(--spacing-md)', marginBottom: 'var(--spacing-xs)', textTransform: 'uppercase', letterSpacing: '1px' }}>المحتوى التعليمي</p>
+                            <NavLink href="/admin/dashboard/courses" icon={<BookOpen size={20} />}>إدارة الدورات</NavLink>
+                            <NavLink href="/admin/dashboard/programs" icon={<GraduationCap size={20} />}>إدارة البرامج</NavLink>
+                        </div>
+
+                        <div style={{ marginBottom: 'var(--spacing-md)' }}>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', padding: '0 var(--spacing-md)', marginBottom: 'var(--spacing-xs)', textTransform: 'uppercase', letterSpacing: '1px' }}>التواصل والميديا</p>
+                            <NavLink href="/admin/dashboard/announcements" icon={<Megaphone size={20} />}>الإعلانات</NavLink>
+                            <NavLink href="/admin/dashboard/gallery" icon={<ImageIcon size={20} />}>المعرض</NavLink>
+                        </div>
+
+                        <div style={{ marginBottom: 'var(--spacing-md)' }}>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', padding: '0 var(--spacing-md)', marginBottom: 'var(--spacing-xs)', textTransform: 'uppercase', letterSpacing: '1px' }}>الإعدادات</p>
+                            <NavLink href="/admin/dashboard/settings" icon={<Settings size={20} />}>المتعلم الذكي</NavLink>
+                        </div>
+
+                        <div style={{ marginTop: 'var(--spacing-xl)', paddingTop: 'var(--spacing-md)', borderTop: '1px solid var(--color-border)' }}>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', padding: '0 var(--spacing-md)', marginBottom: 'var(--spacing-xs)', textTransform: 'uppercase', letterSpacing: '1px' }}>روابط الموقع العام</p>
+                            <NavLink href="/" icon={<Home size={20} />}>الموقع الرئيسي</NavLink>
+                            <NavLink href="/courses" icon={<BookOpen size={20} />}>كل الدورات</NavLink>
+                            <NavLink href="/programs" icon={<GraduationCap size={20} />}>كل البرامج</NavLink>
+                            <NavLink href="/surveys" icon={<ClipboardList size={20} />}>الاستبيانات العامة</NavLink>
+                        </div>
                     </div>
                 </nav>
 

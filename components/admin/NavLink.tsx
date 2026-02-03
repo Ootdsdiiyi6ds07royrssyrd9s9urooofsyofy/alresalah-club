@@ -4,7 +4,7 @@ import React from 'react'
 
 interface NavLinkProps {
     href: string
-    icon: string
+    icon: React.ReactNode
     children: React.ReactNode
 }
 
