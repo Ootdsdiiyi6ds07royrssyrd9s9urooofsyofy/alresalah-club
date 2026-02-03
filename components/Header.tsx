@@ -170,7 +170,7 @@ export default function Header() {
                 }
                 @media (max-width: 768px) {
                     .header-logo {
-                        height: 90px;
+                        height: 50px;
                     }
                     .no-mobile {
                         display: none;
