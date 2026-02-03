@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect } from 'react'
-import { Home, BookOpen, GraduationCap, Megaphone, CheckSquare, Image as ImageIcon, LayoutDashboard, X, Download } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Home, BookOpen, GraduationCap, Megaphone, CheckSquare, Image as ImageIcon, LayoutDashboard, X, Download, Share, PlusSquare } from 'lucide-react'
 import { usePWA } from '@/hooks/usePWA'
 
 import Image from 'next/image'
@@ -102,7 +102,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                     <MenuLink href="/admin/login" onClick={onClose} icon={<LayoutDashboard size={20} />}>لوحة التحكم</MenuLink>
                 </nav>
 
-                <PWAInstallButton />
+                <PWAInstallContainer />
 
                 <div style={{ marginTop: 'auto', textAlign: 'center' }}>
                     <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-xs)' }}>
@@ -148,16 +148,91 @@ function MenuLink({ href, children, onClick, icon }: { href: string; children: R
     )
 }
 
-function PWAInstallButton() {
-    const { isInstallable, isStandalone, installPWA } = usePWA()
+function PWAInstallContainer() {
+    const { isInstallable, isStandalone, isIOS, installPWA } = usePWA()
+    const [showIOSInstructions, setShowIOSInstructions] = useState(false)
 
-    if (isStandalone || !isInstallable) return null
+    if (isStandalone) return null
+
+    if (isIOS) {
+        return (
+            <div style={{ marginTop: 'var(--spacing-xl)' }}>
+                {!showIOSInstructions ? (
+                    <button
+                        onClick={() => setShowIOSInstructions(true)}
+                        style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 'var(--spacing-md)',
+                            padding: 'var(--spacing-md)',
+                            borderRadius: 'var(--radius-lg)',
+                            background: 'linear-gradient(135deg, var(--color-primary) 0%, #2c5e84 100%)',
+                            color: 'white',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontWeight: 600,
+                            fontSize: 'var(--font-size-sm)',
+                            boxShadow: '0 4px 15px rgba(26, 58, 82, 0.3)',
+                            transition: 'all 0.3s ease',
+                        }}
+                    >
+                        <Download size={20} />
+                        تثبيت التطبيق على الآيفون
+                    </button>
+                ) : (
+                    <div style={{
+                        padding: 'var(--spacing-md)',
+                        backgroundColor: 'rgba(var(--color-primary-rgb), 0.1)',
+                        borderRadius: 'var(--radius-lg)',
+                        border: '1px solid var(--color-primary)',
+                        fontSize: 'var(--font-size-xs)',
+                        color: 'var(--color-text)',
+                        lineHeight: '1.6',
+                        animation: 'fadeIn 0.3s ease'
+                    }}>
+                        <p style={{ fontWeight: 600, marginBottom: 'var(--spacing-xs)', color: 'var(--color-primary)' }}>لتثبيت التطبيق على آيفون:</p>
+                        <ol style={{ paddingRight: '20px', margin: 0 }}>
+                            <li>اضغط على زر المشاركة <Share size={14} style={{ display: 'inline', verticalAlign: 'middle' }} /> في الأسفل</li>
+                            <li>اختر "إضافة إلى الشاشة الرئيسية" <PlusSquare size={14} style={{ display: 'inline', verticalAlign: 'middle' }} /></li>
+                            <li>اضغط "إضافة" في الزاوية العلوية</li>
+                        </ol>
+                        <button
+                            onClick={() => setShowIOSInstructions(false)}
+                            style={{
+                                marginTop: 'var(--spacing-sm)',
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--color-primary)',
+                                cursor: 'pointer',
+                                fontSize: 'var(--font-size-xs)',
+                                fontWeight: 500,
+                                padding: 0
+                            }}
+                        >
+                            إغلاق التعليمات
+                        </button>
+                    </div>
+                )}
+                <style jsx>{`
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                `}</style>
+            </div>
+        )
+    }
+
+    if (!isInstallable) return null
 
     return (
         <button
             onClick={installPWA}
             style={{
                 marginTop: 'var(--spacing-xl)',
+                width: '100%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

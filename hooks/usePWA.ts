@@ -15,6 +15,7 @@ export function usePWA() {
     const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
     const [isInstallable, setIsInstallable] = useState(false)
     const [isStandalone, setIsStandalone] = useState(false)
+    const [isIOS, setIsIOS] = useState(false)
 
     useEffect(() => {
         // Check if app is already installed
@@ -22,7 +23,16 @@ export function usePWA() {
             (window.navigator as any).standalone === true
         setIsStandalone(isStandaloneMode)
 
+        // Detect iOS
+        const userAgent = window.navigator.userAgent.toLowerCase()
+        const isIOSDevice = /iphone|ipad|ipod/.test(userAgent)
+        setIsIOS(isIOSDevice)
+
+        // Log PWA state for debugging
+        console.log('PWA Check:', { isStandaloneMode, isIOSDevice })
+
         const handler = (e: Event) => {
+            console.log('beforeinstallprompt event fired')
             // Prevent the mini-infobar from appearing on mobile
             e.preventDefault()
             // Stash the event so it can be triggered later.
@@ -45,7 +55,10 @@ export function usePWA() {
     }, [])
 
     const installPWA = async () => {
-        if (!deferredPrompt) return
+        if (!deferredPrompt) {
+            console.log('No deferred prompt available')
+            return
+        }
 
         // Show the install prompt
         await deferredPrompt.prompt()
@@ -59,5 +72,5 @@ export function usePWA() {
         setIsInstallable(false)
     }
 
-    return { isInstallable, isStandalone, installPWA }
+    return { isInstallable, isStandalone, isIOS, installPWA }
 }
