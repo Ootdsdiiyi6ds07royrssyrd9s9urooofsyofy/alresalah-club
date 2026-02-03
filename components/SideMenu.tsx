@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { Home, BookOpen, GraduationCap, Megaphone, CheckSquare, Image as ImageIcon, LayoutDashboard, X } from 'lucide-react'
+import { Home, BookOpen, GraduationCap, Megaphone, CheckSquare, Image as ImageIcon, LayoutDashboard, X, Download } from 'lucide-react'
+import { usePWA } from '@/hooks/usePWA'
 
 import Image from 'next/image'
 
@@ -100,6 +101,8 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                     <div style={{ margin: 'var(--spacing-md) 0', borderTop: '1px solid var(--color-border)' }} />
                     <MenuLink href="/admin/login" onClick={onClose} icon={<LayoutDashboard size={20} />}>لوحة التحكم</MenuLink>
                 </nav>
+
+                <PWAInstallButton />
 
                 <div style={{ marginTop: 'auto', textAlign: 'center' }}>
                     <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-xs)' }}>

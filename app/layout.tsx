@@ -85,6 +85,19 @@ export const metadata: Metadata = {
     alternates: {
         canonical: 'https://alresalah.club',
     },
+    manifest: '/manifest.webmanifest',
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: 'default',
+        title: 'نادي الرسالة',
+    },
+    formatDetection: {
+        telephone: false,
+    },
+    icons: {
+        shortcut: '/pwa-icon.png',
+        apple: '/pwa-icon.png',
+    },
 }
 
 export default function RootLayout({
