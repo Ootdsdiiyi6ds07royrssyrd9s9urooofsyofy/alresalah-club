@@ -127,8 +127,8 @@ export default function Header() {
                             <Image
                                 src="/logo.png"
                                 alt="Al-Resalah Club Logo"
-                                width={140}
-                                height={140}
+                                width={100}
+                                height={100}
                                 priority
                                 className="header-logo"
                                 style={{ objectFit: 'contain' }}
@@ -161,7 +161,7 @@ export default function Header() {
                     transition: color var(--transition-fast);
                 }
                 .header-logo {
-                    height: 140px;
+                    height: 100px;
                     width: auto;
                     transition: height var(--transition-base);
                 }
@@ -170,7 +170,7 @@ export default function Header() {
                 }
                 @media (max-width: 768px) {
                     .header-logo {
-                        height: 50px;
+                        height: 40px;
                     }
                     .no-mobile {
                         display: none;
