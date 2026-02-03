@@ -28,27 +28,58 @@ export default function GlobalLoading() {
         <div style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(var(--color-surface), 0.7)',
-            backdropFilter: 'blur(8px)',
+            backgroundColor: 'rgba(var(--color-surface), 0.85)',
+            backdropFilter: 'blur(12px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 9999,
             pointerEvents: 'all',
-            transition: 'opacity 0.2s ease-in-out'
+            opacity: isLoading ? 1 : 0,
+            visibility: isLoading ? 'visible' : 'hidden',
+            transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s'
         }}>
-            <div className="pulse-logo">
-                <img src="/logo.png" alt="Loading..." style={{ height: '180px', width: 'auto' }} />
+            <div className="loading-container">
+                <img src="/logo.png" alt="Loading..." style={{ height: '160px', width: 'auto' }} />
+                <div className="progress-bar-container">
+                    <div className="progress-bar-fill"></div>
+                </div>
             </div>
 
             <style jsx>{`
-                .pulse-logo {
-                    animation: pulse 1.2s infinite ease-in-out;
+                .loading-container {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: var(--spacing-xl);
+                    animation: float 3s infinite ease-in-out;
                 }
-                @keyframes pulse {
-                    0% { transform: scale(0.95); opacity: 0.8; }
-                    50% { transform: scale(1.05); opacity: 1; }
-                    100% { transform: scale(0.95); opacity: 0.8; }
+                .progress-bar-container {
+                    width: 200px;
+                    height: 4px;
+                    background: var(--color-border);
+                    border-radius: 2px;
+                    overflow: hidden;
+                    position: relative;
+                }
+                .progress-bar-fill {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    background: var(--color-primary);
+                    animation: progress 2s infinite ease-in-out;
+                    transform-origin: 0% 50%;
+                }
+                @keyframes float {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-10px); }
+                }
+                @keyframes progress {
+                    0% { transform: scaleX(0); left: 0; opacity: 1; }
+                    50% { transform: scaleX(0.7); left: 30%; opacity: 0.8; }
+                    100% { transform: scaleX(0); left: 100%; opacity: 0; }
                 }
             `}</style>
         </div>

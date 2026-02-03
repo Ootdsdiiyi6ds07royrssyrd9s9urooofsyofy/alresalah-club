@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Header from '@/components/Header'
 import GlobalLoading from '@/components/GlobalLoading'
+import SessionMonitor from '@/components/SessionMonitor'
 import { Suspense } from 'react'
 
 export const dynamic = 'force-dynamic'
@@ -88,6 +89,7 @@ export default function RootLayout({
                 <Suspense fallback={null}>
                     <GlobalLoading />
                 </Suspense>
+                <SessionMonitor />
                 <Header />
                 {children}
             </body>

@@ -36,6 +36,45 @@ export default function Header() {
 
     const isAdmin = pathname?.startsWith('/admin')
 
+    // Floating admin controls for admin pages
+    if (isAdmin && pathname !== '/admin/login') {
+        return (
+            <div style={{
+                position: 'fixed',
+                top: 'var(--spacing-md)',
+                left: 'var(--spacing-md)',
+                zIndex: 2000,
+                display: 'flex',
+                gap: 'var(--spacing-sm)',
+                alignItems: 'center',
+                padding: 'var(--spacing-xs)',
+                backgroundColor: 'rgba(var(--color-surface), 0.5)',
+                backdropFilter: 'blur(10px)',
+                borderRadius: 'var(--radius-lg)',
+                border: '1px solid var(--color-border)',
+                boxShadow: 'var(--shadow-md)'
+            }}>
+                <ThemeToggle />
+                <button
+                    onClick={handleSignOut}
+                    className="btn btn-secondary btn-sm"
+                    style={{
+                        padding: '8px',
+                        borderRadius: 'var(--radius-md)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                    title="تسجيل الخروج"
+                >
+                    <LogOut size={18} />
+                </button>
+            </div>
+        )
+    }
+
+    if (isAdmin) return null
+
     return (
         <>
             <header
@@ -89,24 +128,7 @@ export default function Header() {
 
                     <div style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
                         <ThemeToggle />
-                        {user ? (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
-                                <div className="no-mobile" style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', color: 'var(--color-primary)', fontSize: '0.85rem' }}>
-                                    <User size={16} />
-                                    <span>{user.email}</span>
-                                </div>
-                                <button
-                                    onClick={handleSignOut}
-                                    className="btn btn-secondary btn-sm"
-                                    style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}
-                                >
-                                    <LogOut size={16} />
-                                    <span className="no-mobile">خروج</span>
-                                </button>
-                            </div>
-                        ) : (
-                            <Link href="/admin/login" className="btn btn-primary btn-sm">دخول</Link>
-                        )}
+                        <Link href="/admin/login" className="btn btn-primary btn-sm">دخول</Link>
                     </div>
                 </div>
             </header>

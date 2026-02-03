@@ -9,6 +9,9 @@ export async function middleware(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith('/admin')) {
         // Skip login page
         if (request.nextUrl.pathname === '/admin/login') {
+            if (user) {
+                return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+            }
             return response
         }
 
