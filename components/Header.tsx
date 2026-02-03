@@ -1,18 +1,36 @@
 'use client'
 
-import { useState } from 'react'
-import ThemeToggle from './ThemeToggle'
-import SideMenu from './SideMenu'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import { LogOut, User } from 'lucide-react'
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [user, setUser] = useState<any>(null)
     const pathname = usePathname()
+    const router = useRouter()
+    const supabase = createClient()
+
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser()
+            setUser(user)
+        }
+        getUser()
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null)
+        })
+
+        return () => subscription.unsubscribe()
+    }, [supabase])
+
+    const handleSignOut = async () => {
+        await supabase.auth.signOut()
+        router.push('/admin/login')
+    }
 
     const isAdmin = pathname?.startsWith('/admin')
-
-    if (isAdmin) return null
 
     return (
         <>
@@ -67,7 +85,24 @@ export default function Header() {
 
                     <div style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
                         <ThemeToggle />
-                        <Link href="/admin/login" className="btn btn-primary btn-sm">دخول</Link>
+                        {user ? (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
+                                <div className="no-mobile" style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', color: 'var(--color-primary)', fontSize: '0.85rem' }}>
+                                    <User size={16} />
+                                    <span>{user.email}</span>
+                                </div>
+                                <button
+                                    onClick={handleSignOut}
+                                    className="btn btn-secondary btn-sm"
+                                    style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}
+                                >
+                                    <LogOut size={16} />
+                                    <span className="no-mobile">خروج</span>
+                                </button>
+                            </div>
+                        ) : (
+                            <Link href="/admin/login" className="btn btn-primary btn-sm">دخول</Link>
+                        )}
                     </div>
                 </div>
             </header>

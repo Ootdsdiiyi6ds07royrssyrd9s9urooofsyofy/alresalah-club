@@ -151,19 +151,10 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                     paddingTop: 'var(--spacing-md)',
                     marginTop: 'auto',
                     paddingBottom: 'calc(var(--spacing-md) + env(safe-area-inset-bottom, 0px))',
-                    backgroundColor: 'var(--color-surface)' // Keep background for sticky look if needed
+                    backgroundColor: 'var(--color-surface)',
+                    textAlign: 'center'
                 }}>
-                    <div style={{ marginBottom: 'var(--spacing-md)' }}>
-                        <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)', marginBottom: '4px' }}>مسجل كـ:</p>
-                        <p style={{ fontSize: 'var(--font-size-xs)', fontWeight: 500, wordBreak: 'break-all', opacity: 0.8 }}>{userEmail}</p>
-                    </div>
-                    <div style={{ display: 'flex', gap: 'var(--spacing-xs)', flexWrap: 'wrap', alignItems: 'center' }}>
-                        <ThemeToggle />
-                        <button onClick={handleSignOut} className="btn btn-secondary btn-sm" style={{ display: 'flex', gap: '6px', fontSize: 'var(--font-size-xs)', padding: '6px 10px' }}>
-                            <LogOut size={14} />
-                            خروج
-                        </button>
-                    </div>
+                    <p style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', margin: 0 }}>نادي الرسالة التعليمي © 2026</p>
                 </div>
 
                 <style jsx>{`

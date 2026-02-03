@@ -22,11 +22,11 @@ export default function SmartLearnerSettings() {
                 .from('site_settings')
                 .select('value')
                 .eq('id', 'smart_learner')
-                .single()
+                .single() as any
 
             if (data) {
                 // Ensure image_url exists in merged state
-                setLearner({ ...learner, ...data.value })
+                setLearner({ ...learner, ...data.value } as any)
             }
             setLoading(false)
         }
@@ -72,7 +72,7 @@ export default function SmartLearnerSettings() {
 
         const { error } = await supabase
             .from('site_settings')
-            .upsert({ id: 'smart_learner', value: learner })
+            .upsert({ id: 'smart_learner', value: learner } as any)
 
         setSaving(false)
 
@@ -138,10 +138,6 @@ export default function SmartLearnerSettings() {
                 </div>
             </form>
 
-            <div className="card" style={{ marginTop: 'var(--spacing-2xl)', border: '1px solid var(--color-gold)' }}>
-                <h3>⚠️ تنبيه تقني</h3>
-                <p>تأكد من وجود 'Buckets' باسم 'media' في Supabase Storage وأن سياسات الأمان تسمح بالرفع والقراءة (Public).</p>
-            </div>
         </div>
     )
 }

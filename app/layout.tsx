@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import Header from '@/components/Header'
+import GlobalLoading from '@/components/GlobalLoading'
+import { Suspense } from 'react'
 
 export const dynamic = 'force-dynamic'
 
@@ -83,6 +85,9 @@ export default function RootLayout({
     return (
         <html lang="ar" dir="rtl">
             <body>
+                <Suspense fallback={null}>
+                    <GlobalLoading />
+                </Suspense>
                 <Header />
                 {children}
             </body>
