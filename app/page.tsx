@@ -157,19 +157,6 @@ export default function HomePage() {
                                 borderRadius: 'var(--radius-lg)'
                             }}>
                                 <span style={{ color: 'var(--color-gold)' }}><Gem size={80} /></span>
-                                <div style={{
-                                    position: 'absolute',
-                                    bottom: '-15px',
-                                    right: '-15px',
-                                    background: 'var(--color-learner-badge)',
-                                    color: 'white',
-                                    padding: '4px 12px',
-                                    borderRadius: 'var(--radius-md)',
-                                    fontWeight: 'bold',
-                                    fontSize: '0.9rem',
-                                    boxShadow: 'var(--shadow-md)',
-                                    zIndex: 2
-                                }}>الذكي 2026</div>
                             </div>
                         </div>
                     </div>
