@@ -52,7 +52,7 @@ export default function HomePage() {
                 style={{
                     background: 'var(--grad-navy)',
                     color: 'white',
-                    padding: 'var(--spacing-2xl) 0 var(--spacing-3xl)',
+                    padding: 'var(--spacing-2xl) 0',
                     textAlign: 'center',
                     position: 'relative',
                     overflow: 'hidden',
@@ -61,51 +61,48 @@ export default function HomePage() {
             >
                 <div className="container" style={{ position: 'relative', zIndex: 2 }}>
                     <h2 className="hero-title" style={{
-                        fontSize: 'clamp(2rem, 8vw, 3.5rem)',
-                        marginBottom: 'var(--spacing-md)',
+                        fontSize: 'clamp(2.5rem, 5vw, 3.5rem)',
+                        marginBottom: 'var(--spacing-lg)',
                         color: 'white',
-                        textShadow: '0 2px 10px rgba(0,0,0,0.2)',
-                        lineHeight: 1.2
+                        textShadow: '0 2px 10px rgba(0,0,0,0.2)'
                     }}>
                         نادي الرسالة التعليمي
                     </h2>
                     <p className="hero-subtitle" style={{
-                        fontSize: 'clamp(1rem, 4vw, 1.25rem)',
+                        fontSize: 'clamp(1.1rem, 2vw, 1.5rem)',
                         marginBottom: 'var(--spacing-2xl)',
                         opacity: 0.9,
                         maxWidth: '800px',
-                        margin: '0 auto var(--spacing-2xl)',
-                        lineHeight: 1.5,
-                        padding: '0 var(--spacing-md)'
+                        margin: '0 auto var(--spacing-2xl)'
                     }}>
                         بوابتك نحو التميز والإبداع في رحلتك التعليمية. نقدم لك برامج تدريبية متكاملة تهدف إلى تطوير مهاراتك وبناء مستقبلك.
                     </p>
 
                     {/* Quick Access Buttons */}
-                    <div className="quick-buttons-grid" style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                        gap: 'var(--spacing-md)',
+                    <div style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'center',
+                        gap: 'var(--spacing-lg)',
                         maxWidth: '900px',
-                        margin: '0 auto',
-                        padding: '0 var(--spacing-md)'
+                        margin: '0 auto'
                     }}>
-                        <QuickButton href="/announcements" icon={<Megaphone size={24} />} label="الإعلانات" color="#3b82f6" />
-                        <QuickButton href="/surveys" icon={<CheckSquare size={24} />} label="الاستبيانات" color="#ef4444" />
-                        <QuickButton href="/gallery" icon={<ImageIcon size={24} />} label="المعرض" color="#10b981" />
-                        <QuickButton href="/courses" icon={<BookOpen size={24} />} label="الدورات" color="#f59e0b" />
-                        <QuickButton href="/programs" icon={<GraduationCap size={24} />} label="البرامج" color="#8b5cf6" />
+                        <QuickButton href="/announcements" icon={<Megaphone size={28} />} label="الإعلانات" color="#3b82f6" />
+                        <QuickButton href="/surveys" icon={<CheckSquare size={28} />} label="الاستبيانات" color="#ef4444" />
+                        <QuickButton href="/gallery" icon={<ImageIcon size={28} />} label="المعرض" color="#10b981" />
+                        <QuickButton href="/courses" icon={<BookOpen size={28} />} label="الدورات" color="#f59e0b" />
+                        <QuickButton href="/programs" icon={<GraduationCap size={28} />} label="البرامج" color="#8b5cf6" />
                     </div>
                 </div>
 
                 {/* Decorative background element */}
                 <div style={{
                     position: 'absolute',
-                    top: '-10%',
-                    right: '-5%',
-                    width: 'min(500px, 100vw)',
-                    height: '500px',
-                    background: 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%)',
+                    top: '-50%',
+                    right: '-10%',
+                    width: 'min(600px, 100vw)',
+                    height: '600px',
+                    background: 'radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%)',
                     borderRadius: '50%',
                     zIndex: 1,
                     pointerEvents: 'none'

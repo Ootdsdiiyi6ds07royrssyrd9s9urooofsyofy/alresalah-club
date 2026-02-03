@@ -90,11 +90,11 @@ export default function Header() {
                     position: 'sticky',
                     top: 0,
                     zIndex: 1000,
-                    backgroundColor: 'rgba(var(--color-surface), 0.85)',
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
+                    backgroundColor: 'rgba(var(--color-surface), 0.8)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
                     borderBottom: '1px solid var(--color-border)',
-                    padding: 'var(--spacing-sm) 0',
+                    padding: 'var(--spacing-md) 0',
                     transition: 'all var(--transition-base)',
                 }}
             >
@@ -124,17 +124,15 @@ export default function Header() {
                             </svg>
                         </button>
                         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
-                            <div className="header-logo-container">
-                                <Image
-                                    src="/logo.png"
-                                    alt="Al-Resalah Club Logo"
-                                    width={140}
-                                    height={140}
-                                    priority
-                                    className="header-logo"
-                                    style={{ objectFit: 'contain' }}
-                                />
-                            </div>
+                            <Image
+                                src="/logo.png"
+                                alt="Al-Resalah Club Logo"
+                                width={140}
+                                height={140}
+                                priority
+                                className="header-logo"
+                                style={{ objectFit: 'contain' }}
+                            />
                         </Link>
                     </div>
 
@@ -148,7 +146,7 @@ export default function Header() {
 
                     <div style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
                         <ThemeToggle />
-                        <Link href="/admin/login" className="btn btn-primary btn-sm no-mobile">دخول</Link>
+                        <Link href="/admin/login" className="btn btn-primary btn-sm">دخول</Link>
                     </div>
                 </div>
             </header>
