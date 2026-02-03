@@ -147,3 +147,46 @@ function MenuLink({ href, children, onClick, icon }: { href: string; children: R
         </Link>
     )
 }
+
+function PWAInstallButton() {
+    const { isInstallable, isStandalone, installPWA } = usePWA()
+
+    if (isStandalone || !isInstallable) return null
+
+    return (
+        <button
+            onClick={installPWA}
+            style={{
+                marginTop: 'var(--spacing-xl)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--spacing-md)',
+                padding: 'var(--spacing-md)',
+                borderRadius: 'var(--radius-lg)',
+                background: 'linear-gradient(135deg, var(--color-primary) 0%, #2c5e84 100%)',
+                color: 'white',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: 600,
+                fontSize: 'var(--font-size-sm)',
+                boxShadow: '0 4px 15px rgba(26, 58, 82, 0.3)',
+                transition: 'all 0.3s ease',
+            }}
+            className="pwa-install-btn"
+        >
+            <Download size={20} />
+            تثبيت التطبيق على الجوال
+            <style jsx>{`
+                .pwa-install-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(26, 58, 82, 0.4);
+                    filter: brightness(1.1);
+                }
+                .pwa-install-btn:active {
+                    transform: translateY(0);
+                }
+            `}</style>
+        </button>
+    )
+}
