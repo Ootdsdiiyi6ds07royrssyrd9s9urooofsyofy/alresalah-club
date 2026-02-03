@@ -76,7 +76,7 @@ export default function Header() {
                     transition: color var(--transition-fast);
                 }
                 .header-logo {
-                    height: 90px;
+                    height: 110px;
                     width: auto;
                     transition: height var(--transition-base);
                 }
@@ -85,7 +85,7 @@ export default function Header() {
                 }
                 @media (max-width: 768px) {
                     .header-logo {
-                        height: 50px;
+                        height: 65px;
                     }
                     .no-mobile {
                         display: none;

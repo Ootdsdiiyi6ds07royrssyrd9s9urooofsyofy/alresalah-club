@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 interface Response {
     id: string
     responses: any
-    created_at: string
+    submitted_at: string
 }
 
 interface Question {
@@ -62,7 +62,7 @@ export default function SurveyResultsPage() {
                 .from('survey_responses')
                 .select('*')
                 .eq('survey_id', params.id)
-                .order('created_at', { ascending: false })
+                .order('submitted_at', { ascending: false })
 
             if (rError) throw rError
             console.log('Survey Results Debug:', {
@@ -192,7 +192,7 @@ export default function SurveyResultsPage() {
                                             </td>
                                             <td style={{ padding: '12px' }}>
                                                 <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
-                                                    {new Date(response.created_at).toLocaleDateString('ar-SA')}
+                                                    {new Date(response.submitted_at).toLocaleDateString('ar-SA')}
                                                 </div>
                                             </td>
                                             <td style={{ padding: '12px', textAlign: 'center' }}>
@@ -250,7 +250,7 @@ export default function SurveyResultsPage() {
                             </div>
                             <div>
                                 <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>تاريخ الإرسال:</div>
-                                <div style={{ fontWeight: 500 }}>{new Date(viewingResponse.created_at).toLocaleString('ar-SA')}</div>
+                                <div style={{ fontWeight: 500 }}>{new Date(viewingResponse.submitted_at).toLocaleString('ar-SA')}</div>
                             </div>
                         </div>
 
