@@ -9,17 +9,31 @@ export default function GlobalLoading() {
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-        const handleStart = () => setIsLoading(true)
-        const handleComplete = () => {
-            // Short delay for optimal feel
-            setTimeout(() => setIsLoading(false), 300)
+        let showTimer: NodeJS.Timeout
+        let minTimer: NodeJS.Timeout
+
+        const handleStart = () => {
+            // Only show if it takes more than 50ms (prevents flash on fast loads)
+            showTimer = setTimeout(() => {
+                setIsLoading(true)
+                // Once shown, keep for at least 500ms for visual stability
+                minTimer = setTimeout(() => { }, 500)
+            }, 50)
         }
 
-        // We can't easily hook into Next.js 13+ app router transitions directly 
-        // without a custom router wrapper or progress bar lib,
-        // but we can trigger it on pathname/searchParams changes.
+        const handleComplete = () => {
+            clearTimeout(showTimer)
+            // Ensure a smooth exit
+            setTimeout(() => setIsLoading(false), 400)
+        }
+
         handleStart()
         handleComplete()
+
+        return () => {
+            clearTimeout(showTimer)
+            clearTimeout(minTimer)
+        }
     }, [pathname, searchParams])
 
     if (!isLoading) return null
@@ -28,19 +42,19 @@ export default function GlobalLoading() {
         <div style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(var(--color-surface), 0.85)',
-            backdropFilter: 'blur(12px)',
+            backgroundColor: 'rgba(var(--color-surface), 0.6)',
+            backdropFilter: 'blur(4px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 9999,
-            pointerEvents: 'all',
+            pointerEvents: 'none', // Don't block interaction if it's just finishing
             opacity: isLoading ? 1 : 0,
             visibility: isLoading ? 'visible' : 'hidden',
-            transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s'
+            transition: 'opacity 0.6s ease-in-out, visibility 0.6s'
         }}>
             <div className="loading-container">
-                <img src="/logo.png" alt="Loading..." style={{ height: '160px', width: 'auto' }} />
+                <img src="/logo.png" alt="Loading..." style={{ height: '140px', width: 'auto', opacity: 0.8 }} />
                 <div className="progress-bar-container">
                     <div className="progress-bar-fill"></div>
                 </div>
@@ -51,14 +65,14 @@ export default function GlobalLoading() {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    gap: var(--spacing-xl);
-                    animation: float 3s infinite ease-in-out;
+                    gap: var(--spacing-lg);
+                    animation: subtle-float 4s infinite ease-in-out;
                 }
                 .progress-bar-container {
-                    width: 200px;
-                    height: 4px;
+                    width: 160px;
+                    height: 2px;
                     background: var(--color-border);
-                    border-radius: 2px;
+                    border-radius: 1px;
                     overflow: hidden;
                     position: relative;
                 }
@@ -69,17 +83,17 @@ export default function GlobalLoading() {
                     left: 0;
                     width: 100%;
                     background: var(--color-primary);
-                    animation: progress 2s infinite ease-in-out;
+                    animation: slow-progress 3s infinite ease-in-out;
                     transform-origin: 0% 50%;
                 }
-                @keyframes float {
-                    0%, 100% { transform: translateY(0); }
-                    50% { transform: translateY(-10px); }
+                @keyframes subtle-float {
+                    0%, 100% { transform: translateY(0); opacity: 0.7; }
+                    50% { transform: translateY(-5px); opacity: 1; }
                 }
-                @keyframes progress {
-                    0% { transform: scaleX(0); left: 0; opacity: 1; }
-                    50% { transform: scaleX(0.7); left: 30%; opacity: 0.8; }
-                    100% { transform: scaleX(0); left: 100%; opacity: 0; }
+                @keyframes slow-progress {
+                    0% { transform: scaleX(0); left: 0; }
+                    50% { transform: scaleX(0.4); left: 20%; }
+                    100% { transform: scaleX(0); left: 100%; }
                 }
             `}</style>
         </div>
