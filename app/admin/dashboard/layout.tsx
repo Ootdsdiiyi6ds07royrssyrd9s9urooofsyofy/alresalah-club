@@ -36,7 +36,7 @@ export default function AdminDashboardLayout({
         await supabase.auth.signOut()
         localStorage.clear()
         sessionStorage.clear()
-        window.location.href = '/admin/login'
+        window.location.href = '/'
     }
 
     if (loading) {

@@ -30,7 +30,7 @@ export default function SessionMonitor() {
                 if (user) {
                     await supabase.auth.signOut()
                     localStorage.removeItem('admin_last_active')
-                    window.location.href = '/admin/login'
+                    window.location.href = '/'
                 }
             }
         }

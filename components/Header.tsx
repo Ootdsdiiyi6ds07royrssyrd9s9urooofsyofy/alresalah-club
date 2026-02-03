@@ -34,8 +34,8 @@ export default function Header() {
         // Clear all local storage to ensure fresh state
         localStorage.clear()
         sessionStorage.clear()
-        // Force a full page reload to the login page
-        window.location.href = '/admin/login'
+        // Force a full page reload to the homepage
+        window.location.href = '/'
     }
 
     const isAdmin = pathname?.startsWith('/admin')
