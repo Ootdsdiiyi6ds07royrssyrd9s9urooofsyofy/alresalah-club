@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import Header from '@/components/Header'
 import GlobalLoading from '@/components/GlobalLoading'
@@ -6,6 +6,15 @@ import SessionMonitor from '@/components/SessionMonitor'
 import { Suspense } from 'react'
 
 export const dynamic = 'force-dynamic'
+
+export const viewport: Viewport = {
+    themeColor: '#1a3a52',
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+    viewportFit: 'cover',
+}
 
 export const metadata: Metadata = {
     title: 'نادي الرسالة التعليمي | الرائد في التدريب والتعليم المهارى',
@@ -84,14 +93,16 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="ar" dir="rtl">
-            <body>
+        <html lang="ar" dir="rtl" style={{ height: '100dvh', overflowX: 'hidden' }}>
+            <body style={{ minHeight: '100dvh', margin: 0, padding: 0 }}>
                 <Suspense fallback={null}>
                     <GlobalLoading />
                 </Suspense>
                 <SessionMonitor />
                 <Header />
-                {children}
+                <main style={{ minHeight: 'calc(100dvh - 80px)' }}>
+                    {children}
+                </main>
             </body>
         </html>
     )

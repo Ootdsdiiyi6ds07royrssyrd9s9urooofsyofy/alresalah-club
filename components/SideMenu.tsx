@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { useEffect } from 'react'
 import { Home, BookOpen, GraduationCap, Megaphone, CheckSquare, Image as ImageIcon, LayoutDashboard, X } from 'lucide-react'
 
+import Image from 'next/image'
+
 interface SideMenuProps {
     isOpen: boolean
     onClose: () => void
@@ -14,11 +16,14 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden'
+            document.body.style.touchAction = 'none'
         } else {
             document.body.style.overflow = 'auto'
+            document.body.style.touchAction = 'auto'
         }
         return () => {
             document.body.style.overflow = 'auto'
+            document.body.style.touchAction = 'auto'
         }
     }, [isOpen])
 
@@ -30,12 +35,13 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                 style={{
                     position: 'fixed',
                     inset: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    backdropFilter: 'blur(4px)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
                     zIndex: 2000,
                     opacity: isOpen ? 1 : 0,
                     visibility: isOpen ? 'visible' : 'hidden',
-                    transition: 'all 0.3s ease-in-out',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
             />
 
@@ -45,20 +51,29 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                     position: 'fixed',
                     top: 0,
                     right: isOpen ? 0 : '-320px',
-                    width: '320px',
-                    height: '100vh',
+                    width: 'min(320px, 85vw)',
+                    height: '100dvh',
                     backgroundColor: 'var(--color-surface)',
                     boxShadow: 'var(--shadow-xl)',
                     zIndex: 2001,
-                    transition: 'right 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transition: 'right 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
                     display: 'flex',
                     flexDirection: 'column',
-                    padding: 'var(--spacing-xl)',
+                    padding: 'var(--spacing-xl) var(--spacing-lg)',
+                    overflowY: 'auto',
+                    WebkitOverflowScrolling: 'touch',
                 }}
             >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-2xl)' }}>
                     <Link href="/" onClick={onClose} style={{ textDecoration: 'none' }}>
-                        <img src="/logo.png" alt="Al-Resalah Club Logo" style={{ height: '140px', width: 'auto', objectFit: 'contain' }} />
+                        <div style={{ position: 'relative', height: '100px', width: '100px' }}>
+                            <Image
+                                src="/logo.png"
+                                alt="Al-Resalah Club Logo"
+                                fill
+                                style={{ objectFit: 'contain' }}
+                            />
+                        </div>
                     </Link>
                     <button
                         onClick={onClose}
@@ -69,6 +84,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                             color: 'var(--color-text-secondary)',
                             padding: 'var(--spacing-sm)',
                         }}
+                        aria-label="Close Menu"
                     >
                         <X size={24} />
                     </button>

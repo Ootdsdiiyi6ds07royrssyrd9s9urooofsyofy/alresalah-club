@@ -8,6 +8,8 @@ import ThemeToggle from './ThemeToggle'
 import SideMenu from './SideMenu'
 import Link from 'next/link'
 
+import Image from 'next/image'
+
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [user, setUser] = useState<any>(null)
@@ -54,6 +56,7 @@ export default function Header() {
                 padding: 'var(--spacing-xs)',
                 backgroundColor: 'rgba(var(--color-surface), 0.8)',
                 backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
                 borderRadius: 'var(--radius-lg)',
                 border: '1px solid var(--color-border)',
                 boxShadow: 'var(--shadow-md)'
@@ -87,10 +90,11 @@ export default function Header() {
                     position: 'sticky',
                     top: 0,
                     zIndex: 1000,
-                    backgroundColor: 'rgba(var(--color-surface), 0.8)',
-                    backdropFilter: 'blur(10px)',
+                    backgroundColor: 'rgba(var(--color-surface), 0.85)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
                     borderBottom: '1px solid var(--color-border)',
-                    padding: 'var(--spacing-md) 0',
+                    padding: 'var(--spacing-sm) 0',
                     transition: 'all var(--transition-base)',
                 }}
             >
@@ -111,6 +115,7 @@ export default function Header() {
                             }}
                             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-border)')}
                             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                            aria-label="Open Menu"
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <circle cx="12" cy="12" r="1" />
@@ -119,7 +124,17 @@ export default function Header() {
                             </svg>
                         </button>
                         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
-                            <img src="/logo.png" alt="Al-Resalah Club Logo" className="header-logo" />
+                            <div className="header-logo-container">
+                                <Image
+                                    src="/logo.png"
+                                    alt="Al-Resalah Club Logo"
+                                    width={140}
+                                    height={140}
+                                    priority
+                                    className="header-logo"
+                                    style={{ objectFit: 'contain' }}
+                                />
+                            </div>
                         </Link>
                     </div>
 
@@ -133,7 +148,7 @@ export default function Header() {
 
                     <div style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
                         <ThemeToggle />
-                        <Link href="/admin/login" className="btn btn-primary btn-sm">دخول</Link>
+                        <Link href="/admin/login" className="btn btn-primary btn-sm no-mobile">دخول</Link>
                     </div>
                 </div>
             </header>

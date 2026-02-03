@@ -114,7 +114,9 @@
 html,
 body {
   max-width: 100vw;
+  min-height: 100dvh;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   font-family: var(--font-family);
   background-color: var(--color-background);
   color: var(--color-text);

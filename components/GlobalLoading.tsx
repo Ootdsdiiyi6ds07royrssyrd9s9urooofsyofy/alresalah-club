@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 
+import Image from 'next/image'
+
 export default function GlobalLoading() {
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -10,21 +12,18 @@ export default function GlobalLoading() {
 
     useEffect(() => {
         let showTimer: NodeJS.Timeout
-        let minTimer: NodeJS.Timeout
 
         const handleStart = () => {
-            // Only show if it takes more than 50ms (prevents flash on fast loads)
+            // Only show if it takes more than 100ms (prevents flash on fast loads)
             showTimer = setTimeout(() => {
                 setIsLoading(true)
-                // Once shown, keep for at least 500ms for visual stability
-                minTimer = setTimeout(() => { }, 500)
-            }, 50)
+            }, 100)
         }
 
         const handleComplete = () => {
             clearTimeout(showTimer)
             // Ensure a smooth exit
-            setTimeout(() => setIsLoading(false), 400)
+            setTimeout(() => setIsLoading(false), 500)
         }
 
         handleStart()
@@ -32,7 +31,6 @@ export default function GlobalLoading() {
 
         return () => {
             clearTimeout(showTimer)
-            clearTimeout(minTimer)
         }
     }, [pathname, searchParams])
 
@@ -42,19 +40,28 @@ export default function GlobalLoading() {
         <div style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(var(--color-surface), 0.6)',
-            backdropFilter: 'blur(4px)',
+            backgroundColor: 'rgba(var(--color-surface), 0.9)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 9999,
-            pointerEvents: 'none', // Don't block interaction if it's just finishing
+            pointerEvents: 'none',
             opacity: isLoading ? 1 : 0,
             visibility: isLoading ? 'visible' : 'hidden',
-            transition: 'opacity 0.6s ease-in-out, visibility 0.6s'
+            transition: 'opacity 0.4s ease-out, visibility 0.4s'
         }}>
             <div className="loading-container">
-                <img src="/logo.png" alt="Loading..." style={{ height: '140px', width: 'auto', opacity: 0.8 }} />
+                <div style={{ position: 'relative', height: '120px', width: '120px', marginBottom: '20px' }}>
+                    <Image
+                        src="/logo.png"
+                        alt="Loading..."
+                        fill
+                        priority
+                        style={{ objectFit: 'contain' }}
+                    />
+                </div>
                 <div className="progress-bar-container">
                     <div className="progress-bar-fill"></div>
                 </div>
