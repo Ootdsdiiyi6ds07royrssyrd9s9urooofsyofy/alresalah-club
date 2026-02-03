@@ -14,38 +14,43 @@ export default function SessionMonitor() {
 
         const handleActivity = () => {
             const now = Date.now()
-            localStorage.setItem('last_active', now.toString())
+            localStorage.setItem('admin_last_active', now.toString())
 
             clearTimeout(timer)
             timer = setTimeout(checkTimeout, IDLE_TIMEOUT)
         }
 
         const checkTimeout = async () => {
-            const lastActive = parseInt(localStorage.getItem('last_active') || '0')
+            const lastActive = parseInt(localStorage.getItem('admin_last_active') || '0')
             const now = Date.now()
 
             // If more than 1 minute passed since last activity
-            if (now - lastActive > IDLE_TIMEOUT) {
+            if (now - lastActive >= IDLE_TIMEOUT) {
                 const { data: { user } } = await supabase.auth.getUser()
                 if (user) {
                     await supabase.auth.signOut()
-                    router.push('/admin/login')
+                    localStorage.removeItem('admin_last_active')
+                    window.location.href = '/admin/login'
                 }
             }
         }
 
-        // Initial check on mount (for when tab is closed and reopened)
-        checkTimeout()
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                checkTimeout()
+            }
+        }
 
         // Listen for activity
-        const events = ['mousedown', 'keydown', 'scroll', 'touchstart']
+        const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'mousemove']
         events.forEach(event => window.addEventListener(event, handleActivity))
+        document.addEventListener('visibilitychange', handleVisibilityChange)
 
-        // Initial activity marker
         handleActivity()
 
         return () => {
             events.forEach(event => window.removeEventListener(event, handleActivity))
+            document.removeEventListener('visibilitychange', handleVisibilityChange)
             clearTimeout(timer)
         }
     }, [supabase, router])

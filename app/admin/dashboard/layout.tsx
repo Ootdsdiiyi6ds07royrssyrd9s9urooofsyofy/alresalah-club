@@ -34,7 +34,9 @@ export default function AdminDashboardLayout({
 
     const handleSignOut = async () => {
         await supabase.auth.signOut()
-        router.push('/admin/login')
+        localStorage.clear()
+        sessionStorage.clear()
+        window.location.href = '/admin/login'
     }
 
     if (loading) {

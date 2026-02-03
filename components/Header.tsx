@@ -31,7 +31,11 @@ export default function Header() {
 
     const handleSignOut = async () => {
         await supabase.auth.signOut()
-        router.push('/admin/login')
+        // Clear all local storage to ensure fresh state
+        localStorage.clear()
+        sessionStorage.clear()
+        // Force a full page reload to the login page
+        window.location.href = '/admin/login'
     }
 
     const isAdmin = pathname?.startsWith('/admin')
@@ -48,8 +52,8 @@ export default function Header() {
                 gap: 'var(--spacing-sm)',
                 alignItems: 'center',
                 padding: 'var(--spacing-xs)',
-                backgroundColor: 'rgba(var(--color-surface), 0.5)',
-                backdropFilter: 'blur(10px)',
+                backgroundColor: 'rgba(var(--color-surface), 0.8)',
+                backdropFilter: 'blur(12px)',
                 borderRadius: 'var(--radius-lg)',
                 border: '1px solid var(--color-border)',
                 boxShadow: 'var(--shadow-md)'
@@ -63,7 +67,8 @@ export default function Header() {
                         borderRadius: 'var(--radius-md)',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        backgroundColor: 'var(--color-surface)'
                     }}
                     title="تسجيل الخروج"
                 >

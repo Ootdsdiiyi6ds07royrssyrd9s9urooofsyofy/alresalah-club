@@ -143,6 +143,28 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                             <NavLink href="/programs" icon={<GraduationCap size={20} />}>كل البرامج</NavLink>
                             <NavLink href="/surveys" icon={<ClipboardList size={20} />}>الاستبيانات العامة</NavLink>
                         </div>
+
+                        <div style={{ marginTop: 'var(--spacing-md)', paddingTop: 'var(--spacing-md)', borderTop: '1px solid var(--color-border)' }}>
+                            <button
+                                onClick={handleSignOut}
+                                className="nav-link"
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 'var(--spacing-md)',
+                                    padding: 'var(--spacing-md)',
+                                    width: '100%',
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    color: 'var(--color-error)',
+                                    fontWeight: 500
+                                }}
+                            >
+                                <LogOut size={20} />
+                                <span>تسجيل الخروج</span>
+                            </button>
+                        </div>
                     </div>
                 </nav>
 
