@@ -1,8 +1,12 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { LogOut, User } from 'lucide-react'
+import ThemeToggle from './ThemeToggle'
+import SideMenu from './SideMenu'
+import Link from 'next/link'
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
