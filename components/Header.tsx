@@ -136,7 +136,7 @@ export default function Header() {
                         </Link>
                     </div>
 
-                    <nav style={{ display: 'flex', gap: 'var(--spacing-lg)', alignItems: 'center' }} className="no-mobile">
+                    <nav className="no-mobile">
                         <Link href="/courses" className="nav-link">الدورات</Link>
                         <Link href="/programs" className="nav-link">البرامج</Link>
                         <Link href="/announcements" className="nav-link">الإعلانات</Link>
@@ -154,6 +154,11 @@ export default function Header() {
             <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
             <style jsx>{`
+                .no-mobile {
+                    display: flex;
+                    gap: var(--spacing-lg);
+                    align-items: center;
+                }
                 .nav-link {
                     color: var(--color-text-secondary);
                     font-weight: 500;
@@ -161,7 +166,7 @@ export default function Header() {
                     transition: color var(--transition-fast);
                 }
                 .header-logo {
-                    height: 100px;
+                    height: 90px;
                     width: auto;
                     transition: height var(--transition-base);
                 }
@@ -170,10 +175,10 @@ export default function Header() {
                 }
                 @media (max-width: 768px) {
                     .header-logo {
-                        height: 40px;
+                        height: 45px;
                     }
                     .no-mobile {
-                        display: none;
+                        display: none !important;
                     }
                 }
             `}</style>

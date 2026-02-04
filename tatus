@@ -1,0 +1,20 @@
+[33m28179de[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m style: reduce logo size and finalize mobile optimizations
+[33mb12dd60[m style: final mobile logo size adjustment and visual revert
+[33m9ef85ec[m style: revert visual changes while keeping performance fixes
+[33m35df06f[m feat: optimize mobile and safari performance
+[33m9a5a546[m Final Refinement V4: Sign-out redirect to homepage and UX stability
+[33m6871921[m Final Refinement V3: Definitive logout, strict 60s timeout, and ultra-smooth loading
+[33m69bacae[m UX Polish: Elegant loading transitions, minimal admin header, and session security
+[33m409bf99[m Final Refinement V2: Premium loading screen, minimal admin controls, and idle session monitoring
+[33m43d11f0[m Final Touch: Global loading, admin header restoration, and settings cleanup
+[33mfe29119[m Final Touch: Global loading, admin header restoration, and settings cleanup
+[33mda88cdd[m Refactor: Unified admin sidebar, increased logo size globally, and fixed survey database error
+[33m202f991[m Fix: Survey results timestamp error and increased header logo size
+[33me684939[m UI Refinement: Removed Smart Learner badge and finalized all updates
+[33m499e325[m Final improvements: Survey question types, overhauled results display, dark mode fixes, and mobile UI optimizations
+[33m3b42b73[m Refactor: Align survey question types, fix results display, improve dark mode for Smart Learner, and optimize mobile UI
+[33m10e5691[m Complete updates: Admin dashboard, Programs detail, Registration flow and Excel improvements
+[33m983a76e[m Implement Deep Audit Fixes Part 1: Dashboard, Forms, Mobile UI
+[33mba70d35[m Improve UI layout for Quick Access buttons
+[33mfa9554e[m Optimize SEO metadata
+[33mac8ce18[m Fix settings error, add survey link, and update icons
