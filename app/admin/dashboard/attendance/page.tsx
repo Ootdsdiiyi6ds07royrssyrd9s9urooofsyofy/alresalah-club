@@ -117,6 +117,5 @@ export default async function AttendanceListPage() {
                     </div>
                 )}
             </div>
-
             );
 }

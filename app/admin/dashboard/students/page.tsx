@@ -135,6 +135,5 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
                     </table>
                 </div>
             </div>
-
             );
 }
