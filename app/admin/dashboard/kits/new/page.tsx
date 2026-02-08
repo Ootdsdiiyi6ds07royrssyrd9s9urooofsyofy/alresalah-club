@@ -4,6 +4,8 @@
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Package, FileText, Image as ImageIcon, Plus, Save, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export default function NewKitPage() {
     const router = useRouter();
@@ -19,6 +21,7 @@ export default function NewKitPage() {
         const formData = new FormData(e.currentTarget);
         const title = formData.get('title') as string;
         const description = formData.get('description') as string;
+        const category = formData.get('category') as string;
 
         try {
             let fileUrl = '';
@@ -29,7 +32,6 @@ export default function NewKitPage() {
                 const fileName = `${Math.random()}.${fileExt}`;
                 const { data, error } = await supabase.storage.from('media').upload(`kits/${fileName}`, file);
                 if (error) throw error;
-                // Get public URL
                 const { data: publicUrlData } = supabase.storage.from('media').getPublicUrl(`kits/${fileName}`);
                 fileUrl = publicUrlData.publicUrl;
             }
@@ -43,9 +45,10 @@ export default function NewKitPage() {
                 coverUrl = publicUrlData.publicUrl;
             }
 
-            const { error: insertError } = await supabase.from('educational_kits').insert({
+            const { error: insertError } = await supabase.from('educational_kits' as any).insert({
                 title,
                 description,
+                category,
                 file_url: fileUrl,
                 cover_url: coverUrl,
             });
@@ -64,31 +67,124 @@ export default function NewKitPage() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">إضافة حقيبة تعليمية جديدة</h1>
-            <form onSubmit={handleSubmit} className="space-y-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--spacing-xl)' }}>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">العنوان</label>
-                    <input name="title" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white p-2 border" />
+                    <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'bold', color: 'var(--color-text)' }}>إضافة حقيبة تعليمية جديدة</h1>
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>أنشئ حقيبة تعليمية جديدة وشارك الملفات مع الطلاب</p>
                 </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">الوصف</label>
-                    <textarea name="description" rows={3} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white p-2 border" />
+                <Link href="/admin/dashboard/kits" className="btn btn-secondary">
+                    <ArrowRight size={18} /> العودة
+                </Link>
+            </div>
+
+            <form onSubmit={handleSubmit} className="card-elevated p-8 space-y-8">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 'var(--spacing-lg)' }}>
+                    {/* Title */}
+                    <div className="form-group">
+                        <label className="label">
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+                                <Package size={16} /> عنوان الحقيبة
+                            </span>
+                        </label>
+                        <input
+                            name="title"
+                            required
+                            className="input"
+                            placeholder="مثال: أساسيات علوم الحاسب"
+                        />
+                    </div>
+
+                    {/* Category Selection (Optional enhancement) */}
+                    <div className="form-group">
+                        <label className="label">التصنيف</label>
+                        <select name="category" className="input">
+                            <option value="general">عام</option>
+                            <option value="coding">برمجة</option>
+                            <option value="design">تصميم</option>
+                            <option value="business">ريادة أعمال</option>
+                        </select>
+                    </div>
+
+                    {/* Description */}
+                    <div className="form-group">
+                        <label className="label">الوصف</label>
+                        <textarea
+                            name="description"
+                            rows={4}
+                            className="input"
+                            placeholder="اكتب وصفاً مختصراً لمحتويات الحقيبة..."
+                        />
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-lg)' }}>
+                        {/* Cover Image */}
+                        <div className="form-group">
+                            <label className="label">
+                                <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+                                    <ImageIcon size={16} /> صورة الغلاف
+                                </span>
+                            </label>
+                            <div style={{
+                                border: '2px dashed var(--color-border)',
+                                borderRadius: 'var(--radius-md)',
+                                padding: 'var(--spacing-md)',
+                                textAlign: 'center',
+                                background: 'var(--color-background)'
+                            }}>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => setCover(e.target.files?.[0] || null)}
+                                    style={{ width: '100%' }}
+                                />
+                                <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', marginTop: 'var(--spacing-xs)' }}>
+                                    JPG, PNG أو WebP (بحد أقصى 2MB)
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* File Upload */}
+                        <div className="form-group">
+                            <label className="label">
+                                <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+                                    <FileText size={16} /> ملف الحقيبة (PDF)
+                                </span>
+                            </label>
+                            <div style={{
+                                border: '2px dashed var(--color-border)',
+                                borderRadius: 'var(--radius-md)',
+                                padding: 'var(--spacing-md)',
+                                textAlign: 'center',
+                                background: 'var(--color-background)'
+                            }}>
+                                <input
+                                    type="file"
+                                    required
+                                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                                    style={{ width: '100%' }}
+                                />
+                                <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', marginTop: 'var(--spacing-xs)' }}>
+                                    PDF, DOCX أو ZIP
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">صورة الغلاف</label>
-                    <input type="file" accept="image/*" onChange={(e) => setCover(e.target.files?.[0] || null)} className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:text-gray-300" />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">الملف (PDF, DOCX, etc.)</label>
-                    <input type="file" required onChange={(e) => setFile(e.target.files?.[0] || null)} className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:text-gray-300" />
-                </div>
-                <div className="flex justify-end">
-                    <button type="submit" disabled={loading} className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 disabled:opacity-50">
-                        {loading ? 'جاري الحفظ...' : 'حفظ'}
+
+                {/* Actions */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--spacing-md)', borderTop: '1px solid var(--color-border)', paddingTop: 'var(--spacing-lg)' }}>
+                    <button type="submit" disabled={loading} className="btn btn-primary" style={{ minWidth: '150px' }}>
+                        {loading ? <span className="loading"></span> : (
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+                                <Save size={18} /> حفظ الحقيبة
+                            </span>
+                        )}
                     </button>
                 </div>
             </form>
         </div>
     );
 }
+

@@ -94,8 +94,10 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
                                                 </div>
                                             )}
                                             <div>
-                                                <div style={{ fontWeight: '600', color: 'var(--color-text)' }}>{student.name}</div>
-                                                <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>ID: {student.bawaba_id}</div>
+                                                <Link href={`/admin/dashboard/students/${student.id}`} style={{ fontWeight: '600', color: 'var(--color-primary)', textDecoration: 'none' }} className="hover:underline">
+                                                    {student.name}
+                                                </Link>
+                                                <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>ID: {student.bawaba_id || student.id.slice(0, 8)}</div>
                                             </div>
                                         </div>
                                     </td>
@@ -120,10 +122,16 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
                                         </div>
                                     </td>
                                     <td style={{ padding: 'var(--spacing-lg)', textAlign: 'center' }}>
-                                        <span className="badge badge-success">نشط</span>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--spacing-sm)' }}>
+                                            <span className="badge badge-success">نشط</span>
+                                            <Link href={`/admin/dashboard/students/${student.id}`} className="btn btn-secondary p-1" title="عرض التفاصيل">
+                                                <Search size={14} />
+                                            </Link>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
+
                             {(!students || students.length === 0) && (
                                 <tr>
                                     <td colSpan={4} style={{ padding: 'var(--spacing-2xl)', textAlign: 'center', color: 'var(--color-text-muted)' }}>
