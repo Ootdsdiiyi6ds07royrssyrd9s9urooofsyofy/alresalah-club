@@ -19,7 +19,7 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
     const { data: students } = await studentQuery;
 
     return (
-        <div style={{ spaceY: 'var(--spacing-lg)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
             {/* Header Area */}
             <div style={{
                 display: 'flex',
@@ -68,7 +68,7 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
                                 <th style={{ padding: 'var(--spacing-lg)', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', textAlign: 'center' }}>الحالة</th>
                             </tr>
                         </thead>
-                        <tbody style={{ divideY: '1px solid var(--color-border)' }}>
+                        <tbody>
                             {students?.map((student) => (
                                 <tr key={student.id} style={{ borderBottom: '1px solid var(--color-border)', transition: 'background var(--transition-fast)' }} className="hover-bg-surface">
                                     <td style={{ padding: 'var(--spacing-lg)' }}>

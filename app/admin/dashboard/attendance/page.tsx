@@ -14,7 +14,7 @@ export default async function AttendanceListPage() {
         .order('is_happening_now', { ascending: false });
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', spaceY: 'var(--spacing-lg)' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
             {/* Header Area */}
             <div style={{
                 display: 'flex',
@@ -117,5 +117,6 @@ export default async function AttendanceListPage() {
                     </div>
                 )}
             </div>
-            );
+        </div>
+    );
 }
