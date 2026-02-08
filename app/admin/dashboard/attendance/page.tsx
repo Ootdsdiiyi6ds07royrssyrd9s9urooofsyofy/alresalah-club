@@ -10,7 +10,7 @@ export default async function AttendanceListPage() {
     const { data: courses } = await supabase
         .from('courses')
         .select('*')
-        .or('is_happening_now.eq.true,status.eq.active')
+        .eq('is_active', true)
         .order('is_happening_now', { ascending: false });
 
     return (
