@@ -29,7 +29,10 @@ export default function EditCoursePage({ params }: { params: { id: string } }) {
         end_date: '',
         total_seats: 30,
         price: 0,
-        is_active: true
+        is_active: true,
+        banner_url: '',
+        status: 'upcoming',
+        is_happening_now: false
     })
 
     // Form Builder State
@@ -60,7 +63,10 @@ export default function EditCoursePage({ params }: { params: { id: string } }) {
                 end_date: course.end_date || '',
                 total_seats: course.total_seats,
                 price: course.price || 0,
-                is_active: course.is_active
+                is_active: course.is_active,
+                banner_url: course.banner_url || '',
+                status: course.status || 'upcoming',
+                is_happening_now: course.is_happening_now || false
             })
 
             // 2. Fetch Registration Form
@@ -143,7 +149,7 @@ export default function EditCoursePage({ params }: { params: { id: string } }) {
                     // We might need to manually adjust available_seats if total is changed.
                     // For now, let's leave available_seats as is, or recalculate:
                     // new_available = new_total - (old_total - old_available)
-                    // This is complex. Let's just update total_seats and let admin manage.
+                    // ...formData includes new fields
                 })
                 .eq('id', params.id)
 
@@ -249,6 +255,65 @@ export default function EditCoursePage({ params }: { params: { id: string } }) {
                         بيانات الدورة
                     </h2>
                     <div style={{ display: 'grid', gap: 'var(--spacing-md)' }}>
+                        {/* Banner Upload */}
+                        <div className="form-group">
+                            <label className="label">بانر الدورة</label>
+                            <div className="flex items-center gap-4">
+                                {formData.banner_url && (
+                                    <img src={formData.banner_url} alt="Banner" className="h-20 w-32 object-cover rounded border" />
+                                )}
+                                <label className="btn btn-secondary btn-sm cursor-pointer">
+                                    <span>{formData.banner_url ? 'تغيير الصورة' : 'رفع صورة'}</span>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        style={{ display: 'none' }}
+                                        onChange={async (e) => {
+                                            const file = e.target.files?.[0]
+                                            if (!file) return
+                                            try {
+                                                const fileExt = file.name.split('.').pop()
+                                                const fileName = `banners/${Math.random()}.${fileExt}`
+                                                const { error: uploadError } = await supabase.storage.from('media').upload(fileName, file)
+                                                if (uploadError) throw uploadError
+                                                const { data } = supabase.storage.from('media').getPublicUrl(fileName)
+                                                setFormData({ ...formData, banner_url: data.publicUrl })
+                                            } catch (err) {
+                                                console.error(err)
+                                                alert('فشل رفع الصورة')
+                                            }
+                                        }}
+                                    />
+                                </label>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-md)' }}>
+                            <div className="form-group">
+                                <label className="label">الحالة</label>
+                                <select
+                                    className="input"
+                                    value={formData.status}
+                                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                >
+                                    <option value="upcoming">قريباً</option>
+                                    <option value="active">متاحة للتسجيل</option>
+                                    <option value="completed">منتهية</option>
+                                </select>
+                            </div>
+                            <div className="form-group" style={{ display: 'flex', alignItems: 'center' }}>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.is_happening_now}
+                                        onChange={(e) => setFormData({ ...formData, is_happening_now: e.target.checked })}
+                                    />
+                                    تقام الآن (الحضور)
+                                </label>
+                            </div>
+                        </div>
+
                         <div className="form-group">
                             <label className="label">عنوان الدورة</label>
                             <input

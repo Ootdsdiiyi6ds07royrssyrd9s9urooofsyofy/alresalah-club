@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ThemeToggle from '@/components/ThemeToggle'
 import NavLink from '@/components/admin/NavLink'
+import { createClient } from '@/lib/supabase/client'
 import {
     LayoutDashboard,
     BookOpen,
@@ -17,7 +18,9 @@ import {
     X,
     LogOut,
     Home,
-    Globe
+    Globe,
+    Clock,
+    UserCheck
 } from 'lucide-react'
 
 interface AdminSidebarProps {
@@ -27,6 +30,23 @@ interface AdminSidebarProps {
 
 export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarProps) {
     const [isOpen, setIsOpen] = useState(false)
+    const [happeningNowCourses, setHappeningNowCourses] = useState<any[]>([])
+    const supabase = createClient()
+
+    useEffect(() => {
+        const fetchHappeningNow = async () => {
+            const { data } = await supabase
+                .from('courses')
+                .select('id, title')
+                .eq('is_happening_now', true)
+            if (data) setHappeningNowCourses(data)
+        }
+        fetchHappeningNow()
+
+        // Realtime subscription? Maybe overkill for now.
+        // But let's verify if user wants instant updates. "If a course starts... a new slot opens".
+        // Polling or subscription would be better but manual refresh/page load is fine for MVP.
+    }, [])
 
     const toggleSidebar = () => setIsOpen(!isOpen)
 
@@ -113,11 +133,27 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                     <div onClick={() => setIsOpen(false)}>
                         <div style={{ marginBottom: 'var(--spacing-md)' }}>
                             <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', padding: '0 var(--spacing-md)', marginBottom: 'var(--spacing-xs)', textTransform: 'uppercase', letterSpacing: '1px' }}>الإدارة</p>
-                            <NavLink href="/admin/dashboard" icon={<LayoutDashboard size={20} />}>الرئيسية (لوحة التحكم)</NavLink>
+                            <NavLink href="/admin/dashboard" icon={<LayoutDashboard size={20} />}>الرئيسية</NavLink>
+                            <NavLink href="/admin/dashboard/students" icon={<Users size={20} />}>كشفيات الطلاب</NavLink>
+                            <NavLink href="/admin/dashboard/attendance" icon={<UserCheck size={20} />}>التحضير والكشوفات</NavLink>
                             <NavLink href="/admin/dashboard/applicants" icon={<Users size={20} />}>المتقدمين للمسارات</NavLink>
                             <NavLink href="/admin/dashboard/surveys" icon={<ClipboardList size={20} />}>نتائج الاستبيانات</NavLink>
-                            <NavLink href="/admin/dashboard/logs" icon={<Activity size={20} />}>سجل النظام</NavLink>
                         </div>
+
+                        {/* Happening Now Section */}
+                        {happeningNowCourses.length > 0 && (
+                            <div style={{ marginBottom: 'var(--spacing-md)' }}>
+                                <p style={{ fontSize: '0.75rem', color: 'var(--color-success)', padding: '0 var(--spacing-md)', marginBottom: 'var(--spacing-xs)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    <span className="animate-pulse w-2 h-2 rounded-full bg-green-500"></span>
+                                    تقام الآن
+                                </p>
+                                {happeningNowCourses.map(course => (
+                                    <NavLink key={course.id} href={`/admin/dashboard/attendance/${course.id}`} icon={<Clock size={20} />}>
+                                        {course.title}
+                                    </NavLink>
+                                ))}
+                            </div>
+                        )}
 
                         <div style={{ marginBottom: 'var(--spacing-md)' }}>
                             <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', padding: '0 var(--spacing-md)', marginBottom: 'var(--spacing-xs)', textTransform: 'uppercase', letterSpacing: '1px' }}>المحتوى التعليمي</p>
@@ -129,11 +165,12 @@ export default function AdminSidebar({ userEmail, handleSignOut }: AdminSidebarP
                             <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', padding: '0 var(--spacing-md)', marginBottom: 'var(--spacing-xs)', textTransform: 'uppercase', letterSpacing: '1px' }}>التواصل والميديا</p>
                             <NavLink href="/admin/dashboard/announcements" icon={<Megaphone size={20} />}>الإعلانات</NavLink>
                             <NavLink href="/admin/dashboard/gallery" icon={<ImageIcon size={20} />}>المعرض</NavLink>
+                            <NavLink href="/admin/dashboard/kits" icon={<BookOpen size={20} />}>الحقائب التعليمية</NavLink>
                         </div>
 
                         <div style={{ marginBottom: 'var(--spacing-md)' }}>
                             <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', padding: '0 var(--spacing-md)', marginBottom: 'var(--spacing-xs)', textTransform: 'uppercase', letterSpacing: '1px' }}>الإعدادات</p>
-                            <NavLink href="/admin/dashboard/settings" icon={<Settings size={20} />}>المتعلم الذكي</NavLink>
+                            <NavLink href="/admin/dashboard/settings" icon={<Settings size={20} />}>إعدادات الموقع</NavLink>
                         </div>
 
                         <div style={{ marginTop: 'var(--spacing-xl)', paddingTop: 'var(--spacing-md)', borderTop: '1px solid var(--color-border)' }}>

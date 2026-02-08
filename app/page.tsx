@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { Megaphone, Image as ImageIcon, BookOpen, GraduationCap, Star, CheckCircle, CheckSquare, Trophy, Gem } from 'lucide-react'
+import { Megaphone, Image as ImageIcon, BookOpen, GraduationCap, Star, CheckCircle, CheckSquare, Trophy, Gem, Mail, Phone, MapPin, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react'
 
 export default function HomePage() {
     const supabase = createClient()
@@ -16,6 +16,8 @@ export default function HomePage() {
         description: 'نكرم في كل عام الطالب الأكثر تميزاً ومشاركة في برامجنا التدريبية. الطالب الذي أثبت جدارته بالتفوق والابتكار.',
         image_url: ''
     })
+    const [contactInfo, setContactInfo] = useState<any>({})
+    const [happeningNowCourses, setHappeningNowCourses] = useState<any[]>([])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,13 +27,17 @@ export default function HomePage() {
                 completedResult,
                 announcementsRes,
                 featuredRes,
-                smartRes
+                smartRes,
+                contactRes,
+                happeningRes
             ] = await Promise.all([
                 supabase.from('courses').select('*', { count: 'exact', head: true }).eq('is_active', true).gt('available_seats', 0),
                 supabase.from('courses').select('*', { count: 'exact', head: true }).eq('is_active', true).lt('end_date', now),
                 supabase.from('announcements').select('*').eq('is_active', true).lte('publish_date', now).order('publish_date', { ascending: false }).limit(3),
                 supabase.from('courses').select('*').eq('is_active', true).gt('available_seats', 0).order('created_at', { ascending: false }).limit(4),
-                supabase.from('site_settings').select('value').eq('id', 'smart_learner').single()
+                supabase.from('site_settings').select('value').eq('id', 'smart_learner').single(),
+                supabase.from('site_settings').select('value').eq('id', 'contact_info').single(),
+                supabase.from('courses').select('id, title, instructor, banner_url').eq('is_happening_now', true)
             ])
 
             setStats({
@@ -41,6 +47,8 @@ export default function HomePage() {
             if (announcementsRes.data) setAnnouncements(announcementsRes.data)
             if (featuredRes.data) setFeaturedCourses(featuredRes.data)
             if (smartRes.data?.value) setSmartLearner(smartRes.data.value)
+            if (contactRes.data?.value) setContactInfo(contactRes.data.value)
+            if (happeningRes.data) setHappeningNowCourses(happeningRes.data)
         }
         fetchData()
     }, [])
@@ -92,6 +100,7 @@ export default function HomePage() {
                         <QuickButton href="/gallery" icon={<ImageIcon size={28} />} label="المعرض" color="#10b981" />
                         <QuickButton href="/courses" icon={<BookOpen size={28} />} label="الدورات" color="#f59e0b" />
                         <QuickButton href="/programs" icon={<GraduationCap size={28} />} label="البرامج" color="#8b5cf6" />
+                        <QuickButton href="/kits" icon={<BookOpen size={28} />} label="الحقائب" color="#ec4899" />
                     </div>
                 </div>
 
@@ -108,6 +117,38 @@ export default function HomePage() {
                     pointerEvents: 'none'
                 }} />
             </section>
+
+            {/* Happening Now Section */}
+            {happeningNowCourses.length > 0 && (
+                <section style={{ padding: 'var(--spacing-xl) 0', background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}>
+                    <div className="container">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'var(--spacing-lg)' }}>
+                            <span className="animate-pulse w-3 h-3 rounded-full bg-green-500"></span>
+                            <h2 style={{ margin: 0, color: 'var(--color-success)' }}>تقام الآن (مباشر)</h2>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 'var(--spacing-lg)' }}>
+                            {happeningNowCourses.map((course: any) => (
+                                <Link href={`/courses/${course.id}`} key={course.id} className="card hover-scale" style={{ border: '2px solid var(--color-success)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)', textDecoration: 'none', color: 'inherit' }}>
+                                    <div style={{ width: '80px', height: '80px', borderRadius: 'var(--radius-md)', overflow: 'hidden', flexShrink: 0, backgroundColor: '#eee' }}>
+                                        {course.banner_url ? (
+                                            <img src={course.banner_url} alt={course.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        ) : (
+                                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-success)', color: 'white' }}>
+                                                <BookOpen size={24} />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <h3 style={{ fontSize: '1.1rem', marginBottom: '4px' }}>{course.title}</h3>
+                                        <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>{course.instructor}</p>
+                                        <span style={{ fontSize: '0.8rem', color: 'var(--color-success)', fontWeight: 'bold' }}>• مباشر الآن</span>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Statistics & Counters Section */}
             <section style={{ padding: 'var(--spacing-2xl) 0', background: 'var(--color-surface)', marginTop: '-40px' }}>
@@ -228,6 +269,31 @@ export default function HomePage() {
                         <div style={{ maxWidth: '400px' }}>
                             <h2 style={{ color: 'white', marginBottom: 'var(--spacing-md)' }}>نادي الرسالة</h2>
                             <p style={{ opacity: 0.7 }}>نحن نهتم ببناء جيل مبدع، ملهم، وقادر على قيادة المستقبل من خلال برامج تعليمية نوعية.</p>
+
+                            <div style={{ marginTop: 'var(--spacing-lg)', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
+                                {contactInfo.email && (
+                                    <a href={`mailto:${contactInfo.email}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white', opacity: 0.8, textDecoration: 'none' }}>
+                                        <Mail size={16} /> {contactInfo.email}
+                                    </a>
+                                )}
+                                {contactInfo.phone && (
+                                    <a href={`tel:${contactInfo.phone}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white', opacity: 0.8, textDecoration: 'none' }}>
+                                        <Phone size={16} /> <span dir="ltr">{contactInfo.phone}</span>
+                                    </a>
+                                )}
+                                {contactInfo.address && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white', opacity: 0.8 }}>
+                                        <MapPin size={16} /> {contactInfo.address}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div style={{ marginTop: 'var(--spacing-lg)', display: 'flex', gap: 'var(--spacing-md)' }}>
+                                {contactInfo.twitter && <a href={contactInfo.twitter} target="_blank" rel="noopener noreferrer" style={{ color: 'white', opacity: 0.8 }}><Twitter size={20} /></a>}
+                                {contactInfo.instagram && <a href={contactInfo.instagram} target="_blank" rel="noopener noreferrer" style={{ color: 'white', opacity: 0.8 }}><Instagram size={20} /></a>}
+                                {contactInfo.linkedin && <a href={contactInfo.linkedin} target="_blank" rel="noopener noreferrer" style={{ color: 'white', opacity: 0.8 }}><Linkedin size={20} /></a>}
+                                {contactInfo.youtube && <a href={contactInfo.youtube} target="_blank" rel="noopener noreferrer" style={{ color: 'white', opacity: 0.8 }}><Youtube size={20} /></a>}
+                            </div>
                         </div>
                         <div style={{ display: 'flex', gap: 'var(--spacing-2xl)' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
@@ -235,6 +301,7 @@ export default function HomePage() {
                                 <Link href="/courses" style={{ color: 'white', opacity: 0.8 }}>الدورات</Link>
                                 <Link href="/programs" style={{ color: 'white', opacity: 0.8 }}>البرامج</Link>
                                 <Link href="/gallery" style={{ color: 'white', opacity: 0.8 }}>المعرض</Link>
+                                <Link href="/kits" style={{ color: 'white', opacity: 0.8 }}>الحقائب التعليمية</Link>
                             </div>
                         </div>
                     </div>

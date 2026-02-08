@@ -29,8 +29,28 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
         <div style={{ minHeight: '100vh', padding: 'var(--spacing-xl) 0' }}>
             <div className="container" style={{ maxWidth: '900px' }}>
                 <div className="card">
+                    {/* Banner Section */}
+                    <div style={{ position: 'relative', height: '300px', borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: 'var(--spacing-xl)', backgroundColor: 'var(--color-surface)' }}>
+                        {course.banner_url ? (
+                            <img src={course.banner_url} alt={course.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : (
+                            <div style={{ width: '100%', height: '100%', background: 'var(--grad-navy)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.2)' }}>
+                                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            </div>
+                        )}
+                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, rgba(0,0,0,0.8))', padding: 'var(--spacing-xl)', color: 'white' }}>
+                            <div className="container">
+                                {course.is_happening_now && (
+                                    <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold mb-2 inline-block animate-pulse">
+                                        تقام الآن (مباشر)
+                                    </span>
+                                )}
+                                <h1 style={{ marginBottom: 'var(--spacing-sm)', fontSize: 'var(--font-size-3xl)' }}>{course.title}</h1>
+                            </div>
+                        </div>
+                    </div>
+
                     <div style={{ marginBottom: 'var(--spacing-xl)' }}>
-                        <h1 style={{ marginBottom: 'var(--spacing-md)' }}>{course.title}</h1>
                         {course.description && (
                             <p style={{ fontSize: 'var(--font-size-lg)', color: 'var(--color-text-secondary)' }}>
                                 {course.description}
