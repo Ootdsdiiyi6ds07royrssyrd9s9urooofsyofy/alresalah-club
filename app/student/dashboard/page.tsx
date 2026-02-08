@@ -10,7 +10,7 @@ export default async function StudentDashboard() {
         redirect('/student/login');
     }
 
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: student } = await supabase
         .from('students')
         .select('*')

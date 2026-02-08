@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Mail, Phone, Search } from 'lucide-react';
 
 export default async function StudentListPage({ searchParams }: { searchParams: { q?: string } }) {
-    const supabase = createClient();
+    const supabase = await createClient();
     const query = searchParams.q || '';
 
     let studentQuery = supabase
