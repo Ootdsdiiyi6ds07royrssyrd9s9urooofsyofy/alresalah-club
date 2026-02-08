@@ -69,8 +69,8 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
                             </tr>
                         </thead>
                         <tbody>
-                            {students?.map((student) => (
-                                <tr key={student.id} style={{ borderBottom: '1px solid var(--color-border)', transition: 'background var(--transition-fast)' }} className="hover-bg-surface">
+                            {students?.map((student: any) => (
+                                <tr key={student.id} style={{ borderBottom: '1px solid var(--color-border)', transition: 'background var(--transition-fast)' }}>
                                     <td style={{ padding: 'var(--spacing-lg)' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
                                             {student.avatar_url ? (
@@ -135,5 +135,6 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
                     </table>
                 </div>
             </div>
-            );
+        </div>
+    );
 }

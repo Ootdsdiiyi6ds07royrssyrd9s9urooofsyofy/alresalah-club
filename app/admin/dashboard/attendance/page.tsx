@@ -1,7 +1,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { ChevronLeft, MapPin, User, Calendar, Clock } from 'lucide-react';
+import { ChevronLeft, User, Calendar, Clock } from 'lucide-react';
 
 export default async function AttendanceListPage() {
     const supabase = await createClient();
@@ -38,7 +38,7 @@ export default async function AttendanceListPage() {
                 gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
                 gap: 'var(--spacing-lg)'
             }}>
-                {courses?.map(course => (
+                {courses?.map((course: any) => (
                     <Link key={course.id} href={`/admin/dashboard/attendance/${course.id}`} className="fade-in" style={{ textDecoration: 'none' }}>
                         <div className="card hover-scale" style={{
                             height: '100%',
@@ -66,8 +66,7 @@ export default async function AttendanceListPage() {
                                         width: '8px',
                                         height: '8px',
                                         borderRadius: '50%',
-                                        backgroundColor: 'var(--color-success)',
-                                        animation: 'pulse 2s infinite'
+                                        backgroundColor: 'var(--color-success)'
                                     }} />
                                     تقام الآن
                                 </div>
