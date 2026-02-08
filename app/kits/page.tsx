@@ -5,7 +5,7 @@ import { createClient as createServerClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
 export default async function PublicKitsPage() {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
     const { data: kits } = await supabase
         .from('educational_kits')
         .select('*')

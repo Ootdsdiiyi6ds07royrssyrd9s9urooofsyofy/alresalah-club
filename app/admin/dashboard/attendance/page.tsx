@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 export default async function AttendanceListPage() {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Fetch courses that are happening now OR active
     const { data: courses } = await supabase

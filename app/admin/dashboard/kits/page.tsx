@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
 export default async function KitsPage() {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: kits } = await supabase.from('educational_kits').select('*').order('created_at', { ascending: false });
 
     return (
