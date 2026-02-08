@@ -136,11 +136,5 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
                 </div>
             </div>
 
-            <style jsx>{`
-                .hover-bg-surface:hover {
-                    background-color: var(--color-surface-elevated);
-                }
-            `}</style>
-        </div>
-    );
+            );
 }

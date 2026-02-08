@@ -118,13 +118,5 @@ export default async function AttendanceListPage() {
                 )}
             </div>
 
-            <style jsx>{`
-                @keyframes pulse {
-                    0% { opacity: 1; transform: scale(1); }
-                    50% { opacity: 0.5; transform: scale(1.2); }
-                    100% { opacity: 1; transform: scale(1); }
-                }
-            `}</style>
-        </div>
-    );
+            );
 }
