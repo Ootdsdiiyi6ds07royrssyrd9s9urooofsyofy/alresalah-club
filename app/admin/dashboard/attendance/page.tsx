@@ -1,7 +1,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ChevronLeft, MapPin, User, Calendar, Clock } from 'lucide-react';
 
 export default async function AttendanceListPage() {
     const supabase = await createClient();
@@ -14,38 +14,117 @@ export default async function AttendanceListPage() {
         .order('is_happening_now', { ascending: false });
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">كشوفات الحضور</h1>
-                <Link href="/admin/dashboard" className="text-gray-500 hover:text-gray-900 flex items-center gap-2">
-                    <ArrowLeft size={20} /> عودة
+        <div style={{ maxWidth: '1000px', margin: '0 auto', spaceY: 'var(--spacing-lg)' }}>
+            {/* Header Area */}
+            <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 'var(--spacing-xl)'
+            }}>
+                <div>
+                    <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'bold', color: 'var(--color-text)' }}>كشوفات الحضور</h1>
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>اختر الدورة لتسجيل حضور الطلاب اليوم</p>
+                </div>
+                <Link href="/admin/dashboard" className="btn btn-secondary btn-sm" style={{ gap: 'var(--spacing-xs)' }}>
+                    <span>العودة للرئيسية</span>
+                    <ChevronLeft size={16} />
                 </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Courses Grid */}
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+                gap: 'var(--spacing-lg)'
+            }}>
                 {courses?.map(course => (
-                    <Link key={course.id} href={`/admin/dashboard/attendance/${course.id}`} className="block group">
-                        <div className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 transition hover:translate-y-[-2px] ${course.is_happening_now ? 'border-l-green-500 ring-2 ring-green-100 dark:ring-green-900/20' : 'border-l-gray-300 dark:border-l-gray-600'}`}>
+                    <Link key={course.id} href={`/admin/dashboard/attendance/${course.id}`} className="fade-in" style={{ textDecoration: 'none' }}>
+                        <div className="card hover-scale" style={{
+                            height: '100%',
+                            borderRight: course.is_happening_now ? '4px solid var(--color-success)' : '4px solid var(--color-border)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            position: 'relative'
+                        }}>
                             {course.is_happening_now && (
-                                <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full mb-2 inline-block font-bold animate-pulse">
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 'var(--spacing-md)',
+                                    left: 'var(--spacing-md)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 'var(--spacing-xs)',
+                                    background: 'var(--color-success-bg)',
+                                    color: 'var(--color-success)',
+                                    padding: '4px 8px',
+                                    borderRadius: 'var(--radius-sm)',
+                                    fontSize: 'var(--font-size-xs)',
+                                    fontWeight: 'bold'
+                                }}>
+                                    <div style={{
+                                        width: '8px',
+                                        height: '8px',
+                                        borderRadius: '50%',
+                                        backgroundColor: 'var(--color-success)',
+                                        animation: 'pulse 2s infinite'
+                                    }} />
                                     تقام الآن
-                                </span>
+                                </div>
                             )}
-                            <h3 className="text-lg font-bold group-hover:text-indigo-600 transition">{course.title}</h3>
-                            <p className="text-gray-500 text-sm mt-1">{course.instructor || 'بدون مدرب'}</p>
-                            <div className="mt-4 flex justify-between items-center text-sm text-gray-400">
-                                <span>{course.start_date}</span>
-                                <span>تسجيل الحضور ←</span>
+
+                            <h3 style={{
+                                fontSize: 'var(--font-size-lg)',
+                                fontWeight: 'bold',
+                                color: 'var(--color-primary)',
+                                marginBottom: 'var(--spacing-sm)',
+                                marginTop: course.is_happening_now ? 'var(--spacing-lg)' : '0'
+                            }}>
+                                {course.title}
+                            </h3>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)', flex: 1 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                                    <User size={14} />
+                                    <span>{course.instructor || 'المحاضر غير محدد'}</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                                    <Calendar size={14} />
+                                    <span>{course.start_date || 'تاريخ غير محدد'}</span>
+                                </div>
+                            </div>
+
+                            <div style={{
+                                marginTop: 'var(--spacing-lg)',
+                                paddingTop: 'var(--spacing-md)',
+                                borderTop: '1px solid var(--color-border)',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}>
+                                <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: '500', color: 'var(--color-primary)' }}>تسجيل الحضور</span>
+                                <ChevronLeft size={16} style={{ color: 'var(--color-primary)' }} />
                             </div>
                         </div>
                     </Link>
                 ))}
-                {courses?.length === 0 && (
-                    <div className="col-span-full text-center p-12 bg-white dark:bg-gray-800 rounded-lg text-gray-500">
-                        لا توجد دورات نشطة حالياً
+
+                {(!courses || courses.length === 0) && (
+                    <div className="card" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: 'var(--spacing-2xl)', border: '2px dashed var(--color-border)', background: 'transparent' }}>
+                        <Clock size={48} style={{ margin: '0 auto var(--spacing-md)', color: 'var(--color-text-muted)', opacity: 0.5 }} />
+                        <h3 style={{ color: 'var(--color-text)', marginBottom: 'var(--spacing-sm)' }}>لا توجد دورات نشطة</h3>
+                        <p style={{ color: 'var(--color-text-secondary)' }}>ستظهر الدورات النشطة هنا لتتمكن من تحضير الطلاب</p>
                     </div>
                 )}
             </div>
+
+            <style jsx>{`
+                @keyframes pulse {
+                    0% { opacity: 1; transform: scale(1); }
+                    50% { opacity: 0.5; transform: scale(1.2); }
+                    100% { opacity: 1; transform: scale(1); }
+                }
+            `}</style>
         </div>
     );
 }

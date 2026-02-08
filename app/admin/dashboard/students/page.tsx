@@ -1,7 +1,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { Mail, Phone, Search } from 'lucide-react';
+import { Mail, Phone, Search, User as UserIcon, Calendar } from 'lucide-react';
 
 export default async function StudentListPage({ searchParams }: { searchParams: { q?: string } }) {
     const supabase = await createClient();
@@ -19,75 +19,114 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
     const { data: students } = await studentQuery;
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">كشفيات الطلاب</h1>
+        <div style={{ spaceY: 'var(--spacing-lg)' }}>
+            {/* Header Area */}
+            <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 'var(--spacing-md)',
+                marginBottom: 'var(--spacing-xl)'
+            }}>
+                <div>
+                    <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'bold', color: 'var(--color-text)' }}>كشفيات الطلاب</h1>
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>إدارة واستعراض بيانات الطلاب المسجلين</p>
+                </div>
+
                 {/* Search Box */}
-                <form className="relative">
+                <form style={{ position: 'relative', width: '300px' }}>
+                    <Search
+                        size={18}
+                        style={{
+                            position: 'absolute',
+                            right: 'var(--spacing-sm)',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            color: 'var(--color-text-muted)'
+                        }}
+                    />
                     <input
                         name="q"
                         defaultValue={query}
                         placeholder="بحث عن طالب..."
-                        className="pl-10 pr-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="input"
+                        style={{ paddingRight: 'var(--spacing-xl)' }}
                     />
-                    <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
                 </form>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-gray-50 dark:bg-gray-700/50">
-                            <tr>
-                                <th className="text-right p-4 text-sm font-semibold text-gray-600 dark:text-gray-300">الطالب</th>
-                                <th className="text-right p-4 text-sm font-semibold text-gray-600 dark:text-gray-300">معلومات التواصل</th>
-                                <th className="text-right p-4 text-sm font-semibold text-gray-600 dark:text-gray-300">تاريخ الانضمام</th>
-                                <th className="text-center p-4 text-sm font-semibold text-gray-600 dark:text-gray-300">الحالة</th>
+            {/* Table Area */}
+            <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                        <thead>
+                            <tr style={{ background: 'var(--color-surface-elevated)', borderBottom: '1px solid var(--color-border)' }}>
+                                <th style={{ padding: 'var(--spacing-lg)', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>الطالب</th>
+                                <th style={{ padding: 'var(--spacing-lg)', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>بيانات التواصل</th>
+                                <th style={{ padding: 'var(--spacing-lg)', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>تاريخ التسجيل</th>
+                                <th style={{ padding: 'var(--spacing-lg)', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', textAlign: 'center' }}>الحالة</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody style={{ divideY: '1px solid var(--color-border)' }}>
                             {students?.map((student) => (
-                                <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-3">
+                                <tr key={student.id} style={{ borderBottom: '1px solid var(--color-border)', transition: 'background var(--transition-fast)' }} className="hover-bg-surface">
+                                    <td style={{ padding: 'var(--spacing-lg)' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
                                             {student.avatar_url ? (
-                                                <img src={student.avatar_url} alt={student.name} className="w-10 h-10 rounded-full object-cover" />
+                                                <img
+                                                    src={student.avatar_url}
+                                                    alt={student.name}
+                                                    style={{ width: '45px', height: '45px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--color-border)' }}
+                                                />
                                             ) : (
-                                                <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 font-bold">
-                                                    {student.name?.[0] || '?'}
+                                                <div style={{
+                                                    width: '45px',
+                                                    height: '45px',
+                                                    borderRadius: '50%',
+                                                    background: 'var(--grad-navy)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    color: 'white'
+                                                }}>
+                                                    <UserIcon size={20} />
                                                 </div>
                                             )}
                                             <div>
-                                                <div className="font-medium text-gray-900 dark:text-white">{student.name}</div>
-                                                <div className="text-xs text-gray-500">ID: {student.bawaba_id}</div>
+                                                <div style={{ fontWeight: '600', color: 'var(--color-text)' }}>{student.name}</div>
+                                                <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>ID: {student.bawaba_id}</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="p-4 space-y-1">
-                                        {student.email && (
-                                            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <Mail size={14} /> {student.email}
-                                            </div>
-                                        )}
-                                        {student.phone && (
-                                            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <Phone size={14} /> <span dir="ltr">{student.phone}</span>
-                                            </div>
-                                        )}
+                                    <td style={{ padding: 'var(--spacing-lg)' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xs)' }}>
+                                            {student.email && (
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                                                    <Mail size={14} /> {student.email}
+                                                </div>
+                                            )}
+                                            {student.phone && (
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                                                    <Phone size={14} /> <span dir="ltr">{student.phone}</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </td>
-                                    <td className="p-4 text-sm text-gray-600 dark:text-gray-400">
-                                        {new Date(student.created_at).toLocaleDateString('ar-SA')}
+                                    <td style={{ padding: 'var(--spacing-lg)' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                                            <Calendar size={14} />
+                                            {new Date(student.created_at).toLocaleDateString('ar-SA')}
+                                        </div>
                                     </td>
-                                    <td className="p-4 text-center">
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                            نشط
-                                        </span>
+                                    <td style={{ padding: 'var(--spacing-lg)', textAlign: 'center' }}>
+                                        <span className="badge badge-success">نشط</span>
                                     </td>
                                 </tr>
                             ))}
-                            {students?.length === 0 && (
+                            {(!students || students.length === 0) && (
                                 <tr>
-                                    <td colSpan={4} className="p-8 text-center text-gray-500">
+                                    <td colSpan={4} style={{ padding: 'var(--spacing-2xl)', textAlign: 'center', color: 'var(--color-text-muted)' }}>
                                         لا يوجد طلاب مطابقين للبحث
                                     </td>
                                 </tr>
@@ -96,6 +135,12 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
                     </table>
                 </div>
             </div>
+
+            <style jsx>{`
+                .hover-bg-surface:hover {
+                    background-color: var(--color-surface-elevated);
+                }
+            `}</style>
         </div>
     );
 }

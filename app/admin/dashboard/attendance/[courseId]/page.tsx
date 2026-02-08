@@ -4,7 +4,7 @@
 import { createClient } from '@/lib/supabase/client';
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Loader2, Save, Check, X, Clock, FileText } from 'lucide-react';
+import { Loader2, Save, Check, X, Clock, FileText, Plus, ChevronRight, User, Mail, Calendar } from 'lucide-react';
 
 export default function AttendancePage() {
     const params = useParams();
@@ -17,9 +17,9 @@ export default function AttendancePage() {
     const [students, setStudents] = useState<any[]>([]);
     const [sessions, setSessions] = useState<any[]>([]);
     const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
-    const [attendance, setAttendance] = useState<Record<string, string>>({}); // studentId -> status
+    const [attendance, setAttendance] = useState<Record<string, string>>({});
     const [saving, setSaving] = useState(false);
-    const [notes, setNotes] = useState<Record<string, string>>({}); // studentId -> notes
+    const [notes, setNotes] = useState<Record<string, string>>({});
 
     useEffect(() => {
         fetchData();
@@ -27,7 +27,6 @@ export default function AttendancePage() {
 
     const fetchData = async () => {
         try {
-            // 1. Fetch Course Info
             const { data: courseData, error: courseError } = await supabase
                 .from('courses')
                 .select('*')
@@ -37,22 +36,15 @@ export default function AttendancePage() {
             if (courseError) throw courseError;
             setCourse(courseData);
 
-            // 2. Fetch Enrolled Students (Applicants -> Students?)
-            // We need to link applicants to students if possible, or just list applicants.
-            // The requirement says "Show registered people".
-            // Applicants table has `full_name`. 
-            // Ideally we should use `students` table if they are synced, but `applicants` is the source of truth for course registration.
-            // Let's use `applicants` for the list.
             const { data: applicantsHelper, error: applicantsError } = await supabase
                 .from('applicants')
                 .select('*')
                 .eq('course_id', courseId)
-                .eq('status', 'approved'); // Only approved? Or all? User said "registered".
+                .eq('status', 'approved');
 
             if (applicantsError) throw applicantsError;
             setStudents(applicantsHelper || []);
 
-            // 3. Fetch Sessions
             const { data: sessionsData, error: sessionsError } = await supabase
                 .from('course_sessions')
                 .select('*')
@@ -61,14 +53,6 @@ export default function AttendancePage() {
 
             if (sessionsError) throw sessionsError;
             setSessions(sessionsData || []);
-
-            if (sessionsData && sessionsData.length > 0) {
-                // Select most recent or create new?
-                // For now just letting user select or create.
-                // Or auto-select first.
-                // setSelectedSessionId(sessionsData[0].id);
-                // fetchAttendance(sessionsData[0].id);
-            }
 
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -93,28 +77,6 @@ export default function AttendancePage() {
                 const newAttendance: Record<string, string> = {};
                 const newNotes: Record<string, string> = {};
                 data.forEach((record: any) => {
-                    // We need to map applicant ID to student ID? 
-                    // Wait, `attendance` table links to `student_id` (from `students` table).
-                    // `applicants` table might not have `student_id`.
-                    // This is a disconnect.
-                    // If students register via Bawaba, they are in `students`.
-                    // When they apply, we should link `applicants` to `students`?
-                    // Currently `applicants` has email. `students` has email.
-                    // We can join on email.
-                    // OR, we can just store `applicant_id` in attendance?
-                    // The schema said `student_id`.
-                    // Let's assume we map by email for now or assume `applicants` are linked.
-                    // For the Hackathon speed, let's just use `applicant_id` in `attendance` table instead of `student_id`?
-                    // Or change schema. existing schema in `schema_update.sql` uses `student_id`.
-                    // We need to find the `student_id` for each applicant.
-
-                    // Allow simple solution: Update `attendance` to reference `applicants` OR `students`.
-                    // Since specific requirement "System for students separate from admin", 
-                    // students are in `students`.
-                    // Applicants are course registrations.
-                    // We should probably find the `student` record for the `applicant`.
-                    // Let's assume we use `student_id` in attendance and we look it up.
-
                     if (record.student_id) newAttendance[record.student_id] = record.status;
                     if (record.notes) newNotes[record.student_id] = record.notes;
                 });
@@ -154,17 +116,10 @@ export default function AttendancePage() {
         if (!selectedSessionId) return;
         setSaving(true);
         try {
-            // We need `student_id` for each applicant.
-            // Complex lookup: Applicant -> Email -> Student ID.
-            // We can do this on the fly or bulk.
-
             const updates = [];
             for (const applicant of students) {
-                const status = attendance[applicant.id] || 'absent'; // Default to absent? Or skip?
-                // Wait, `attendance` state uses applicant.id as key for UI convenience.
-                // But DB needs `student_id`.
+                const status = attendance[applicant.id] || 'absent';
 
-                // Lookup student by email
                 const { data: student } = await supabase.from('students').select('id').eq('email', applicant.email).single();
 
                 if (student) {
@@ -196,95 +151,175 @@ export default function AttendancePage() {
         }
     };
 
-    if (loading) return <div>تحميل...</div>;
+    if (loading) return (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px', gap: 'var(--spacing-md)', color: 'var(--color-text-secondary)' }}>
+            <Loader2 className="animate-spin" />
+            <span>جاري تحميل البيانات...</span>
+        </div>
+    );
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+        <div style={{ spaceY: 'var(--spacing-lg)' }}>
+            {/* Header Area */}
+            <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 'var(--spacing-md)',
+                marginBottom: 'var(--spacing-xl)',
+                background: 'var(--color-surface)',
+                padding: 'var(--spacing-lg)',
+                borderRadius: 'var(--radius-lg)',
+                borderBottom: '4px solid var(--color-primary)'
+            }}>
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{course.title}</h1>
-                    <p className="text-gray-500 dark:text-gray-400">إدارة الحضور والغياب</p>
+                    <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'bold', color: 'var(--color-text)' }}>{course.title}</h1>
+                    <div style={{ display: 'flex', gap: 'var(--spacing-md)', marginTop: 'var(--spacing-xs)' }}>
+                        <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Calendar size={14} /> {course.start_date}
+                        </span>
+                        <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <User size={14} /> {course.instructor}
+                        </span>
+                    </div>
                 </div>
-                <button onClick={createSession} className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 flex items-center gap-2">
-                    <PlusIcon /> جلسة جديدة
-                </button>
+
+                <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                    <Link href="/admin/dashboard/attendance" className="btn btn-secondary">
+                        <ChevronRight size={18} /> عودة
+                    </Link>
+                    <button onClick={createSession} className="btn btn-primary">
+                        <Plus size={18} /> جلسة جديدة
+                    </button>
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 1fr) 3fr', gap: 'var(--spacing-xl)' }}>
                 {/* Sessions Sidebar */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                    <div className="p-4 border-b dark:border-gray-700 font-bold">الجلسات السابقة</div>
-                    <div className="max-h-[500px] overflow-y-auto">
+                <div className="card" style={{ padding: 0, overflow: 'hidden', height: 'fit-content' }}>
+                    <div style={{ padding: 'var(--spacing-md)', background: 'var(--color-surface-elevated)', borderBottom: '1px solid var(--color-border)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
+                        <Clock size={18} /> الجلسات
+                    </div>
+                    <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
                         {sessions.map(session => (
                             <button
                                 key={session.id}
                                 onClick={() => fetchAttendance(session.id)}
-                                className={`w-full text-right p-4 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition ${selectedSessionId === session.id ? 'bg-indigo-50 dark:bg-indigo-900/50 border-r-4 border-r-indigo-600' : ''}`}
+                                style={{
+                                    width: '100%',
+                                    textAlign: 'right',
+                                    padding: 'var(--spacing-lg)',
+                                    borderBottom: '1px solid var(--color-border)',
+                                    background: selectedSessionId === session.id ? 'var(--color-surface-elevated)' : 'transparent',
+                                    borderRight: selectedSessionId === session.id ? '4px solid var(--color-primary)' : '0',
+                                    transition: 'all var(--transition-fast)',
+                                    cursor: 'pointer'
+                                }}
+                                className="session-item"
                             >
-                                <div className="font-medium">{session.title}</div>
-                                <div className="text-xs text-gray-500">{session.date}</div>
+                                <div style={{ fontWeight: '600', color: selectedSessionId === session.id ? 'var(--color-primary)' : 'var(--color-text)' }}>{session.title}</div>
+                                <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', marginTop: '4px' }}>{new Date(session.date).toLocaleDateString('ar-SA')}</div>
                             </button>
                         ))}
-                        {sessions.length === 0 && <div className="p-4 text-center text-gray-500">لا يوجد جلسات</div>}
+                        {sessions.length === 0 && (
+                            <div style={{ padding: 'var(--spacing-2xl)', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+                                <FileText size={40} style={{ margin: '0 auto var(--spacing-md)', opacity: 0.3 }} />
+                                <p>لا توجد جلسات حالياً</p>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                {/* Attendance List */}
-                <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                {/* Main Content Area */}
+                <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
                     {selectedSessionId ? (
                         <>
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-xl font-bold">قائمة الطلاب</h2>
-                                <button onClick={saveAttendance} disabled={saving} className="bg-green-600 text-white px-6 py-2 rounded shadow hover:bg-green-700 disabled:opacity-50 flex items-center gap-2">
-                                    <Save size={18} /> {saving ? 'جاري الحفظ...' : 'حفظ الكشف'}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--spacing-lg)', borderBottom: '1px solid var(--color-border)', background: 'var(--color-surface-elevated)' }}>
+                                <h2 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'bold' }}>تحضير الطلاب</h2>
+                                <button
+                                    onClick={saveAttendance}
+                                    disabled={saving}
+                                    className="btn btn-primary"
+                                    style={{ padding: 'var(--spacing-sm) var(--spacing-xl)' }}
+                                >
+                                    {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
+                                    {saving ? 'جاري الحفظ...' : 'حفظ الكشف'}
                                 </button>
                             </div>
 
-                            <div className="overflow-x-auto">
-                                <table className="w-full">
-                                    <thead>
-                                        <tr className="border-b dark:border-gray-700">
-                                            <th className="text-right p-3">اسم الطالب</th>
-                                            <th className="text-center p-3">الحالة</th>
-                                            <th className="text-right p-3">ملاحظات</th>
+                            <div style={{ overflowX: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'right' }}>
+                                    <thead style={{ background: 'var(--color-surface)', color: 'var(--color-text-secondary)' }}>
+                                        <tr>
+                                            <th style={{ padding: 'var(--spacing-lg)', fontSize: 'var(--font-size-sm)' }}>الطالب</th>
+                                            <th style={{ padding: 'var(--spacing-lg)', fontSize: 'var(--font-size-sm)', textAlign: 'center' }}>تسجيل الحضور</th>
+                                            <th style={{ padding: 'var(--spacing-lg)', fontSize: 'var(--font-size-sm)' }}>ملاحظات ومذكرة</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y dark:divide-gray-700">
+                                    <tbody>
                                         {students.map(student => (
-                                            <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                                <td className="p-3">
-                                                    <div className="font-medium">{student.full_name}</div>
-                                                    <div className="text-xs text-gray-500">{student.email}</div>
+                                            <tr key={student.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                                                <td style={{ padding: 'var(--spacing-lg)' }}>
+                                                    <div style={{ fontWeight: '600' }}>{student.full_name}</div>
+                                                    <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                        <Mail size={12} /> {student.email}
+                                                    </div>
                                                 </td>
-                                                <td className="p-3">
-                                                    <div className="flex justify-center gap-2">
+                                                <td style={{ padding: 'var(--spacing-lg)' }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--spacing-sm)' }}>
                                                         <button
                                                             onClick={() => markAttendance(student.id, 'present')}
-                                                            className={`p-2 rounded ${attendance[student.id] === 'present' ? 'bg-green-100 text-green-700 ring-2 ring-green-600' : 'bg-gray-100 text-gray-400 hover:bg-green-50'}`}
                                                             title="حاضر"
+                                                            style={{
+                                                                padding: 'var(--spacing-sm)',
+                                                                borderRadius: 'var(--radius-md)',
+                                                                border: '1px solid var(--color-border)',
+                                                                background: attendance[student.id] === 'present' ? 'var(--color-success)' : 'transparent',
+                                                                color: attendance[student.id] === 'present' ? 'white' : 'var(--color-text-muted)',
+                                                                cursor: 'pointer',
+                                                                transition: 'all var(--transition-fast)'
+                                                            }}
                                                         >
                                                             <Check size={20} />
                                                         </button>
                                                         <button
                                                             onClick={() => markAttendance(student.id, 'late')}
-                                                            className={`p-2 rounded ${attendance[student.id] === 'late' ? 'bg-yellow-100 text-yellow-700 ring-2 ring-yellow-600' : 'bg-gray-100 text-gray-400 hover:bg-yellow-50'}`}
                                                             title="متأخر"
+                                                            style={{
+                                                                padding: 'var(--spacing-sm)',
+                                                                borderRadius: 'var(--radius-md)',
+                                                                border: '1px solid var(--color-border)',
+                                                                background: attendance[student.id] === 'late' ? 'var(--color-warning)' : 'transparent',
+                                                                color: attendance[student.id] === 'late' ? 'white' : 'var(--color-text-muted)',
+                                                                cursor: 'pointer',
+                                                                transition: 'all var(--transition-fast)'
+                                                            }}
                                                         >
                                                             <Clock size={20} />
                                                         </button>
                                                         <button
                                                             onClick={() => markAttendance(student.id, 'absent')}
-                                                            className={`p-2 rounded ${attendance[student.id] === 'absent' ? 'bg-red-100 text-red-700 ring-2 ring-red-600' : 'bg-gray-100 text-gray-400 hover:bg-red-50'}`}
                                                             title="غائب"
+                                                            style={{
+                                                                padding: 'var(--spacing-sm)',
+                                                                borderRadius: 'var(--radius-md)',
+                                                                border: '1px solid var(--color-border)',
+                                                                background: attendance[student.id] === 'absent' ? 'var(--color-error)' : 'transparent',
+                                                                color: attendance[student.id] === 'absent' ? 'white' : 'var(--color-text-muted)',
+                                                                cursor: 'pointer',
+                                                                transition: 'all var(--transition-fast)'
+                                                            }}
                                                         >
                                                             <X size={20} />
                                                         </button>
                                                     </div>
                                                 </td>
-                                                <td className="p-3">
+                                                <td style={{ padding: 'var(--spacing-lg)' }}>
                                                     <input
-                                                        className="w-full bg-transparent border-b border-gray-300 dark:border-gray-700 focus:border-indigo-500 outline-none text-sm py-1"
+                                                        className="input"
                                                         placeholder="اضافة ملاحظة..."
+                                                        style={{ height: '36px', fontSize: 'var(--font-size-sm)', background: 'transparent' }}
                                                         value={notes[student.id] || ''}
                                                         onChange={(e) => setNotes({ ...notes, [student.id]: e.target.value })}
                                                     />
@@ -293,7 +328,9 @@ export default function AttendancePage() {
                                         ))}
                                         {students.length === 0 && (
                                             <tr>
-                                                <td colSpan={3} className="p-8 text-center text-gray-500">لا يوجد طلاب مسجلين في هذه الدورة</td>
+                                                <td colSpan={3} style={{ padding: 'var(--spacing-2xl)', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+                                                    لا يوجد طلاب معتمدين لهذه الدورة حتى الآن
+                                                </td>
                                             </tr>
                                         )}
                                     </tbody>
@@ -301,18 +338,20 @@ export default function AttendancePage() {
                             </div>
                         </>
                     ) : (
-                        <div className="flex flex-col items-center justify-center h-64 text-gray-500">
-                            <FileText size={48} className="mb-4 opacity-50" />
-                            <p>اختر جلسة من القائمة لعرض كشف الحضور</p>
-                            <p className="text-sm mt-2">أو قم بإنشاء جلسة جديدة</p>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '400px', color: 'var(--color-text-muted)', padding: 'var(--spacing-2xl)', textAlign: 'center' }}>
+                            <FileText size={64} style={{ opacity: 0.2, marginBottom: 'var(--spacing-lg)' }} />
+                            <h3 style={{ fontSize: 'var(--font-size-xl)' }}>بانتظار عرض الجلسة</h3>
+                            <p style={{ maxWidth: '300px', marginTop: 'var(--spacing-sm)' }}>يرجى اختيار جلسة من القائمة الجانبية لعرض كشف الحضور، أو إنشاء جلسة جديدة لليوم.</p>
                         </div>
                     )}
                 </div>
             </div>
+
+            <style jsx>{`
+                .session-item:hover:not(:disabled) {
+                    background-color: var(--color-surface);
+                }
+            `}</style>
         </div>
     );
-}
-
-function PlusIcon() {
-    return <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
 }
