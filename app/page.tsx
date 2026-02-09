@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { Megaphone, Image as ImageIcon, BookOpen, GraduationCap, Star, CheckCircle, CheckSquare, Trophy, Gem, Mail, Phone, MapPin, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react'
+import { Megaphone, Image as ImageIcon, BookOpen, GraduationCap, Star, CheckCircle, CheckSquare, Trophy, Gem, Mail, Phone, MapPin, Twitter, Instagram, Linkedin, Youtube, User as UserIcon } from 'lucide-react'
 
 export default function HomePage() {
     const supabase = createClient()
