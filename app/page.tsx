@@ -87,22 +87,11 @@ export default function HomePage() {
                     </p>
 
                     <div style={{ marginBottom: 'var(--spacing-2xl)' }}>
-                        <Link href="/student/login" className="btn btn-accent" style={{
-                            padding: '12px 32px',
-                            fontSize: '1.2rem',
-                            borderRadius: '50px',
-                            boxShadow: '0 4px 20px rgba(212, 175, 55, 0.3)',
-                            fontWeight: 'bold',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '10px'
-                        }}>
-                            <UserIcon size={22} /> بوابة الطلاب (دخول / تسجيل)
-                        </Link>
                     </div>
 
 
                     {/* Quick Access Buttons */}
+
                     <div style={{
                         display: 'flex',
                         flexWrap: 'wrap',

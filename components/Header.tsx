@@ -147,7 +147,7 @@ export default function Header() {
 
                     <div style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
                         <ThemeToggle />
-                        <Link href="/admin/login" className="btn btn-primary btn-sm">دخول</Link>
+                        <Link href="/login/portal" className="btn btn-primary btn-sm">دخول</Link>
                     </div>
                 </div>
             </header>
