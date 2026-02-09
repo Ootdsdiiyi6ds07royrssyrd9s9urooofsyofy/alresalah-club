@@ -18,3 +18,32 @@
 [33mba70d35[m Improve UI layout for Quick Access buttons
 [33mfa9554e[m Optimize SEO metadata
 [33mac8ce18[m Fix settings error, add survey link, and update icons
+[33mcommit 295e35061bd14b21a0559740dc4148271b57d850[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Admin <admin@example.com>
+Date:   Mon Feb 9 22:34:49 2026 +0300
+
+    feat: unified login portal and homepage cleanup
+
+[33mcommit 6cc8ae94ee7e8f30ba0cc23b55b4f3d7f60fd464[m
+Author: Admin <admin@example.com>
+Date:   Mon Feb 9 07:46:24 2026 +0300
+
+    feat: simplify kit creation and add student portal button to homepage
+
+[33mcommit 5fe70ab66129220feef26066593eb46bb9c8e47b[m
+Author: Admin <admin@example.com>
+Date:   Mon Feb 9 07:39:25 2026 +0300
+
+    refactor: remove category from kit creation and add student portal button to homepage
+
+[33mcommit ca2102f0229d9958f7cb4fa8f5c30fe7a9b6a2b7[m
+Author: Admin <admin@example.com>
+Date:   Sun Feb 8 18:26:00 2026 +0300
+
+    feat: implement student authentication, redesign admin pages, and enhance profile system
+
+[33mcommit 683e0d662bc5679ddb8120580210ed4148907389[m
+Author: Admin <admin@example.com>
+Date:   Sun Feb 8 18:06:44 2026 +0300
+
+    fix: Robust syntax fix for Attendance and Students pages
