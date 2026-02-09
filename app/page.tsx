@@ -78,13 +78,29 @@ export default function HomePage() {
                     </h2>
                     <p className="hero-subtitle" style={{
                         fontSize: 'clamp(1.1rem, 2vw, 1.5rem)',
-                        marginBottom: 'var(--spacing-2xl)',
+                        marginBottom: 'var(--spacing-xl)',
                         opacity: 0.9,
                         maxWidth: '800px',
-                        margin: '0 auto var(--spacing-2xl)'
+                        margin: '0 auto var(--spacing-xl)'
                     }}>
                         بوابتك نحو التميز والإبداع في رحلتك التعليمية. نقدم لك برامج تدريبية متكاملة تهدف إلى تطوير مهاراتك وبناء مستقبلك.
                     </p>
+
+                    <div style={{ marginBottom: 'var(--spacing-2xl)' }}>
+                        <Link href="/student/login" className="btn btn-accent" style={{
+                            padding: '12px 32px',
+                            fontSize: '1.2rem',
+                            borderRadius: '50px',
+                            boxShadow: '0 4px 20px rgba(212, 175, 55, 0.3)',
+                            fontWeight: 'bold',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '10px'
+                        }}>
+                            <UserIcon size={22} /> بوابة الطلاب (دخول / تسجيل)
+                        </Link>
+                    </div>
+
 
                     {/* Quick Access Buttons */}
                     <div style={{

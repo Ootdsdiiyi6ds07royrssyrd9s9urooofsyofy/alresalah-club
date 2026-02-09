@@ -21,7 +21,6 @@ export default function NewKitPage() {
         const formData = new FormData(e.currentTarget);
         const title = formData.get('title') as string;
         const description = formData.get('description') as string;
-        const category = formData.get('category') as string;
 
         try {
             let fileUrl = '';
@@ -48,10 +47,10 @@ export default function NewKitPage() {
             const { error: insertError } = await supabase.from('educational_kits' as any).insert({
                 title,
                 description,
-                category,
                 file_url: fileUrl,
                 cover_url: coverUrl,
             });
+
 
             if (insertError) throw insertError;
 
@@ -96,20 +95,10 @@ export default function NewKitPage() {
                         />
                     </div>
 
-                    {/* Category Selection (Optional enhancement) */}
-                    <div className="form-group">
-                        <label className="label">التصنيف</label>
-                        <select name="category" className="input">
-                            <option value="general">عام</option>
-                            <option value="coding">برمجة</option>
-                            <option value="design">تصميم</option>
-                            <option value="business">ريادة أعمال</option>
-                        </select>
-                    </div>
-
                     {/* Description */}
                     <div className="form-group">
                         <label className="label">الوصف</label>
+
                         <textarea
                             name="description"
                             rows={4}
