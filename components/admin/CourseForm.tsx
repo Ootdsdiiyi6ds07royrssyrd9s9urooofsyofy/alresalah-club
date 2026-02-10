@@ -3,8 +3,8 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import { ArrowRight, Upload } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowRight, Upload, Save, X, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 interface CourseFormProps {
@@ -18,20 +18,35 @@ export default function CourseForm({ initialData, isEdit = false }: CourseFormPr
     const [loading, setLoading] = useState(false);
     const [banner, setBanner] = useState<File | null>(null);
     const [bannerPreview, setBannerPreview] = useState<string | null>(initialData?.banner_url || null);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
+        setError('');
+        setSuccess('');
 
         const formData = new FormData(e.currentTarget);
+
+        // Validation and Parsing
+        const totalSeats = parseInt(formData.get('total_seats') as string);
+        const price = parseFloat(formData.get('price') as string);
+
+        if (isNaN(totalSeats) || totalSeats < 0) {
+            setError('يرجى إدخال عدد مقاعد صحيح');
+            setLoading(false);
+            return;
+        }
+
         const data: any = {
             title: formData.get('title'),
             description: formData.get('description'),
             instructor: formData.get('instructor'),
-            start_date: formData.get('start_date'),
-            end_date: formData.get('end_date'),
-            total_seats: parseInt(formData.get('total_seats') as string),
-            price: parseFloat(formData.get('price') as string),
+            start_date: formData.get('start_date') || null,
+            end_date: formData.get('end_date') || null,
+            total_seats: totalSeats,
+            price: isNaN(price) ? 0 : price,
             status: formData.get('status'),
             is_happening_now: formData.get('is_happening_now') === 'on',
             is_active: formData.get('is_active') === 'on',
@@ -43,146 +58,234 @@ export default function CourseForm({ initialData, isEdit = false }: CourseFormPr
 
         try {
             if (banner) {
-                const fileExt = banner.name.split('.').pop();
-                const fileName = `banners/${Math.random()}.${fileExt}`;
-                const { error: uploadError } = await supabase.storage.from('media').upload(fileName, banner);
-                if (uploadError) throw uploadError;
-                const { data: publicUrlData } = supabase.storage.from('media').getPublicUrl(fileName);
-                data.banner_url = publicUrlData.publicUrl;
+                const uploadFormData = new FormData();
+                uploadFormData.append('file', banner);
+                uploadFormData.append('folder', 'courses');
+
+                const uploadRes = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: uploadFormData,
+                });
+
+                if (!uploadRes.ok) {
+                    const errorData = await uploadRes.json();
+                    throw new Error(errorData.error || 'فشل رفع الصورة سحابياً');
+                }
+
+                const uploadData = await uploadRes.json();
+                data.banner_url = uploadData.url;
             }
 
+            let resultError;
             if (isEdit) {
                 const { error } = await supabase.from('courses').update(data).eq('id', initialData.id);
-                if (error) throw error;
+                resultError = error;
             } else {
                 const { error } = await supabase.from('courses').insert(data);
-                if (error) throw error;
+                resultError = error;
             }
 
-            router.push('/admin/dashboard/courses');
-            router.refresh();
-        } catch (error) {
-            console.error('Error saving course:', error);
-            alert('حدث خطأ أثناء حفظ الدورة');
+            if (resultError) throw resultError;
+
+            setSuccess(isEdit ? 'تم تحديث الدورة بنجاح' : 'تم نشر الدورة بنجاح');
+
+            setTimeout(() => {
+                router.push('/admin/dashboard/courses');
+                router.refresh();
+            }, 1500);
+
+        } catch (err: any) {
+            console.error('Error saving course:', err);
+            setError(err.message || 'حدث خطأ غير متوقع أثناء الحفظ');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-8 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
-            {/* ... existing fields ... */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label className="label">عنوان الدورة</label>
-                    <input name="title" defaultValue={initialData?.title} required className="input" />
+        <div className="fade-in">
+            {error && (
+                <div className="alert alert-error mb-6 flex items-center gap-2">
+                    <AlertCircle size={20} />
+                    {error}
                 </div>
-                <div>
-                    <label className="label">المدرب</label>
-                    <input name="instructor" defaultValue={initialData?.instructor} className="input" />
+            )}
+
+            {success && (
+                <div className="alert alert-success mb-6 flex items-center gap-2">
+                    <CheckCircle size={20} />
+                    {success}
                 </div>
-                {/* ... other standard fields ... */}
-            </div>
+            )}
 
-            {/* New Fields: Banner, Status, Happening Now */}
-            <div className="border-t pt-6 border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">إعدادات العرض والحالة</h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label className="label">بانر الدورة (صورة عرض)</label>
-                        <div className="mt-2 flex items-center gap-4">
-                            {bannerPreview && (
-                                <img src={bannerPreview} alt="Preview" className="h-20 w-32 object-cover rounded-lg border dark:border-gray-600" />
-                            )}
-                            <label className="cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 flex items-center gap-2">
-                                <Upload size={16} />
-                                <span>اختر صورة</span>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    onChange={(e) => {
-                                        const file = e.target.files?.[0];
-                                        if (file) {
-                                            setBanner(file);
-                                            setBannerPreview(URL.createObjectURL(file));
-                                        }
-                                    }}
-                                />
-                            </label>
+            <form onSubmit={handleSubmit} className="card-elevated p-8 space-y-10">
+                {/* Basic Info Section */}
+                <section>
+                    <h3 className="text-xl font-bold mb-6 pb-2 border-b-2 border-accent inline-block">المعلومات الأساسية</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="form-group">
+                            <label className="label">عنوان الدورة</label>
+                            <input
+                                name="title"
+                                defaultValue={initialData?.title}
+                                required
+                                className="input"
+                                placeholder="مثال: أساسيات التصميم الجرافيكي"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label className="label">المدرب / المحاضر</label>
+                            <input
+                                name="instructor"
+                                defaultValue={initialData?.instructor}
+                                className="input"
+                                placeholder="اسم المدرب الرباعي"
+                            />
                         </div>
                     </div>
-
-                    <div>
-                        <label className="label">حالة الدورة</label>
-                        <select name="status" defaultValue={initialData?.status || 'upcoming'} className="input">
-                            <option value="upcoming">قريباً</option>
-                            <option value="active">متاحة للتسجيل</option>
-                            <option value="completed">منتهية</option>
-                        </select>
-                    </div>
-
-                    <div className="flex items-center gap-2 mt-4">
-                        <input
-                            type="checkbox"
-                            name="is_happening_now"
-                            id="is_happening_now"
-                            defaultChecked={initialData?.is_happening_now}
-                            className="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
+                    <div className="form-group mt-4">
+                        <label className="label">وصف الدورة</label>
+                        <textarea
+                            name="description"
+                            rows={4}
+                            defaultValue={initialData?.description}
+                            className="input"
+                            placeholder="اكتب تفاصيل الدورة، المحاور، والمستهدفين..."
                         />
-                        <label htmlFor="is_happening_now" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            تقام الآن (تظهر في الشريط الجانبي لتسجيل الحضور)
-                        </label>
                     </div>
-                    <div className="flex items-center gap-2 mt-4">
-                        <input
-                            type="checkbox"
-                            name="is_active"
-                            id="is_active"
-                            defaultChecked={initialData?.is_active !== false}
-                            className="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
-                        />
-                        <label htmlFor="is_active" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            نشط (تظهر في الموقع)
-                        </label>
+                </section>
+
+                {/* Display & Status Section */}
+                <section className="bg-surface p-6 rounded-xl border border-border">
+                    <h3 className="text-lg font-bold mb-6">إعدادات العرض والحالة</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="form-group">
+                            <label className="label">صورة الغلاف (Banner)</label>
+                            <div className="flex flex-col gap-4">
+                                {bannerPreview && (
+                                    <div className="relative w-full h-40 rounded-xl overflow-hidden border-2 border-accent">
+                                        <img src={bannerPreview} alt="Banner Preview" className="w-full h-full object-cover" />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setBanner(null);
+                                                setBannerPreview(null);
+                                            }}
+                                            className="absolute top-2 right-2 p-1 bg-error text-white rounded-full hover:scale-110 transition"
+                                        >
+                                            <X size={16} />
+                                        </button>
+                                    </div>
+                                )}
+                                <label className="btn btn-secondary w-full h-12 dashed-border cursor-pointer">
+                                    <Upload size={18} />
+                                    <span>{bannerPreview ? 'تغيير الصورة' : 'رفع صورة الغلاف'}</span>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                setBanner(file);
+                                                setBannerPreview(URL.createObjectURL(file));
+                                            }
+                                        }}
+                                    />
+                                </label>
+                            </div>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="form-group">
+                                <label className="label">حالة التسجيل</label>
+                                <select name="status" defaultValue={initialData?.status || 'upcoming'} className="input">
+                                    <option value="upcoming">قريباً (لم يبدأ التسجيل)</option>
+                                    <option value="active">متاحة للتسجيل الآن</option>
+                                    <option value="completed">منتهية (للأرشفة)</option>
+                                </select>
+                            </div>
+
+                            <div className="space-y-4 pt-2">
+                                <label className="flex items-center gap-3 cursor-pointer group">
+                                    <input
+                                        type="checkbox"
+                                        name="is_active"
+                                        defaultChecked={initialData?.is_active !== false}
+                                        className="w-5 h-5 rounded border-border text-primary focus:ring-accent"
+                                    />
+                                    <span className="text-sm font-medium group-hover:text-primary transition">نشر في الموقع العام</span>
+                                </label>
+
+                                <label className="flex items-center gap-3 cursor-pointer group">
+                                    <input
+                                        type="checkbox"
+                                        name="is_happening_now"
+                                        defaultChecked={initialData?.is_happening_now}
+                                        className="w-5 h-5 rounded border-border text-primary focus:ring-accent"
+                                    />
+                                    <span className="text-sm font-medium group-hover:text-primary transition">تقام الآن (تفعيل تسجيل الحضور)</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </section>
 
-            {/* Rest of form inputs (dates, seats, price, description) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label className="label">تاريخ البداية</label>
-                    <input type="date" name="start_date" defaultValue={initialData?.start_date} className="input" />
-                </div>
-                <div>
-                    <label className="label">تاريخ النهاية</label>
-                    <input type="date" name="end_date" defaultValue={initialData?.end_date} className="input" />
-                </div>
-                <div>
-                    <label className="label">عدد المقاعد الكلي</label>
-                    <input type="number" name="total_seats" defaultValue={initialData?.total_seats} required className="input" />
-                </div>
-                <div>
-                    <label className="label">السعر (ريال)</label>
-                    <input type="number" step="0.01" name="price" defaultValue={initialData?.price || 0} className="input" />
-                </div>
-            </div>
+                {/* Logistics Section */}
+                <section>
+                    <h3 className="text-lg font-bold mb-6">البيانات اللوجستية</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="form-group">
+                            <label className="label">تاريخ البدء</label>
+                            <input type="date" name="start_date" defaultValue={initialData?.start_date} className="input" />
+                        </div>
+                        <div className="form-group">
+                            <label className="label">تاريخ الانتهاء</label>
+                            <input type="date" name="end_date" defaultValue={initialData?.end_date} className="input" />
+                        </div>
+                        <div className="form-group">
+                            <label className="label">إجمالي المقاعد</label>
+                            <input type="number" name="total_seats" defaultValue={initialData?.total_seats || 0} required className="input" min="0" />
+                        </div>
+                        <div className="form-group">
+                            <label className="label">سعر الدورة (ريال)</label>
+                            <input type="number" step="0.01" name="price" defaultValue={initialData?.price || 0} className="input" min="0" />
+                        </div>
+                    </div>
+                </section>
 
-            <div>
-                <label className="label">الوصف</label>
-                <textarea name="description" rows={4} defaultValue={initialData?.description} className="input" />
-            </div>
+                {/* Actions */}
+                <div className="pt-8 border-t border-border flex justify-end gap-4">
+                    <Link href="/admin/dashboard/courses" className="btn btn-secondary">
+                        إلغاء
+                    </Link>
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="btn btn-primary"
+                        style={{ minWidth: '160px' }}
+                    >
+                        {loading ? (
+                            <Loader2 className="animate-spin" size={20} />
+                        ) : (
+                            <span className="flex items-center gap-2">
+                                <Save size={18} /> {isEdit ? 'حفظ التعديلات' : 'نشر الدورة الآن'}
+                            </span>
+                        )}
+                    </button>
+                </div>
+            </form>
 
-            <div className="flex justify-end gap-3 pt-4">
-                <Link href="/admin/dashboard/courses" className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
-                    إلغاء
-                </Link>
-                <button type="submit" disabled={loading} className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2">
-                    {loading ? 'جاري الحفظ...' : 'حفظ التغييرات'}
-                </button>
-            </div>
-        </form>
+            <style jsx>{`
+                .dashed-border {
+                    border: 2px dashed var(--color-border);
+                    background: transparent;
+                }
+                .dashed-border:hover {
+                    border-color: var(--color-accent);
+                    background: var(--color-background);
+                }
+            `}</style>
+        </div>
     );
 }

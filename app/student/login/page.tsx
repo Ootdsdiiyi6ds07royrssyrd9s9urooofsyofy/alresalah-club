@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, ArrowLeft, LogIn } from 'lucide-react';
+import { Mail, Lock, ArrowRight, LogIn, UserPlus } from 'lucide-react';
 
 export default function StudentLoginPage() {
     const router = useRouter();
@@ -32,8 +32,8 @@ export default function StudentLoginPage() {
                 throw new Error(result.error || 'فشل تسجيل الدخول');
             }
 
-            router.push('/student/dashboard');
-            router.refresh();
+            // Successful login
+            window.location.href = '/student/dashboard';
 
         } catch (err: any) {
             setError(err.message);
@@ -43,84 +43,128 @@ export default function StudentLoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{ background: 'var(--color-background)' }}>
-            <div className="max-w-md w-full space-y-8">
-                <div className="text-center">
-                    <h2 className="mt-6 text-3xl font-extrabold gradient-text">تسجيل دخول الطلاب</h2>
-                    <p className="mt-2 text-sm text-text-secondary">مرحباً بك مجدداً في نادي الرسالة</p>
+        <div style={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'var(--grad-gold)',
+            padding: 'var(--spacing-md)'
+        }}>
+            <div className="card-elevated fade-in" style={{
+                maxWidth: '450px',
+                width: '100%',
+                padding: 'var(--spacing-2xl)',
+                backgroundColor: 'var(--color-surface-elevated)'
+            }}>
+                <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-xl)' }}>
+                    <h1 className="gradient-text" style={{
+                        fontSize: 'var(--font-size-3xl)',
+                        fontWeight: '800',
+                        marginBottom: 'var(--spacing-xs)'
+                    }}>
+                        نادي الرسالة
+                    </h1>
+                    <p style={{ color: 'var(--color-text-secondary)', fontWeight: '500' }}>بوابة الطلاب</p>
                 </div>
 
-                <div className="card-elevated p-8">
-                    {error && (
-                        <div className="alert alert-error mb-6">
-                            {error}
-                        </div>
-                    )}
+                {error && (
+                    <div className="alert alert-error" style={{ marginBottom: 'var(--spacing-lg)' }}>
+                        {error}
+                    </div>
+                )}
 
-                    {/* Direct Login Form */}
-                    <form className="space-y-6" onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label className="label" htmlFor="email">البريد الإلكتروني</label>
-                            <div className="relative">
-                                <Mail className="absolute right-3 top-3 text-text-muted" size={18} />
-                                <input id="email" name="email" type="email" required className="input pr-10" placeholder="example@mail.com" />
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label className="label" htmlFor="password">كلمة المرور</label>
-                            <div className="relative">
-                                <Lock className="absolute right-3 top-3 text-text-muted" size={18} />
-                                <input id="password" name="password" type="password" required className="input pr-10" placeholder="••••••••" />
-                            </div>
-                        </div>
-
-                        <button type="submit" disabled={loading} className="btn btn-primary w-full py-3">
-                            {loading ? <span className="loading"></span> : (
-                                <span className="flex items-center gap-2">
-                                    <LogIn size={18} /> تسجيل الدخول
-                                </span>
-                            )}
-                        </button>
-                    </form>
-
-                    <div className="mt-8">
-                        <div className="relative">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-border"></div>
-                            </div>
-                            <div className="relative flex justify-center text-sm">
-                                <span className="px-2 bg-surface-elevated text-text-muted">أو</span>
-                            </div>
-                        </div>
-
-                        <div className="mt-6">
-                            <Link
-                                href="/api/auth/bawaba/login"
-                                className="btn btn-secondary w-full py-3 flex items-center justify-center gap-2"
-                            >
-                                <img src="/bawaba-logo.png" alt="" className="w-5 h-5 opacity-70" onError={(e) => e.currentTarget.style.display = 'none'} />
-                                تسجيل الدخول عبر بوابة
-                            </Link>
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                    <div className="form-group" style={{ marginBottom: 'var(--spacing-lg)' }}>
+                        <label className="label" htmlFor="email">البريد الإلكتروني</label>
+                        <div style={{ position: 'relative' }}>
+                            <Mail style={{ position: 'absolute', right: '12px', top: '12px', color: 'var(--color-text-muted)' }} size={18} />
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                required
+                                className="input"
+                                style={{ paddingRight: '40px' }}
+                                placeholder="example@mail.com"
+                            />
                         </div>
                     </div>
 
-                    <div className="text-center mt-8">
-                        <p className="text-sm text-text-secondary">
-                            ليس لديك حساب؟{' '}
-                            <Link href="/student/register" className="font-medium text-primary hover:underline">
-                                أنشئ حساباً جديداً
-                            </Link>
-                        </p>
+                    <div className="form-group" style={{ marginBottom: 'var(--spacing-xl)' }}>
+                        <label className="label" htmlFor="password">كلمة المرور</label>
+                        <div style={{ position: 'relative' }}>
+                            <Lock style={{ position: 'absolute', right: '12px', top: '12px', color: 'var(--color-text-muted)' }} size={18} />
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                required
+                                className="input"
+                                style={{ paddingRight: '40px' }}
+                                placeholder="••••••••"
+                            />
+                        </div>
+                    </div>
+
+                    <button type="submit" disabled={loading} className="btn btn-primary" style={{ width: '100%', padding: '14px' }}>
+                        {loading ? <span className="loading"></span> : (
+                            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '1.1rem' }}>
+                                <LogIn size={20} /> تسجيل الدخول
+                            </span>
+                        )}
+                    </button>
+                </form>
+
+                <div style={{ margin: 'var(--spacing-xl) 0' }}>
+                    <div style={{ position: 'relative', textAlign: 'center' }}>
+                        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, borderTop: '1px solid var(--color-border)' }}></div>
+                        <span style={{ position: 'relative', padding: '0 12px', background: 'var(--color-surface-elevated)', color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>أو</span>
+                    </div>
+
+                    <div style={{ marginTop: 'var(--spacing-lg)' }}>
+                        <Link
+                            href="/api/auth/bawaba/login"
+                            className="btn btn-secondary"
+                            style={{
+                                width: '100%',
+                                padding: '12px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '10px',
+                                border: '1px solid var(--color-border)'
+                            }}
+                        >
+                            <img src="/bawaba-logo.png" alt="" style={{ width: '20px', height: '20px' }} onError={(e) => e.currentTarget.style.display = 'none'} />
+                            الدخول عبر نفاذ / بوابة
+                        </Link>
                     </div>
                 </div>
 
-                <div className="text-center">
-                    <Link href="/" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-primary transition-colors">
-                        <ArrowLeft size={16} /> العودة للرئيسية
+                <div style={{ textAlign: 'center', marginTop: 'var(--spacing-lg)', borderTop: '1px solid var(--color-border)', paddingTop: 'var(--spacing-lg)' }}>
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                        ليس لديك حساب؟{' '}
+                        <Link href="/student/register" style={{ fontWeight: '600', color: 'var(--color-accent)', textDecoration: 'none' }}>
+                            أنشئ حساباً جديداً
+                        </Link>
+                    </p>
+                </div>
+
+                <div style={{ textAlign: 'center', marginTop: 'var(--spacing-xl)' }}>
+                    <Link href="/login/portal" style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '0.85rem',
+                        color: 'var(--color-text-muted)',
+                        textDecoration: 'none'
+                    }} className="hover:text-primary">
+                        <ArrowRight size={14} /> العودة لاختيار البوابة
                     </Link>
                 </div>
             </div>
         </div>
     );
 }
+

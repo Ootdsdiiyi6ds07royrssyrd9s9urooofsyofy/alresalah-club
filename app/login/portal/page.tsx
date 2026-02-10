@@ -1,47 +1,45 @@
 'use client';
 
 import Link from 'next/link';
-import { ShieldCheck, GraduationCap, ArrowRight } from 'lucide-react';
+import { ShieldCheck, GraduationCap, ArrowRight, Home } from 'lucide-react';
 
 export default function PortalChoicePage() {
     return (
         <div style={{
-            minHeight: '80vh',
+            minHeight: 'calc(100vh - 200px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: 'var(--spacing-xl)'
+            padding: 'var(--spacing-2xl) var(--spacing-md)',
+            background: 'var(--color-background)'
         }}>
-            <div style={{
-                maxWidth: '800px',
-                width: '100%',
-                textAlign: 'center'
-            }}>
-                <h1 style={{
-                    fontSize: 'var(--font-size-3xl)',
-                    fontWeight: '800',
-                    marginBottom: 'var(--spacing-sm)',
-                    background: 'var(--grad-navy)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent'
-                }}>
-                    مرحباً بك في نادي الرسالة
-                </h1>
-                <p style={{
-                    color: 'var(--color-text-secondary)',
-                    marginBottom: 'var(--spacing-2xl)',
-                    fontSize: 'var(--font-size-lg)'
-                }}>
-                    يرجى اختيار البوابة المناسبة للدخول
-                </p>
+            <div className="container" style={{ maxWidth: '900px' }}>
+                <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-2xl)' }}>
+                    <h1 className="gradient-text" style={{
+                        fontSize: 'clamp(2rem, 5vw, 3rem)',
+                        fontWeight: '800',
+                        marginBottom: 'var(--spacing-md)',
+                    }}>
+                        مرحباً بك في نادي الرسالة
+                    </h1>
+                    <p style={{
+                        color: 'var(--color-text-secondary)',
+                        fontSize: 'clamp(1rem, 2vw, 1.2rem)',
+                        maxWidth: '600px',
+                        margin: '0 auto'
+                    }}>
+                        يرجى اختيار البوابة المناسبة للمتابعة إلى حسابك
+                    </p>
+                </div>
 
                 <div style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                    gap: 'var(--spacing-xl)'
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                    gap: 'var(--spacing-xl)',
+                    marginTop: 'var(--spacing-2xl)'
                 }}>
                     {/* Student Portal */}
-                    <Link href="/student/login" className="card-elevated hover-scale" style={{
+                    <Link href="/student/login" className="card-elevated hover-scale fade-in" style={{
                         textDecoration: 'none',
                         color: 'inherit',
                         padding: 'var(--spacing-2xl)',
@@ -50,37 +48,49 @@ export default function PortalChoicePage() {
                         alignItems: 'center',
                         gap: 'var(--spacing-lg)',
                         border: '2px solid transparent',
-                        transition: 'all var(--transition-base)'
+                        transition: 'all var(--transition-base)',
+                        backgroundColor: 'var(--color-surface-elevated)',
+                        position: 'relative',
+                        overflow: 'hidden'
                     }}
                         onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent)')}
                         onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'transparent')}
                     >
                         <div style={{
-                            width: '80px',
-                            height: '80px',
+                            width: '90px',
+                            height: '90px',
                             background: 'var(--grad-gold)',
-                            borderRadius: '50%',
+                            borderRadius: '24px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             color: 'white',
-                            boxShadow: '0 10px 20px rgba(212, 175, 55, 0.2)'
+                            boxShadow: '0 10px 20px rgba(212, 175, 55, 0.2)',
+                            transform: 'rotate(-5deg)'
                         }}>
-                            <GraduationCap size={40} />
+                            <GraduationCap size={44} />
                         </div>
                         <div style={{ textAlign: 'center' }}>
-                            <h2 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--spacing-xs)' }}>بوابة الطلاب</h2>
-                            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-                                للمسجلين في الدورات والبرامج التعليمية
+                            <h2 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: '700', marginBottom: 'var(--spacing-xs)', color: 'var(--color-text)' }}>بوابة الطلاب</h2>
+                            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-base)', lineHeight: '1.5' }}>
+                                للمسجلين في الدورات والبرامج التعليمية والأنشطة التدريبية
                             </p>
                         </div>
-                        <div style={{ color: 'var(--color-accent)', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
-                            دخول الطلاب <ArrowRight size={18} />
+                        <div style={{
+                            color: 'var(--color-accent)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            fontWeight: '700',
+                            marginTop: 'var(--spacing-md)',
+                            fontSize: 'var(--font-size-lg)'
+                        }}>
+                            دخول الطلاب <ArrowRight size={20} />
                         </div>
                     </Link>
 
                     {/* Admin Portal */}
-                    <Link href="/admin/login" className="card-elevated hover-scale" style={{
+                    <Link href="/admin/login" className="card-elevated hover-scale fade-in" style={{
                         textDecoration: 'none',
                         color: 'inherit',
                         padding: 'var(--spacing-2xl)',
@@ -89,42 +99,56 @@ export default function PortalChoicePage() {
                         alignItems: 'center',
                         gap: 'var(--spacing-lg)',
                         border: '2px solid transparent',
-                        transition: 'all var(--transition-base)'
+                        transition: 'all var(--transition-base)',
+                        backgroundColor: 'var(--color-surface-elevated)',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        animationDelay: '0.1s'
                     }}
                         onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--color-primary)')}
                         onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'transparent')}
                     >
                         <div style={{
-                            width: '80px',
-                            height: '80px',
+                            width: '90px',
+                            height: '90px',
                             background: 'var(--grad-navy)',
-                            borderRadius: '50%',
+                            borderRadius: '24px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             color: 'white',
-                            boxShadow: '0 10px 20px rgba(10, 25, 47, 0.2)'
+                            boxShadow: '0 10px 20px rgba(10, 25, 47, 0.2)',
+                            transform: 'rotate(5deg)'
                         }}>
-                            <ShieldCheck size={40} />
+                            <ShieldCheck size={44} />
                         </div>
                         <div style={{ textAlign: 'center' }}>
-                            <h2 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--spacing-xs)' }}>بوابة المسؤول</h2>
-                            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-                                لإدارة الدورات، الإعلانات، والطلاب
+                            <h2 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: '700', marginBottom: 'var(--spacing-xs)', color: 'var(--color-text)' }}>بوابة المسؤول</h2>
+                            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-base)', lineHeight: '1.5' }}>
+                                لوحة التحكم الخاصة بالمديرين والمشرفين لإدارة محتوى النادي
                             </p>
                         </div>
-                        <div style={{ color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
-                            دخول الإدارة <ArrowRight size={18} />
+                        <div style={{
+                            color: 'var(--color-primary)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            fontWeight: '700',
+                            marginTop: 'var(--spacing-md)',
+                            fontSize: 'var(--font-size-lg)'
+                        }}>
+                            دخول الإدارة <ArrowRight size={20} />
                         </div>
                     </Link>
                 </div>
 
-                <div style={{ marginTop: 'var(--spacing-2xl)' }}>
-                    <Link href="/" style={{ color: 'var(--color-text-muted)', textDecoration: 'none', fontSize: 'var(--font-size-sm)' }} className="hover:underline">
-                        العودة للرئيسية
+                <div style={{ marginTop: 'var(--spacing-2xl)', textAlign: 'center' }}>
+                    <Link href="/" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-primary transition-colors font-medium">
+                        <Home size={18} /> العودة للصفحة الرئيسية
                     </Link>
                 </div>
             </div>
         </div>
     );
 }
+

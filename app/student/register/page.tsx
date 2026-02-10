@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User, Mail, Phone, Lock, IdCard, ArrowLeft } from 'lucide-react';
+import { User, Mail, Phone, Lock, IdCard, ArrowRight, CheckCircle } from 'lucide-react';
 
 export default function StudentRegisterPage() {
     const router = useRouter();
@@ -41,7 +41,7 @@ export default function StudentRegisterPage() {
             setSuccess(true);
             setTimeout(() => {
                 router.push('/student/login');
-            }, 2000);
+            }, 2500);
 
         } catch (err: any) {
             setError(err.message);
@@ -52,107 +52,148 @@ export default function StudentRegisterPage() {
 
     if (success) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-surface">
-                <div className="card text-center p-8 max-w-md w-full fade-in">
-                    <div className="w-20 h-20 bg-success-bg text-success rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                        </svg>
+            <div style={{
+                minHeight: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'var(--grad-gold)',
+                padding: 'var(--spacing-md)'
+            }}>
+                <div className="card-elevated text-center p-8 max-w-md w-full fade-in" style={{ backgroundColor: 'var(--color-surface-elevated)' }}>
+                    <div style={{
+                        width: '80px',
+                        height: '80px',
+                        background: 'var(--color-success)',
+                        color: 'white',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0 auto var(--spacing-lg)',
+                        boxShadow: '0 10px 20px rgba(16, 185, 129, 0.2)'
+                    }}>
+                        <CheckCircle size={40} />
                     </div>
-                    <h2 className="text-2xl font-bold mb-2">تم التسجيل بنجاح!</h2>
-                    <p className="text-text-secondary mb-6">جاري توجيهك لصفحة تسجيل الدخول...</p>
-                    <div className="loading mx-auto"></div>
+                    <h2 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: '700', marginBottom: 'var(--spacing-sm)' }}>تم التسجيل بنجاح!</h2>
+                    <p style={{ color: 'var(--color-text-secondary)', marginBottom: 'var(--spacing-xl)' }}>جاري توجيهك لصفحة تسجيل الدخول...</p>
+                    <div className="loading"></div>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{ background: 'var(--color-beige)' }}>
-            <div className="max-w-md w-full space-y-8">
-                <div className="text-center">
-                    <h2 className="mt-6 text-3xl font-extrabold gradient-text">إنشاء حساب طالب جديد</h2>
-                    <p className="mt-2 text-sm text-text-secondary">انضم إلى نادي الرسالة التعليمي</p>
+        <div style={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'var(--grad-gold)',
+            padding: 'var(--spacing-2xl) var(--spacing-md)'
+        }}>
+            <div className="card-elevated fade-in" style={{
+                maxWidth: '600px',
+                width: '100%',
+                padding: 'var(--spacing-2xl)',
+                backgroundColor: 'var(--color-surface-elevated)'
+            }}>
+                <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-xl)' }}>
+                    <h1 className="gradient-text" style={{
+                        fontSize: 'var(--font-size-3xl)',
+                        fontWeight: '800',
+                        marginBottom: 'var(--spacing-xs)'
+                    }}>
+                        إنشاء حساب جديد
+                    </h1>
+                    <p style={{ color: 'var(--color-text-secondary)', fontWeight: '500' }}>انضم لنادي الرسالة التعليمي</p>
                 </div>
 
-                <div className="card-elevated p-8">
-                    {error && (
-                        <div className="alert alert-error mb-6 flex items-center gap-2">
-                            <span>{error}</span>
-                        </div>
-                    )}
+                {error && (
+                    <div className="alert alert-error" style={{ marginBottom: 'var(--spacing-lg)' }}>
+                        {error}
+                    </div>
+                )}
 
-                    <form className="space-y-6" onSubmit={handleSubmit}>
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label className="label" htmlFor="name">الاسم الكامل</label>
+                        <div style={{ position: 'relative' }}>
+                            <User style={{ position: 'absolute', right: '12px', top: '12px', color: 'var(--color-text-muted)' }} size={18} />
+                            <input id="name" name="name" type="text" required className="input" style={{ paddingRight: '40px' }} placeholder="الاسم كما في الهوية" />
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label className="label" htmlFor="email">البريد الإلكتروني</label>
+                        <div style={{ position: 'relative' }}>
+                            <Mail style={{ position: 'absolute', right: '12px', top: '12px', color: 'var(--color-text-muted)' }} size={18} />
+                            <input id="email" name="email" type="email" required className="input" style={{ paddingRight: '40px' }} placeholder="example@mail.com" />
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-md)' }}>
                         <div className="form-group">
-                            <label className="label" htmlFor="name">الاسم الكامل</label>
-                            <div className="relative">
-                                <User className="absolute right-3 top-3 text-text-muted" size={18} />
-                                <input id="name" name="name" type="text" required className="input pr-10" placeholder="الاسم كما في الهوية" />
+                            <label className="label" htmlFor="phone">رقم الجوال</label>
+                            <div style={{ position: 'relative' }}>
+                                <Phone style={{ position: 'absolute', right: '12px', top: '12px', color: 'var(--color-text-muted)' }} size={18} />
+                                <input id="phone" name="phone" type="tel" className="input" style={{ paddingRight: '40px' }} placeholder="05xxxxxxxx" />
                             </div>
                         </div>
-
                         <div className="form-group">
-                            <label className="label" htmlFor="email">البريد الإلكتروني</label>
-                            <div className="relative">
-                                <Mail className="absolute right-3 top-3 text-text-muted" size={18} />
-                                <input id="email" name="email" type="email" required className="input pr-10" placeholder="example@mail.com" />
+                            <label className="label" htmlFor="national_id">الهوية الوطنية</label>
+                            <div style={{ position: 'relative' }}>
+                                <IdCard style={{ position: 'absolute', right: '12px', top: '12px', color: 'var(--color-text-muted)' }} size={18} />
+                                <input id="national_id" name="national_id" type="text" className="input" style={{ paddingRight: '40px' }} placeholder="1xxxxxxxxx" />
                             </div>
                         </div>
+                    </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="form-group">
-                                <label className="label" htmlFor="phone">رقم الجوال</label>
-                                <div className="relative">
-                                    <Phone className="absolute right-3 top-3 text-text-muted" size={18} />
-                                    <input id="phone" name="phone" type="tel" className="input pr-10" placeholder="05xxxxxxxx" />
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <label className="label" htmlFor="national_id">الهوية الوطنية</label>
-                                <div className="relative">
-                                    <IdCard className="absolute right-3 top-3 text-text-muted" size={18} />
-                                    <input id="national_id" name="national_id" type="text" className="input pr-10" placeholder="1xxxxxxxxx" />
-                                </div>
-                            </div>
-                        </div>
-
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-md)' }}>
                         <div className="form-group">
                             <label className="label" htmlFor="password">كلمة المرور</label>
-                            <div className="relative">
-                                <Lock className="absolute right-3 top-3 text-text-muted" size={18} />
-                                <input id="password" name="password" type="password" required className="input pr-10" placeholder="••••••••" />
+                            <div style={{ position: 'relative' }}>
+                                <Lock style={{ position: 'absolute', right: '12px', top: '12px', color: 'var(--color-text-muted)' }} size={18} />
+                                <input id="password" name="password" type="password" required className="input" style={{ paddingRight: '40px' }} placeholder="••••••••" />
                             </div>
                         </div>
-
                         <div className="form-group">
                             <label className="label" htmlFor="confirmPassword">تأكيد كلمة المرور</label>
-                            <div className="relative">
-                                <Lock className="absolute right-3 top-3 text-text-muted" size={18} />
-                                <input id="confirmPassword" name="confirmPassword" type="password" required className="input pr-10" placeholder="••••••••" />
+                            <div style={{ position: 'relative' }}>
+                                <Lock style={{ position: 'absolute', right: '12px', top: '12px', color: 'var(--color-text-muted)' }} size={18} />
+                                <input id="confirmPassword" name="confirmPassword" type="password" required className="input" style={{ paddingRight: '40px' }} placeholder="••••••••" />
                             </div>
                         </div>
+                    </div>
 
-                        <button type="submit" disabled={loading} className="btn btn-primary w-full py-3 text-lg">
-                            {loading ? <span className="loading"></span> : 'إنشاء الحساب'}
-                        </button>
+                    <button type="submit" disabled={loading} className="btn btn-primary" style={{ width: '100%', padding: '14px', marginTop: 'var(--spacing-md)' }}>
+                        {loading ? <span className="loading"></span> : 'إنشاء الحساب'}
+                    </button>
 
-                        <div className="text-center mt-6">
-                            <p className="text-sm text-text-secondary">
-                                لديك حساب بالفعل؟{' '}
-                                <Link href="/student/login" className="font-medium text-primary hover:underline">
-                                    سجل دخولك هنا
-                                </Link>
-                            </p>
-                        </div>
-                    </form>
-                </div>
+                    <div style={{ textAlign: 'center', marginTop: 'var(--spacing-lg)', borderTop: '1px solid var(--color-border)', paddingTop: 'var(--spacing-lg)' }}>
+                        <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                            لديك حساب بالفعل؟{' '}
+                            <Link href="/student/login" style={{ fontWeight: '600', color: 'var(--color-accent)', textDecoration: 'none' }}>
+                                سجل دخولك هنا
+                            </Link>
+                        </p>
+                    </div>
+                </form>
 
-                <div className="text-center">
-                    <Link href="/" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-primary transition-colors">
-                        <ArrowLeft size={16} /> العودة للرئيسية
+                <div style={{ textAlign: 'center', marginTop: 'var(--spacing-xl)' }}>
+                    <Link href="/login/portal" style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '0.85rem',
+                        color: 'var(--color-text-muted)',
+                        textDecoration: 'none'
+                    }} className="hover:text-primary">
+                        <ArrowRight size={14} /> العودة لاختيار البوابة
                     </Link>
                 </div>
             </div>
         </div>
     );
 }
+

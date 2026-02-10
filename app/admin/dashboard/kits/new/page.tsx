@@ -36,12 +36,22 @@ export default function NewKitPage() {
             }
 
             if (cover) {
-                const fileExt = cover.name.split('.').pop();
-                const fileName = `${Math.random()}.${fileExt}`;
-                const { data, error } = await supabase.storage.from('media').upload(`covers/${fileName}`, cover);
-                if (error) throw error;
-                const { data: publicUrlData } = supabase.storage.from('media').getPublicUrl(`covers/${fileName}`);
-                coverUrl = publicUrlData.publicUrl;
+                const uploadFormData = new FormData();
+                uploadFormData.append('file', cover);
+                uploadFormData.append('folder', 'kits');
+
+                const uploadRes = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: uploadFormData,
+                });
+
+                if (!uploadRes.ok) {
+                    const errorData = await uploadRes.json();
+                    throw new Error(errorData.error || 'فشل رفع صورة الغلاف سحابياً');
+                }
+
+                const uploadData = await uploadRes.json();
+                coverUrl = uploadData.url;
             }
 
             const { error: insertError } = await supabase.from('educational_kits' as any).insert({
