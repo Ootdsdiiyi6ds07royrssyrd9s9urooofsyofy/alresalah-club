@@ -1,3 +1,4 @@
+'use client';
 
 import CourseForm from '@/components/admin/CourseForm';
 import { ArrowRight } from 'lucide-react';
