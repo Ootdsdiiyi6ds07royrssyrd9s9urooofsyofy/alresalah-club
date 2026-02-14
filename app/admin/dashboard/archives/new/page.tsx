@@ -1,3 +1,4 @@
+'use client';
 
 import ArchiveForm from '@/components/admin/ArchiveForm';
 import { ArrowRight } from 'lucide-react';

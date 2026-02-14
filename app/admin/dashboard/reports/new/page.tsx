@@ -1,3 +1,4 @@
+'use client';
 
 import ReportBuilder from '@/components/admin/ReportBuilder';
 import { ArrowRight } from 'lucide-react';
