@@ -3,7 +3,7 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
-import { Plus, FileBarChart, Clipboardlist, Trash2, Edit, ChevronLeft, Layout, Table } from 'lucide-react';
+import { Plus, FileBarChart, ClipboardList, Trash2, Edit, ChevronLeft, Layout, Table } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ReportsAdminPage() {
@@ -97,7 +97,7 @@ export default function ReportsAdminPage() {
                 </div>
             ) : (
                 <div className="card text-center py-20 border-2 border-dashed border-gray-200">
-                    <Clipboardlist size={64} className="mx-auto text-gray-200 mb-6" />
+                    <ClipboardList size={64} className="mx-auto text-gray-200 mb-6" />
                     <h2 className="text-2xl font-bold text-gray-400">لا توجد قوالب تقارير حالياً</h2>
                     <p className="text-gray-400 mt-2 mb-8">ابدأ بتصميم أول تقرير مخصص لناديك الآن</p>
                     <Link href="/admin/dashboard/reports/new" className="btn btn-primary px-10">
