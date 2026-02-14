@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { Mail, Phone, Search, User as UserIcon, Calendar } from 'lucide-react';
 
+import StudentActionButtons from '@/components/admin/StudentActionButtons';
+
 export default async function StudentListPage({ searchParams }: { searchParams: { q?: string } }) {
     const supabase = await createClient();
     const query = searchParams.q || '';
@@ -17,6 +19,22 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
     }
 
     const { data: students } = await studentQuery;
+
+    const getStatusBadge = (student: any) => {
+        if (student.status === 'active' && student.is_approved) {
+            return <span className="badge badge-success">نشط</span>;
+        }
+        if (student.status === 'suspended') {
+            return <span className="badge badge-error">موقوف</span>;
+        }
+        if (student.status === 'pending' || (!student.is_approved && student.status !== 'unverified')) {
+            return <span className="badge badge-warning">بانتظار الموافقة</span>;
+        }
+        if (student.status === 'unverified') {
+            return <span className="badge badge-neutral">غير مفعل</span>;
+        }
+        return <span className="badge badge-neutral">{student.status}</span>;
+    };
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
@@ -123,9 +141,16 @@ export default async function StudentListPage({ searchParams }: { searchParams: 
                                     </td>
                                     <td style={{ padding: 'var(--spacing-lg)', textAlign: 'center' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--spacing-sm)' }}>
-                                            <span className="badge badge-success">نشط</span>
-                                            <Link href={`/admin/dashboard/students/${student.id}`} className="btn btn-secondary p-1" title="عرض التفاصيل">
-                                                <Search size={14} />
+                                            {getStatusBadge(student)}
+
+                                            <StudentActionButtons
+                                                studentId={student.id}
+                                                currentStatus={student.status}
+                                                isApproved={student.is_approved}
+                                            />
+
+                                            <Link href={`/admin/dashboard/students/${student.id}`} className="btn btn-secondary p-2" title="عرض التفاصيل">
+                                                <Search size={18} />
                                             </Link>
                                         </div>
                                     </td>

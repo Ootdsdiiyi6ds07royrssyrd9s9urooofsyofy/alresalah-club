@@ -9,6 +9,68 @@ export type Json =
 export interface Database {
     public: {
         Tables: {
+            students: {
+                Row: {
+                    id: string
+                    name: string
+                    email: string
+                    phone: string | null
+                    national_id: string | null
+                    bawaba_id: string | null
+                    password_hash: string | null
+                    bio: string | null
+                    specialization: string | null
+                    interests: Json | null
+                    birth_date: string | null
+                    avatar_url: string | null
+                    status: string
+                    is_approved: boolean | null
+                    verification_code: string | null
+                    code_expiry: string | null
+                    created_at: string
+                    last_login: string | null
+                }
+                Insert: {
+                    id?: string
+                    name: string
+                    email: string
+                    phone?: string | null
+                    national_id?: string | null
+                    bawaba_id?: string | null
+                    password_hash?: string | null
+                    bio?: string | null
+                    specialization?: string | null
+                    interests?: Json | null
+                    birth_date?: string | null
+                    avatar_url?: string | null
+                    status?: string
+                    is_approved?: boolean | null
+                    verification_code?: string | null
+                    code_expiry?: string | null
+                    created_at?: string
+                    last_login?: string | null
+                }
+                Update: {
+                    id?: string
+                    name?: string
+                    email?: string
+                    phone?: string | null
+                    national_id?: string | null
+                    bawaba_id?: string | null
+                    password_hash?: string | null
+                    bio?: string | null
+                    specialization?: string | null
+                    interests?: Json | null
+                    birth_date?: string | null
+                    avatar_url?: string | null
+                    status?: string
+                    is_approved?: boolean | null
+                    verification_code?: string | null
+                    code_expiry?: string | null
+                    created_at?: string
+                    last_login?: string | null
+                }
+            }
             courses: {
                 Row: {
                     id: string

@@ -30,6 +30,18 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'بيانات الاعتماد غير صالحة' }, { status: 401 });
         }
 
+        // Check approval status
+        if (!student.is_approved) {
+            if (student.status === 'unverified') {
+                return NextResponse.json({ error: 'الرجاء تفعيل حسابك أولاً', code: 'UNVERIFIED' }, { status: 403 });
+            }
+            return NextResponse.json({ error: 'حسابك في انتظار موافقة المسؤول', code: 'PENDING_APPROVAL' }, { status: 403 });
+        }
+
+        if (student.status === 'suspended') {
+            return NextResponse.json({ error: 'تم إيقاف هذا الحساب', code: 'SUSPENDED' }, { status: 403 });
+        }
+
         // Update last login
         await supabase
             .from('students')

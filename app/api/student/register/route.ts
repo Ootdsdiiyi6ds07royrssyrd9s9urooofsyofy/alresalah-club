@@ -25,6 +25,10 @@ export async function POST(request: NextRequest) {
         // Hash password
         const passwordHash = await hashPassword(password);
 
+        // Generate OTP
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const codeExpiry = new Date(Date.now() + 15 * 60 * 1000).toISOString(); // 15 minutes
+
         // Insert into students table
         const { data: student, error: studentError } = await supabase
             .from('students')
@@ -34,6 +38,10 @@ export async function POST(request: NextRequest) {
                 phone,
                 national_id,
                 password_hash: passwordHash,
+                status: 'unverified',
+                is_approved: false,
+                verification_code: verificationCode,
+                code_expiry: codeExpiry
             })
             .select()
             .single();
@@ -54,9 +62,12 @@ export async function POST(request: NextRequest) {
             // Non-critical if we already have it in students table for now
         }
 
+        // Log OTP for development/testing purposes (In production, send via Email/SMS)
+        console.log(`OTP for ${email}: ${verificationCode}`);
+
         return NextResponse.json({
-            message: 'تم التسجيل بنجاح',
-            student: { id: student.id, name: student.name, email: student.email }
+            message: 'تم التسجيل بنجاح. يرجى التحقق من رمز التفعيل.',
+            student: { id: student.id, email: student.email }
         }, { status: 201 });
 
     } catch (error: any) {
