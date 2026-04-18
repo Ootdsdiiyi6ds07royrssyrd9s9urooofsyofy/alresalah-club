@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShieldCheck, GraduationCap, ArrowRight, Home } from 'lucide-react';
+import { ShieldCheck, ArrowRight, Home } from 'lucide-react';
 
 export default function PortalChoicePage() {
     return (
@@ -33,62 +33,11 @@ export default function PortalChoicePage() {
                 </div>
 
                 <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                    display: 'flex',
+                    justifyContent: 'center',
                     gap: 'var(--spacing-xl)',
                     marginTop: 'var(--spacing-2xl)'
                 }}>
-                    {/* Student Portal */}
-                    <Link href="/student/login" className="card-elevated hover-scale fade-in" style={{
-                        textDecoration: 'none',
-                        color: 'inherit',
-                        padding: 'var(--spacing-2xl)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: 'var(--spacing-lg)',
-                        border: '2px solid transparent',
-                        transition: 'all var(--transition-base)',
-                        backgroundColor: 'var(--color-surface-elevated)',
-                        position: 'relative',
-                        overflow: 'hidden'
-                    }}
-                        onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent)')}
-                        onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'transparent')}
-                    >
-                        <div style={{
-                            width: '90px',
-                            height: '90px',
-                            background: 'var(--grad-gold)',
-                            borderRadius: '24px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: 'white',
-                            boxShadow: '0 10px 20px rgba(212, 175, 55, 0.2)',
-                            transform: 'rotate(-5deg)'
-                        }}>
-                            <GraduationCap size={44} />
-                        </div>
-                        <div style={{ textAlign: 'center' }}>
-                            <h2 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: '700', marginBottom: 'var(--spacing-xs)', color: 'var(--color-text)' }}>بوابة الطلاب</h2>
-                            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-base)', lineHeight: '1.5' }}>
-                                للمسجلين في الدورات والبرامج التعليمية والأنشطة التدريبية
-                            </p>
-                        </div>
-                        <div style={{
-                            color: 'var(--color-accent)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            fontWeight: '700',
-                            marginTop: 'var(--spacing-md)',
-                            fontSize: 'var(--font-size-lg)'
-                        }}>
-                            دخول الطلاب <ArrowRight size={20} />
-                        </div>
-                    </Link>
-
                     {/* Admin Portal */}
                     <Link href="/admin/login" className="card-elevated hover-scale fade-in" style={{
                         textDecoration: 'none',
